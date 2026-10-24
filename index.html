@@ -101,6 +101,41 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 .daily-chart-axis span{text-align:center;justify-self:stretch;white-space:nowrap}
 .daily-chart-selected{margin-top:15px;padding:12px;border-radius:11px;background:#24292e;border:1px solid var(--line);color:#b6bec7;font-size:12px;line-height:1.7}
 .daily-chart-selected strong{color:var(--ink)}
+/* Reports analytics */
+.report-section-title{margin:24px 3px 12px}
+.report-section-title h2{margin:0}
+.report-subtitle{font-size:12px;color:var(--muted);line-height:1.55;margin:5px 0 0}
+.report-trend{display:grid;gap:14px}
+.trend-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.trend-list{display:grid;gap:14px}
+.trend-month{display:grid;grid-template-columns:54px minmax(0,1fr);gap:10px;align-items:center}
+.trend-month-label{font-size:11px;color:var(--muted)}
+.trend-bars{display:grid;gap:5px;min-width:0}
+.trend-bar-line{display:flex;align-items:center;gap:7px;min-width:0}
+.trend-bar-track{height:9px;flex:1;min-width:0;background:#2b3036;border-radius:20px;overflow:hidden}
+.trend-bar-fill{height:100%;min-width:0;border-radius:20px}
+.trend-bar-fill.income{background:var(--green)}.trend-bar-fill.expense{background:var(--red)}
+.trend-value{font-size:10px;color:#d5dbe1;min-width:65px;text-align:right;font-variant-numeric:tabular-nums}
+.report-donut-layout{display:grid;grid-template-columns:minmax(120px, .85fr) minmax(0,1.15fr);gap:16px;align-items:center}
+.report-donut{width:min(100%,180px);aspect-ratio:1;border-radius:50%;margin:auto;position:relative;background:conic-gradient(#353b42 0deg 360deg)}
+.report-donut::after{content:"";position:absolute;inset:25%;background:var(--panel);border:1px solid var(--line);border-radius:50%}
+.report-donut-center{position:absolute;z-index:1;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.report-donut-center strong{font-size:clamp(12px,3.8vw,18px);overflow-wrap:anywhere;max-width:90%}
+.report-donut-center span{font-size:10px;color:var(--muted);margin-top:3px}
+.report-legend{display:grid;gap:10px;min-width:0}
+.report-legend-row{display:grid;grid-template-columns:9px minmax(0,1fr) auto;align-items:center;gap:7px;font-size:11px}
+.report-legend-swatch{width:9px;height:9px;border-radius:3px}
+.report-legend-name{overflow-wrap:anywhere;color:#c7ced5}
+.report-legend-value{font-weight:750;font-variant-numeric:tabular-nums;text-align:right}
+.report-compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.report-compare-item{background:#22262b;border:1px solid var(--line);border-radius:13px;padding:12px;min-width:0}
+.report-compare-item span{display:block;font-size:11px;color:var(--muted);margin-bottom:7px}
+.report-compare-item strong{display:block;font-size:17px;overflow-wrap:anywhere}
+.report-change{font-size:11px;margin-top:6px;color:var(--muted);line-height:1.5}
+.report-change.good{color:var(--green)}.report-change.bad{color:var(--red)}
+.report-empty{font-size:12px;color:var(--muted);text-align:center;padding:20px 8px}
+@media(max-width:380px){.report-donut-layout{grid-template-columns:1fr}.report-donut{width:145px}.report-legend{gap:8px}.trend-month{grid-template-columns:43px minmax(0,1fr)}.trend-value{min-width:57px;font-size:9px}}
 @media(max-width:480px){
   /* On narrow phone screens, stack date and note to prevent iOS Safari overflow */
   .grid#dateNoteGrid{grid-template-columns:minmax(0,1fr);gap:10px}
@@ -211,9 +246,15 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
       <div class="stats" style="border-top:0;padding-top:5px"><div><span class="small">รายรับ</span><strong class="inc" id="reportIncome">฿0.00</strong></div><div><span class="small">รายจ่าย</span><strong class="exp" id="reportExpense">฿0.00</strong></div></div>
       <div class="summaryline"><span>เงินสุทธิของเดือน</span><strong id="reportNet">฿0.00</strong></div><div class="summaryline"><span>จำนวนรายการ</span><strong id="reportCount">0</strong></div>
     </div>
-    <div class="section"><h2>รายจ่ายแยกตามหมวดหมู่</h2></div><div class="card" id="categoryReport"></div>
-    <div class="section"><h2>รายรับแยกตามหมวดหมู่</h2></div><div class="card" id="incomeReport"></div>
-    <div class="notice" style="margin-top:14px">รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย</div>
+    <div class="report-section-title"><h2>เทียบกับเดือนก่อน</h2><p class="report-subtitle">ดูการเปลี่ยนแปลงของรายรับและรายจ่ายจากเดือนก่อนหน้า</p></div>
+    <div class="card stack"><div class="report-compare-grid"><div class="report-compare-item"><span>รายรับเทียบเดือนก่อน</span><strong class="inc" id="reportIncomeChange">—</strong><div class="report-change" id="reportIncomeChangeNote">ยังไม่มีข้อมูล</div></div><div class="report-compare-item"><span>รายจ่ายเทียบเดือนก่อน</span><strong class="exp" id="reportExpenseChange">—</strong><div class="report-change" id="reportExpenseChangeNote">ยังไม่มีข้อมูล</div></div></div></div>
+    <div class="report-section-title"><h2>แนวโน้มย้อนหลัง 6 เดือน</h2><p class="report-subtitle">เปรียบเทียบรายรับและรายจ่ายในแต่ละเดือน</p></div>
+    <div class="card report-trend"><div class="trend-legend"><span><i class="legend-dot" style="background:var(--green)"></i>รายรับ</span><span><i class="legend-dot" style="background:var(--red)"></i>รายจ่าย</span></div><div class="trend-list" id="reportTrend"></div></div>
+    <div class="report-section-title"><h2>สัดส่วนรายจ่าย</h2><p class="report-subtitle">หมวดหมู่ที่ใช้จ่ายมากที่สุดในเดือนที่เลือก</p></div>
+    <div class="card"><div class="report-donut-layout"><div class="report-donut" id="expenseDonut" role="img" aria-label="กราฟวงกลมสัดส่วนรายจ่าย"><div class="report-donut-center"><strong id="expenseDonutTotal">฿0.00</strong><span>รายจ่ายรวม</span></div></div><div class="report-legend" id="expenseDonutLegend"></div></div></div>
+    <div class="report-section-title"><h2>รายจ่ายแยกตามหมวดหมู่</h2></div><div class="card" id="categoryReport"></div>
+    <div class="report-section-title"><h2>รายรับแยกตามหมวดหมู่</h2></div><div class="card" id="incomeReport"></div>
+    <div class="notice" style="margin-top:14px">รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย กราฟเปรียบเทียบใช้ข้อมูลที่มีอยู่ในเครื่องเท่านั้น</div>
   </section>
 
   <section class="page" id="page-settings">
@@ -286,7 +327,13 @@ $('dailyChartMonth').addEventListener('change',()=>{dailyChartSelectedDate='';re
 function renderHome(){const totals=monthlyTotals(currentMonth()),balances=accountBalances();$('balance').textContent=money(Object.values(balances).reduce((s,n)=>s+n,0));$('income').textContent=money(totals.income);$('expense').textContent=money(totals.expense);$('homeAccounts').innerHTML=accounts.length?accounts.map(a=>`<div class="summaryline"><span>${esc(a.name)}</span><strong>${money(balances[a.name]||0)}</strong></div>`).join(''):emptyHTML('ยังไม่มีบัญชี');const recent=sortedTx().slice(0,5);$('recentList').innerHTML=recent.length?recent.map(transactionHTML).join(''):emptyHTML('ยังไม่มีรายการ เริ่มบันทึกรายการแรกได้เลยค่ะ');renderDailyChart()}
 function renderHistory(){const q=$('search').value.trim().toLowerCase(),f=$('filter').value,month=$('historyMonth').value,arr=sortedTx().filter(t=>(f==='All'||t.type===f)&&(!month||String(t.date).startsWith(month))&&(!q||[t.title,t.note,t.category,t.account,t.to].some(v=>String(v||'').toLowerCase().includes(q))));$('historyCount').textContent=`พบ ${arr.length} รายการ`;$('historyList').innerHTML=arr.length?arr.map(transactionHTML).join(''):emptyHTML('ไม่พบรายการที่ตรงกับเงื่อนไข')}
 function groupByCategory(arr,typeName){const groups={};arr.filter(t=>t.type===typeName).forEach(t=>{const c=t.category||'ไม่ระบุหมวดหมู่';groups[c]=(groups[c]||0)+(Number(t.amount)||0)});const entries=Object.entries(groups).sort((a,b)=>b[1]-a[1]),max=Math.max(1,...entries.map(e=>e[1]));return entries.length?entries.map(([name,value])=>`<div style="padding:10px 0"><div class="summaryline" style="padding:0;border:0"><span>${esc(name)}</span><strong>${money(value)}</strong></div><div class="progress"><span style="width:${Math.max(0,Math.min(100,value/max*100))}%"></span></div></div>`).join(''):emptyHTML('ยังไม่มีข้อมูลในเดือนนี้')}
-function renderReports(){const month=$('reportMonth').value||currentMonth(),arr=tx.filter(t=>String(t.date||'').startsWith(month)),m=monthlyTotals(month);$('reportIncome').textContent=money(m.income);$('reportExpense').textContent=money(m.expense);$('reportNet').textContent=money(m.net);$('reportNet').style.color=m.net<0?'var(--red)':'var(--green)';$('reportCount').textContent=String(m.count);$('categoryReport').innerHTML=groupByCategory(arr,'Expense');$('incomeReport').innerHTML=groupByCategory(arr,'Income')}
+function shiftMonth(month,delta){const [y,m]=month.split('-').map(Number),d=new Date(y,m-1+delta,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function monthLabel(month){const [y,m]=month.split('-').map(Number);return `${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m-1]} ${String(y+543).slice(-2)}`}
+function categoryTotals(arr,typeName){const groups={};arr.filter(t=>t.type===typeName).forEach(t=>{const c=t.category||'ไม่ระบุหมวดหมู่';groups[c]=(groups[c]||0)+(Number(t.amount)||0)});return Object.entries(groups).sort((a,b)=>b[1]-a[1])}
+function renderReportComparison(month){const previous=shiftMonth(month,-1),now=monthlyTotals(month),before=monthlyTotals(previous);[['Income','income'],['Expense','expense']].forEach(([key,id])=>{const current=now[key.toLowerCase()],old=before[key.toLowerCase()],valueEl=$(`report${key}Change`),noteEl=$(`report${key}ChangeNote`);if(old===0&&current===0){valueEl.textContent='0.0%';noteEl.textContent='ไม่มีการเปลี่ยนแปลง';noteEl.className='report-change'}else if(old===0){valueEl.textContent='ใหม่';noteEl.textContent=`เดือนก่อน ${money(old)} · เดือนนี้ ${money(current)}`;noteEl.className='report-change '+(key==='Expense'?'bad':'good')}else{const pct=((current-old)/old)*100;valueEl.textContent=`${pct>0?'+':''}${pct.toFixed(1)}%`;noteEl.textContent=`${money(old)} → ${money(current)}`;const favorable=key==='Income'?pct>=0:pct<=0;noteEl.className='report-change '+(favorable?'good':pct===0?'':'bad')}})}
+function renderReportTrend(month){const months=Array.from({length:6},(_,i)=>shiftMonth(month,i-5)),data=months.map(key=>({month:key,...monthlyTotals(key)})),max=Math.max(1,...data.flatMap(d=>[d.income,d.expense]));$('reportTrend').innerHTML=data.map(d=>`<div class="trend-month"><div class="trend-month-label">${monthLabel(d.month)}</div><div class="trend-bars"><div class="trend-bar-line"><div class="trend-bar-track"><div class="trend-bar-fill income" style="width:${Math.max(0,d.income/max*100)}%"></div></div><span class="trend-value">${money(d.income)}</span></div><div class="trend-bar-line"><div class="trend-bar-track"><div class="trend-bar-fill expense" style="width:${Math.max(0,d.expense/max*100)}%"></div></div><span class="trend-value">${money(d.expense)}</span></div></div></div>`).join('')}
+function renderExpenseDonut(arr){const groups=categoryTotals(arr,'Expense'),total=groups.reduce((s,x)=>s+x[1],0),colors=['#ff737d','#65d6a0','#9cb8ef','#f3c969','#bd9bff','#63c7d5','#ffad70','#d2d7dd','#a6b3bf','#e38ca9'];$('expenseDonutTotal').textContent=money(total);if(!groups.length||total<=0){$('expenseDonut').style.background='conic-gradient(#353b42 0deg 360deg)';$('expenseDonutLegend').innerHTML='<div class="report-empty">ยังไม่มีรายจ่ายในเดือนนี้</div>';return}let cursor=0;const stops=groups.map(([name,value],i)=>{const start=cursor;cursor+=value/total*360;return `${colors[i%colors.length]} ${start.toFixed(2)}deg ${cursor.toFixed(2)}deg`});$('expenseDonut').style.background=`conic-gradient(${stops.join(',')})`;$('expenseDonutLegend').innerHTML=groups.slice(0,8).map(([name,value],i)=>`<div class="report-legend-row"><span class="report-legend-swatch" style="background:${colors[i%colors.length]}"></span><span class="report-legend-name">${esc(name)} <span style="color:var(--muted)">${(value/total*100).toFixed(1)}%</span></span><strong class="report-legend-value">${money(value)}</strong></div>`).join('')+(groups.length>8?`<div class="small">อีก ${groups.length-8} หมวดหมู่รวมอยู่ในกราฟ</div>`:'')}
+function renderReports(){const month=$('reportMonth').value||currentMonth(),arr=tx.filter(t=>String(t.date||'').startsWith(month)),m=monthlyTotals(month);$('reportIncome').textContent=money(m.income);$('reportExpense').textContent=money(m.expense);$('reportNet').textContent=money(m.net);$('reportNet').style.color=m.net<0?'var(--red)':'var(--green)';$('reportCount').textContent=String(m.count);$('categoryReport').innerHTML=groupByCategory(arr,'Expense');$('incomeReport').innerHTML=groupByCategory(arr,'Income');renderReportComparison(month);renderReportTrend(month);renderExpenseDonut(arr)}
 function render(){renderHome();renderHistory();renderReports()}
 function resetForm(){editingId=null;$('form').reset();$('date').value=localDate();$('message').textContent='';$('cancelEdit').hidden=true;setType('Expense')}
 function startEdit(id){const t=tx.find(x=>String(x.id)===String(id));if(!t)return;editingId=t.id;navigate('record');setType(t.type);$('amount').value=t.amount;$('title').value=t.title||'';$('note').value=t.note||'';$('date').value=t.date||localDate();if(t.type==='Transfer'){fillSelect('transferFrom',accounts.map(a=>a.name),t.account);fillSelect('transferTo',accounts.map(a=>a.name),t.to)}else{fillSelect('category',cats[t.type]||[],t.category);fillSelect('account',accounts.map(a=>a.name),t.account)}$('save').textContent='บันทึกการแก้ไข';$('formHeading').textContent='แก้ไขรายการ';$('cancelEdit').hidden=false}
