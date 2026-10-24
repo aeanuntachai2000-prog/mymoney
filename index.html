@@ -72,6 +72,7 @@ input[type="date"],input[type="month"]{font-variant-numeric:tabular-nums}
 .nav-btn .symbol{font-size:21px;line-height:1.1}
 .nav-btn.active{color:#f2f4f6}
 .message{font-size:12px;color:var(--green);min-height:16px;margin:0}
+.slip-card{margin-bottom:12px}.slip-preview{display:block;width:100%;max-height:260px;object-fit:contain;border-radius:12px;background:#111417;border:1px solid var(--line);margin-top:10px}.slip-progress{height:6px;border-radius:20px;background:#343a41;overflow:hidden;margin:8px 0}.slip-progress span{display:block;height:100%;width:0;background:#c5cbd2;transition:width .2s}.slip-raw{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;background:#111417;border:1px solid var(--line);border-radius:10px;padding:10px;max-height:150px;overflow:auto;color:#c4cbd2}
 footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 
 /* Daily chart */
@@ -100,6 +101,12 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 .daily-chart-axis span{text-align:center;justify-self:stretch;white-space:nowrap}
 .daily-chart-selected{margin-top:15px;padding:12px;border-radius:11px;background:#24292e;border:1px solid var(--line);color:#b6bec7;font-size:12px;line-height:1.7}
 .daily-chart-selected strong{color:var(--ink)}
+@media(max-width:480px){
+  /* On narrow phone screens, stack date and note to prevent iOS Safari overflow */
+  .grid#dateNoteGrid{grid-template-columns:minmax(0,1fr);gap:10px}
+  #dateNoteGrid>div{width:100%;min-width:0;max-width:100%}
+  #dateNoteGrid input{width:100%;min-width:0;max-width:100%;font-size:16px;padding:11px 10px}
+}
 @media(max-width:420px){
   .app{padding-left:10px;padding-right:10px}
   .card{padding:13px}
@@ -117,7 +124,6 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   .daily-chart-controls{align-items:stretch;flex-direction:column}
   #dailyChartMonth{width:100%;max-width:none}
   .grid{grid-template-columns:minmax(0,1fr)}
-  .grid#dateNoteGrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 }
 </style>
 </head>
@@ -173,6 +179,16 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 
   <section class="page" id="page-record">
     <div class="section" style="margin-top:5px"><div><p class="eyebrow">QUICK ADD</p><h2 id="formHeading">บันทึกรายการ</h2></div></div>
+    <section class="card stack slip-card">
+      <div><h3>อ่านข้อมูลจากสลิป</h3><p class="small" style="margin:6px 0 0">เลือกรูปสลิปจาก Photos หรือ Files ระบบจะอ่านข้อความบนรูปและช่วยกรอกข้อมูลให้</p></div>
+      <input id="slipFile" type="file" accept="image/*" hidden>
+      <button class="btn secondary" type="button" id="chooseSlip">▧ เลือกรูปสลิป</button>
+      <img id="slipPreview" class="slip-preview" alt="ตัวอย่างสลิปที่เลือก" hidden>
+      <button class="btn primary" type="button" id="readSlip" disabled>อ่านสลิปและเติมข้อมูล</button>
+      <div id="slipProgressWrap" hidden><div class="slip-progress"><span id="slipProgressBar"></span></div><p class="small" id="slipStatus" aria-live="polite">กำลังเตรียมระบบอ่านสลิป…</p></div>
+      <details><summary class="small">ข้อความที่ระบบอ่านได้ (ตรวจสอบได้)</summary><div class="slip-raw" id="slipRaw">ยังไม่มีข้อความ</div></details>
+      <p class="small">ประมวลผลรูปในเบราว์เซอร์ รูปสลิปไม่ถูกส่งไปยังเซิร์ฟเวอร์ OCR โดยโค้ดนี้ แต่ระบบต้องดาวน์โหลดตัวอ่านและชุดภาษาเมื่อใช้ครั้งแรก ยอดเงินและวันที่อาจอ่านผิด กรุณาตรวจสอบก่อนบันทึก</p>
+    </section>
     <div class="actions"><button class="active" data-type="Expense">− รายจ่าย</button><button data-type="Income">＋ รายรับ</button><button data-type="Transfer">⇄ โอนเงิน</button></div>
     <section class="card">
       <form id="form" class="stack">
@@ -277,7 +293,70 @@ function startEdit(id){const t=tx.find(x=>String(x.id)===String(id));if(!t)retur
 function deleteTx(id){if(!confirm('ต้องการลบรายการนี้ใช่ไหมคะ?'))return;tx=tx.filter(t=>String(t.id)!==String(id));saveAll();render()}
 document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-del]');if(edit)startEdit(edit.dataset.edit);if(del)deleteTx(del.dataset.del)});
 $('cancelEdit').addEventListener('click',resetForm);
-$('form').addEventListener('submit',e=>{e.preventDefault();const amount=Number($('amount').value),title=$('title').value.trim();if(!(amount>0)||!title)return;let account,to='';if(type==='Transfer'){account=$('transferFrom').value;to=$('transferTo').value;if(account===to){$('message').textContent='บัญชีต้นทางและปลายทางต้องต่างกัน';return}if(!account||!to){$('message').textContent='กรุณาตั้งค่าบัญชีให้ครบก่อน';return}}else account=$('account').value;const old=editingId===null?null:tx.find(t=>String(t.id)===String(editingId)),record={id:old?old.id:Date.now(),type,amount,date:$('date').value,title,note:$('note').value.trim(),category:type==='Transfer'?'โอนเงิน':$('category').value,account,to,createdAt:old?.createdAt||new Date().toISOString()};if(editingId!==null)tx=tx.map(t=>String(t.id)===String(editingId)?record:t);else tx.push(record);saveAll();resetForm();render();$('message').textContent='บันทึกเรียบร้อยแล้ว';navigate('home')});
+// Slip OCR: image is processed in this browser tab; OCR assets are loaded from a CDN.
+let selectedSlipFile=null, slipWorkerPromise=null;
+$('chooseSlip').addEventListener('click',()=>$('slipFile').click());
+$('slipFile').addEventListener('change',e=>{
+ const file=e.target.files?.[0]; if(!file)return;
+ if(!file.type.startsWith('image/')){alert('กรุณาเลือกรูปภาพสลิปค่ะ');e.target.value='';return}
+ selectedSlipFile=file;
+ const url=URL.createObjectURL(file);$('slipPreview').src=url;$('slipPreview').hidden=false;$('readSlip').disabled=false;
+ $('slipStatus').textContent=`เลือกรูปแล้ว: ${file.name}`;$('slipProgressWrap').hidden=false;$('slipProgressBar').style.width='0%';$('slipRaw').textContent='ยังไม่ได้อ่านสลิป';
+});
+async function getSlipWorker(){
+ if(slipWorkerPromise)return slipWorkerPromise;
+ slipWorkerPromise=(async()=>{
+  if(!window.Tesseract){await new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';sc.onload=resolve;sc.onerror=()=>reject(new Error('โหลดระบบ OCR ไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่'));document.head.appendChild(sc)})}
+  return await Tesseract.createWorker('tha+eng',1,{logger:m=>{if(m.status){$('slipStatus').textContent=`กำลังอ่านสลิป: ${m.status}`;if(typeof m.progress==='number')$('slipProgressBar').style.width=`${Math.round(m.progress*100)}%`}}});
+ })().catch(err=>{slipWorkerPromise=null;throw err});
+ return slipWorkerPromise;
+}
+function parseSlipDate(text){
+ const s=String(text||'').replace(/[๐-๙]/g,d=>String('๐๑๒๓๔๕๖๗๘๙'.indexOf(d)));
+ let m=s.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})\b/);
+ if(m){let a=+m[1],b=+m[2],y=+m[3],day,month;if(a>12){day=a;month=b}else if(b>12){month=a;day=b}else{day=a;month=b}if(y>=2400)y-=543;else if(y<100)y+=2000;if(y>=2000&&month>=1&&month<=12&&day>=1&&day<=31)return `${y}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`}
+ const months={'ม.ค.':1,'มกราคม':1,'ก.พ.':2,'กุมภาพันธ์':2,'มี.ค.':3,'มีนาคม':3,'เม.ย.':4,'เมษายน':4,'พ.ค.':5,'พฤษภาคม':5,'มิ.ย.':6,'มิถุนายน':6,'ก.ค.':7,'กรกฎาคม':7,'ส.ค.':8,'สิงหาคม':8,'ก.ย.':9,'กันยายน':9,'ต.ค.':10,'ตุลาคม':10,'พ.ย.':11,'พฤศจิกายน':11,'ธ.ค.':12,'ธันวาคม':12};
+ for(const [name,mo] of Object.entries(months)){const re=new RegExp('(\\d{1,2})\\s*'+name.replaceAll('.','\\.')+'\\s*(\\d{4})');const x=s.match(re);if(x){let y=+x[2];if(y>=2400)y-=543;if(y>=2000)return `${y}-${String(mo).padStart(2,'0')}-${String(+x[1]).padStart(2,'0')}`}}
+ return '';
+}
+function parseSlipAmount(text){
+ const lines=String(text||'').split(/\n/).map(x=>x.trim()).filter(Boolean);
+ const candidates=[];
+ for(const line of lines){
+  const prioritized=/(จำนวนเงิน|ยอดเงิน|amount|total|transfer amount|บาท|THB|฿)/i.test(line);
+  const matches=[...line.matchAll(/(?:฿\s*)?(\d{1,3}(?:,\d{3})+|\d{1,9})(?:\.(\d{2}))?(?:\s*(?:บาท|THB))?/gi)];
+  for(const m of matches){const whole=m[1].replace(/,/g,'');const val=Number(whole+(m[2]!==undefined?'.'+m[2]:''));if(Number.isFinite(val)&&val>0&&val<100000000)candidates.push({val,prioritized,decimal:m[2]!==undefined,raw:m[0]})}
+ }
+ const priority=candidates.filter(x=>x.prioritized);const pool=priority.length?priority:candidates.filter(x=>x.decimal);
+ if(!pool.length)return null;
+ // Prefer decimal-formatted values; on slips the transfer amount is usually the largest relevant currency value.
+ const decimals=pool.filter(x=>x.decimal);const usable=decimals.length?decimals:pool;
+ return usable.sort((a,b)=>b.val-a.val)[0].val;
+}
+function parseSlipTitle(text){
+ const lines=String(text||'').split(/\n/).map(x=>x.replace(/[|]/g,' ').trim()).filter(x=>x.length>2);
+ const patterns=[/(?:ผู้รับเงิน|ชื่อผู้รับ|ไปยัง|ถึง|ผู้โอน|จากบัญชี|recipient|to)\s*[:：]?\s*(.+)/i,/(?:ร้านค้า|merchant)\s*[:：]?\s*(.+)/i];
+ for(const re of patterns){for(const line of lines){const m=line.match(re);if(m){let value=m[1].replace(/\s{2,}/g,' ').trim();if(value.length>65)value=value.slice(0,65);if(value)return `โอนเงิน ${value}`}}}
+ return 'โอนเงินจากสลิป';
+}
+$('readSlip').addEventListener('click',async()=>{
+ if(!selectedSlipFile)return;
+ $('readSlip').disabled=true;$('slipProgressWrap').hidden=false;$('slipStatus').textContent='กำลังเริ่มระบบอ่านสลิป…';$('slipProgressBar').style.width='3%';
+ try{
+  const worker=await getSlipWorker();
+  const result=await worker.recognize(selectedSlipFile);const text=result?.data?.text||'';$('slipRaw').textContent=text||'ไม่พบข้อความในรูปนี้';
+  if(!text.trim())throw new Error('อ่านข้อความไม่สำเร็จ ลองใช้รูปที่คมชัดและไม่เอียงค่ะ');
+  const amount=parseSlipAmount(text),date=parseSlipDate(text);let filled=[];
+  if(amount!==null){$('amount').value=amount.toFixed(2);filled.push('ยอดเงิน')}
+  if(date){$('date').value=date;filled.push('วันที่')}
+  $('title').value=parseSlipTitle(text);filled.push('ชื่อรายการ');
+  const noteParts=[];if(selectedSlipFile.name)noteParts.push('สลิป: '+selectedSlipFile.name);$('note').value=noteParts.join(' · ').slice(0,160);
+  $('slipProgressBar').style.width='100%';$('slipStatus').textContent=filled.length?`อ่านเสร็จแล้ว เติมข้อมูล: ${filled.join(' / ')} — ตรวจสอบทุกช่องก่อนบันทึก`:'อ่านข้อความได้ แต่ไม่พบยอดเงินหรือวันที่ที่เชื่อถือได้ กรุณากรอกเอง';
+  if(amount===null)$('amount').focus();else if(!date)$('date').focus();
+ }catch(err){$('slipStatus').textContent=err.message||'อ่านสลิปไม่สำเร็จ กรุณาลองใหม่';}
+ finally{$('readSlip').disabled=false}
+});
+$('form').addEventListener('submit' ,e=>{e.preventDefault();const amount=Number($('amount').value),title=$('title').value.trim();if(!(amount>0)||!title)return;let account,to='';if(type==='Transfer'){account=$('transferFrom').value;to=$('transferTo').value;if(account===to){$('message').textContent='บัญชีต้นทางและปลายทางต้องต่างกัน';return}if(!account||!to){$('message').textContent='กรุณาตั้งค่าบัญชีให้ครบก่อน';return}}else account=$('account').value;const old=editingId===null?null:tx.find(t=>String(t.id)===String(editingId)),record={id:old?old.id:Date.now(),type,amount,date:$('date').value,title,note:$('note').value.trim(),category:type==='Transfer'?'โอนเงิน':$('category').value,account,to,createdAt:old?.createdAt||new Date().toISOString()};if(editingId!==null)tx=tx.map(t=>String(t.id)===String(editingId)?record:t);else tx.push(record);saveAll();resetForm();render();$('message').textContent='บันทึกเรียบร้อยแล้ว';navigate('home')});
 $('search').addEventListener('input',renderHistory);$('filter').addEventListener('change',renderHistory);$('historyMonth').addEventListener('change',renderHistory);$('clearFilters').addEventListener('click',()=>{$('search').value='';$('filter').value='All';$('historyMonth').value='';renderHistory()});$('reportMonth').addEventListener('change',renderReports);
 function renderSettings(){$('accountSettings').innerHTML=accounts.map((a,i)=>`<div class="settings-row"><div class="grow"><strong>${esc(a.name)}</strong><div class="small">ยอดตั้งต้น (บาท)</div></div><input type="number" step="0.01" data-opening="${i}" value="${Number(a.opening)||0}" aria-label="ยอดตั้งต้น ${esc(a.name)}"><button class="btn danger" data-remove-account="${i}" aria-label="ลบบัญชี">×</button></div>`).join('')||emptyHTML('ยังไม่มีบัญชี');renderCategorySettings()}
 function renderCategorySettings(){const t=$('categoryType').value;$('categorySettings').innerHTML=(cats[t]||[]).map((c,i)=>`<div class="settings-row"><div class="grow">${esc(c)}</div><button class="btn danger" data-remove-category="${i}">ลบ</button></div>`).join('')||emptyHTML('ยังไม่มีหมวดหมู่')}
