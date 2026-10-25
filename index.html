@@ -188,57 +188,65 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 @media(max-width:360px){.feature-grid{gap:7px}.feature-link{padding:11px}.feature-item{padding:11px}.feature-stats{gap:7px}}
 
 
-/* ===== Compact date/month controls: mobile overflow fix ===== */
+/* ===== History filter fields: consistent sizing and alignment ===== */
 #page-history .grid {
+  display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 8px;
+  gap: 10px;
+  align-items: end;
   min-width: 0;
 }
 #page-history .grid > div {
   min-width: 0;
-  max-width: 100%;
+  width: 100%;
 }
-#historyMonth,
-#historyFrom,
-#historyTo,
-#date,
-#reportMonth {
+#page-history .grid input,
+#page-history .grid select {
   display: block;
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  padding: 8px 5px;
+  min-height: 44px;
+  height: 44px;
+  padding: 10px 9px;
   font-size: 13px;
-  line-height: 1.35;
+  line-height: 1.3;
+  border-radius: 12px;
+}
+#page-history .grid label {
+  display: block;
+  margin-bottom: 7px;
+  line-height: 1.4;
+}
+/* Keep the month and date controls the same visual size as the Type selector. */
+#historyMonth,
+#historyFrom,
+#historyTo {
   font-variant-numeric: tabular-nums;
 }
-/* Keep report month compact instead of stretching across the card */
-#reportMonth {
-  width: min(100%, 230px);
-}
-/* iOS date/month inputs can have a wider intrinsic width than their grid cell */
-#page-history input[type="date"],
-#page-history input[type="month"],
-#page-record input[type="date"],
-#page-reports input[type="month"] {
-  min-width: 0;
+/* Other pages: prevent native date/month inputs from exceeding their container. */
+#page-record #date,
+#page-reports #reportMonth {
+  box-sizing: border-box;
   max-width: 100%;
+  min-width: 0;
+}
+#page-reports #reportMonth {
+  width: 100%;
 }
 @media (max-width: 420px) {
-  #page-history .grid { gap: 7px; }
-  #historyMonth,
-  #historyFrom,
-  #historyTo,
-  #date,
-  #reportMonth {
-    padding: 8px 4px;
-    font-size: 12px;
+  #page-history .grid { gap: 8px; }
+  #page-history .grid input,
+  #page-history .grid select {
+    padding: 10px 7px;
+    font-size: 13px;
   }
 }
 @media (max-width: 350px) {
-  /* History's two date-range fields stay side by side, but remain shrinkable */
   #page-history .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  #page-history .grid input,
+  #page-history .grid select { padding-left: 5px; padding-right: 5px; font-size: 12px; }
 }
 
 </style>
