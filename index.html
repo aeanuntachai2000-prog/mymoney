@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#111315">
 <link rel="icon" type="image/png" sizes="32x32" href="mymoney-favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="mymoney-icon.png">
@@ -15,6 +15,7 @@
   --field:#15181b;--shadow:0 12px 30px #00000026;
 }
 *{box-sizing:border-box}
+html,body{-webkit-text-size-adjust:100%;touch-action:pan-x pan-y}
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif}
 button,input,select{font:inherit}
@@ -183,6 +184,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 .status-paid{color:var(--green)}.status-due{color:#f3c969}
 .forecast-card{margin-top:12px}.forecast-card .feature-stat strong{font-size:clamp(14px,4vw,19px)}
 .warning-note{border:1px solid #6b5430;background:#2c261b;color:#f5d58d;border-radius:12px;padding:11px;font-size:12px;line-height:1.6}
+@media(max-width:680px){input,select,textarea{font-size:16px}}
 @media(max-width:360px){.feature-grid{gap:7px}.feature-link{padding:11px}.feature-item{padding:11px}.feature-stats{gap:7px}}
 
 </style>
@@ -323,7 +325,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   </section>
 
   <section class="page" id="page-planning">
-    <div class="section" style="margin-top:5px"><div><p class="eyebrow">PLAN & TRACK</p><h2>วางแผนการเงิน</h2></div></div>
+    <div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">PLAN & TRACK</p><h2>วางแผนการเงิน</h2></div><button class="btn secondary" type="button" data-go="home" aria-label="กลับไปหน้าก่อนหน้า">← ย้อนกลับ</button></div>
     <div class="card stack feature-card">
       <h3>งบประมาณรายเดือน</h3><p class="small">กำหนดงบตามหมวดหมู่ รายการรายจ่ายที่บันทึกแล้วจะถูกนำมาคำนวณอัตโนมัติ</p>
       <div><label for="budgetMonth">เดือนที่ต้องการวางแผน</label><input type="month" id="budgetMonth"></div>
@@ -362,7 +364,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
     <div class="card stack"><p class="small">แนะนำให้สำรองข้อมูลก่อนแก้ไขแอปหรือเปลี่ยนอุปกรณ์</p><button class="btn secondary" id="exportJson">ดาวน์โหลดข้อมูลสำรอง JSON</button><button class="btn secondary" id="exportCsv">ส่งออกรายการ CSV</button><button class="btn secondary" id="restoreAutoBackup">กู้คืนข้อมูลสำรองอัตโนมัติ</button><p class="small">ระบบเก็บข้อมูลชุดก่อนหน้าล่าสุดไว้ในเบราว์เซอร์นี้เพื่อช่วยกู้คืนเมื่อเกิดข้อผิดพลาด</p><label for="importFile">นำเข้าข้อมูลสำรอง JSON</label><input id="importFile" type="file" accept=".json,application/json"><p class="small">การนำเข้า JSON จะแทนที่รายการและการตั้งค่าปัจจุบัน ควรส่งออกข้อมูลเดิมเก็บไว้ก่อน</p><p class="message" id="backupMessage"></p></div>
     <div class="notice" style="margin-top:14px">ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ</div>
   </section>
-  <footer>MyMoney · Personal Finance · v4 Planning</footer>
+  <footer>MyMoney · Personal Finance · v10 Mobile UX</footer>
 </div>
 
 <nav class="bottom-nav" aria-label="เมนูหลัก">
@@ -371,6 +373,11 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 
 <script>
 'use strict';
+// Keep the app viewport stable on iOS Safari. Input controls are also 16px on mobile
+// to avoid Safari automatically zooming in when a field receives focus.
+['gesturestart','gesturechange','gestureend'].forEach(type => {
+  document.addEventListener(type, event => event.preventDefault(), {passive:false});
+});
 const $ = id => document.getElementById(id);
 const TX_KEY='mymoney_transactions_v1', ACC_KEY='mymoney_accounts_v1', CAT_KEY='mymoney_categories_v1';
 const BUDGET_KEY='mymoney_budgets_v1', BILL_KEY='mymoney_recurring_bills_v1', DEBT_KEY='mymoney_debts_v1', GOAL_KEY='mymoney_saving_goals_v1';
