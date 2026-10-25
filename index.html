@@ -255,7 +255,8 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 }
 #page-record #date,
 #page-reports #reportMonth {
-  inline-size: 100%;
+  width: min(100%, 320px) !important;
+  max-width: 100% !important;
   overflow: hidden;
 }
 /* Put Date and Note on their own full-width rows so Date matches Title width. */
@@ -277,10 +278,15 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   #page-history #historyTo { padding-left: 7px; padding-right: 7px; font-size: 13px; }
 }
 /* Final sizing guard for narrow mobile screens. */
-#page-record #title,
+#page-record #title {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
 #page-record #date,
 #page-reports #reportMonth {
-  width: 100% !important;
+  width: min(100%, 320px) !important;
   max-width: 100% !important;
   min-width: 0 !important;
   box-sizing: border-box !important;
