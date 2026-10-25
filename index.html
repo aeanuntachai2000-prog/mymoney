@@ -187,6 +187,22 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 @media(max-width:680px){input,select,textarea{font-size:16px}}
 @media(max-width:360px){.feature-grid{gap:7px}.feature-link{padding:11px}.feature-item{padding:11px}.feature-stats{gap:7px}}
 
+/* Compact date/month controls on mobile without changing other form fields */
+#historyMonth,#historyFrom,#historyTo,#reportMonth,#date{
+  width:100%;min-width:0;max-width:100%;
+  padding:9px 7px;font-size:13px;line-height:1.25;
+}
+#page-history .grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+#page-history .grid>div{min-width:0;overflow:hidden}
+#page-history input[type="month"],#page-history input[type="date"]{-webkit-appearance:none;appearance:none}
+#page-record #date{font-size:14px;padding:9px 7px}
+#page-reports #reportMonth{max-width:220px}
+@media(max-width:420px){
+  #historyMonth,#historyFrom,#historyTo{font-size:12px;padding:8px 5px;letter-spacing:-.2px}
+  #page-record #date{font-size:13px;padding:8px 5px}
+  #page-reports #reportMonth{max-width:190px;font-size:13px;padding:9px 7px}
+}
+
 </style>
 </head>
 <body>
