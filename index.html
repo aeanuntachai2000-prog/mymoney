@@ -188,7 +188,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 @media(max-width:360px){.feature-grid{gap:7px}.feature-link{padding:11px}.feature-item{padding:11px}.feature-stats{gap:7px}}
 
 
-/* ===== History filter fields: consistent sizing and alignment ===== */
+/* ===== History filter fields: exact matching control dimensions ===== */
 #page-history .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -200,55 +200,55 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   min-width: 0;
   width: 100%;
 }
-#page-history .grid input,
-#page-history .grid select {
+/* Make the Type selector and all date/month fields use the same box model. */
+#page-history #filter,
+#page-history #historyMonth,
+#page-history #historyFrom,
+#page-history #historyTo {
   display: block;
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  min-height: 44px;
   height: 44px;
-  padding: 10px 9px;
-  font-size: 13px;
-  line-height: 1.3;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 9px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: normal;
+  border: 1px solid #3a4149;
   border-radius: 12px;
+  font-variant-numeric: tabular-nums;
+}
+/* Prevent iOS native date/month controls from forcing a wider field. */
+#page-history input[type="date"],
+#page-history input[type="month"] {
+  -webkit-appearance: none;
+  appearance: none;
+  overflow: hidden;
+  white-space: nowrap;
 }
 #page-history .grid label {
   display: block;
-  margin-bottom: 7px;
+  margin: 4px 0 6px;
   line-height: 1.4;
 }
-/* Keep the month and date controls the same visual size as the Type selector. */
-#historyMonth,
-#historyFrom,
-#historyTo {
-  font-variant-numeric: tabular-nums;
-}
-/* Other pages: prevent native date/month inputs from exceeding their container. */
+/* Keep the other pages responsive without squeezing their fields. */
 #page-record #date,
 #page-reports #reportMonth {
   box-sizing: border-box;
-  max-width: 100%;
   min-width: 0;
+  max-width: 100%;
 }
-#page-reports #reportMonth {
-  width: 100%;
-}
+#page-reports #reportMonth { width: 100%; }
 @media (max-width: 420px) {
   #page-history .grid { gap: 8px; }
-  #page-history .grid input,
-  #page-history .grid select {
-    padding: 10px 7px;
-    font-size: 13px;
-  }
+  #page-history #filter,
+  #page-history #historyMonth,
+  #page-history #historyFrom,
+  #page-history #historyTo { padding-left: 7px; padding-right: 7px; font-size: 13px; }
 }
-@media (max-width: 350px) {
-  #page-history .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  #page-history .grid input,
-  #page-history .grid select { padding-left: 5px; padding-right: 5px; font-size: 12px; }
-}
-
 </style>
 </head>
 <body>
