@@ -317,10 +317,14 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   align-items: center;
   justify-content: center;
   gap: 18px;
-  background: #101312;
+  background: #000000;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  pointer-events: auto;
+  /* Fade opacity first; hide visibility only after the fade to avoid a flash. */
+  transition: opacity 0.28s ease, visibility 0s linear 0.28s;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 #mymoney-splash.hide {
@@ -329,55 +333,82 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   pointer-events: none;
 }
 
+#mymoney-splash .splash-mark {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
 #mymoney-splash .splash-logo {
+  display: block;
   width: 112px;
   height: 112px;
   object-fit: contain;
   border-radius: 25px;
-  animation: mymoney-logo-in 0.65s ease both;
-}
-
-#mymoney-splash .splash-name {
-  color: #ffffff;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin: 0;
-}
-
-#mymoney-splash .splash-caption {
-  color: #8f9b95;
-  font-size: 13px;
-  margin: 0;
-}
-
-@keyframes mymoney-logo-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.88);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  /* Keep the base logo still; only the small orbit highlight moves. */
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #mymoney-splash,
-  #mymoney-splash .splash-logo {
-    animation: none;
-    transition: none;
-  }
+  #mymoney-splash .splash-name { animation: none; }
 }
+
+#mymoney-splash .splash-name {
+  color: #f4fff9;
+  background: linear-gradient(100deg, #ffffff 0%, #c7ffe4 28%, #68e0ad 58%, #d7fff0 78%, #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  margin: 0;
+  line-height: 1.2;
+  text-shadow: 0 0 26px rgba(87, 224, 165, 0.12);
+  filter: drop-shadow(0 2px 12px rgba(77, 220, 157, 0.14));
+  background-size: 220% 100%;
+  animation: mymoney-text-glide 4.8s ease-in-out infinite;
+}
+
+@keyframes mymoney-text-glide {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+#mymoney-splash .splash-caption {
+  color: #b8c9c0;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  margin: 0;
+  text-shadow: 0 0 14px rgba(107, 226, 172, 0.12);
+}
+
+#mymoney-splash #splashEnter {
+  color: #07140e;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+  border: 1px solid rgba(191, 255, 224, 0.52);
+  background: linear-gradient(115deg, #c6ffe2 0%, #63dba5 45%, #a2f5ce 100%);
+  box-shadow: 0 8px 28px rgba(75, 220, 156, 0.22), inset 0 1px 0 rgba(255,255,255,.55);
+  transition: filter .18s ease, box-shadow .18s ease;
+}
+
+#mymoney-splash #splashEnter:active {
+  filter: brightness(.94);
+  box-shadow: 0 4px 16px rgba(75, 220, 156, 0.18), inset 0 1px 0 rgba(255,255,255,.4);
+}
+
 </style>
 </head>
 <body>
 <div id="mymoney-splash" aria-label="กำลังเปิด MyMoney">
-  <img
-    class="splash-logo"
-    src="mymoney-icon-512.png"
-    alt="MyMoney"
-  >
+  <div class="splash-mark" aria-label="MyMoney logo">
+    <img class="splash-logo" src="mymoney-icon-512.png" alt="MyMoney logo">
+  </div>
   <p class="splash-name">MyMoney</p>
   <p class="splash-caption">จัดการเงินของคุณให้ง่ายขึ้น</p>
   <button type="button" id="splashEnter" class="btn primary" style="margin-top:8px;min-width:160px">เข้าสู่แอพ</button>
@@ -867,8 +898,9 @@ __i18nObserver.observe(document.body,{childList:true,subtree:true,characterData:
   const enterBtn = document.getElementById("splashEnter");
   if (enterBtn) enterBtn.addEventListener("click", hideSplash);
 
-  // เข้าสู่แอพอัตโนมัติหลัง 1.5 วินาที
-  window.setTimeout(hideSplash, 2000);
+  // เข้าสู่แอพอัตโนมัติหลัง 2 วินาที โดยใช้ transition ชุดเดียว
+  const autoEnterTimer = window.setTimeout(hideSplash, 2000);
+  if (enterBtn) enterBtn.addEventListener("click", () => window.clearTimeout(autoEnterTimer), { once: true });
 
   // สำรอง: ถ้าค้าง ให้ลบออกใน 4 วินาที
   window.setTimeout(() => {
