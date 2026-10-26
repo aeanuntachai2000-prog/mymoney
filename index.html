@@ -196,6 +196,35 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 @media(max-width:360px){.feature-grid{gap:7px}.feature-link{padding:11px}.feature-item{padding:11px}.feature-stats{gap:7px}}
 
 
+
+
+/* Collapsible settings sections */
+.settings-collapse-card{padding:0;overflow:hidden;margin-bottom:12px}
+.settings-collapse-toggle{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:0;background:transparent;color:var(--ink);padding:14px;min-width:0}
+.settings-collapse-symbol{width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#2b3036;font-size:21px;color:#e1e5e9}
+.settings-collapse-copy{flex:1;min-width:0}
+.settings-collapse-copy strong{display:block;font-size:14px}
+.settings-collapse-copy small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:4px}
+.settings-collapse-arrow{color:var(--muted);font-size:19px;transition:transform .18s}
+.settings-collapse-toggle[aria-expanded="true"] .settings-collapse-arrow{transform:rotate(180deg)}
+.settings-collapse-panel{padding:0 14px 14px}
+
+/* Collapsible history filters and transaction display limit */
+.history-filter-card{padding:0;overflow:hidden}
+.history-filter-toggle{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:0;background:transparent;color:var(--ink);padding:14px;min-width:0}
+.history-filter-symbol{width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#2b3036;font-size:21px;color:#e1e5e9}
+.history-filter-copy{flex:1;min-width:0}
+.history-filter-copy strong{display:block;font-size:14px}
+.history-filter-copy small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:4px}
+.history-filter-arrow{color:var(--muted);font-size:19px;transition:transform .18s}
+.history-filter-toggle[aria-expanded="true"] .history-filter-arrow{transform:rotate(180deg)}
+.history-filter-panel{padding:0 14px 14px}
+.history-list-heading{align-items:center;flex-wrap:wrap}
+.history-list-heading h3{flex:1;min-width:0;line-height:1.5}
+.history-limit-control{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.history-limit-control label{margin:0;white-space:nowrap}
+.history-limit-control select{width:auto;max-width:145px;padding:8px 9px;font-size:12px}
+
 /* ===== History filter fields: exact matching control dimensions ===== */
 #page-history .grid {
   display: grid;
@@ -415,25 +444,33 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 
   <section class="page" id="page-history">
     <div class="section" style="margin-top:5px"><div><p class="eyebrow">TRANSACTIONS</p><h2>ประวัติรายการ</h2></div><button class="btn primary" data-go="record">＋ เพิ่ม</button></div>
-    <div class="card stack">
-      <div><label for="search">ค้นหาชื่อรายการ / หมายเหตุ</label><input id="search" placeholder="พิมพ์คำค้นหา"></div>
-      <div class="grid">
-        <div><label for="filter">ประเภท</label><select id="filter"><option value="All">ทั้งหมด</option><option value="Income">รายรับ</option><option value="Expense">รายจ่าย</option><option value="Transfer">โอนเงิน</option></select></div>
-        <div><label for="historyMonth">เดือน</label><input type="month" id="historyMonth"></div>
+    <section class="card history-filter-card">
+      <button class="history-filter-toggle" type="button" id="historyFilterToggle" aria-expanded="false" aria-controls="historyFilterPanel">
+        <span class="history-filter-symbol">☷</span>
+        <span class="history-filter-copy"><strong>ตัวกรองและค้นหา</strong><small>ค้นหาชื่อรายการ ประเภท และช่วงวันที่</small></span>
+        <span class="history-filter-arrow" aria-hidden="true">⌄</span>
+      </button>
+      <div id="historyFilterPanel" class="stack history-filter-panel" hidden>
+        <div><label for="search">ค้นหาชื่อรายการ / หมายเหตุ</label><input id="search" placeholder="พิมพ์คำค้นหา"></div>
+        <div class="grid">
+          <div><label for="filter">ประเภท</label><select id="filter"><option value="All">ทั้งหมด</option><option value="Income">รายรับ</option><option value="Expense">รายจ่าย</option><option value="Transfer">โอนเงิน</option></select></div>
+          <div><label for="historyMonth">เดือน</label><input type="month" id="historyMonth"></div>
+        </div>
+        <div class="grid">
+          <div><label for="historyFrom">ตั้งแต่วันที่</label><input type="date" id="historyFrom"></div>
+          <div><label for="historyTo">ถึงวันที่</label><input type="date" id="historyTo"></div>
+        </div>
+        <div class="row" style="flex-wrap:wrap;gap:7px">
+          <button class="btn secondary" type="button" data-date-range="today">วันนี้</button>
+          <button class="btn secondary" type="button" data-date-range="7days">7 วันล่าสุด</button>
+          <button class="btn secondary" type="button" data-date-range="month">เดือนนี้</button>
+          <button class="btn secondary" type="button" data-date-range="lastmonth">เดือนก่อน</button>
+        </div>
+        <button class="btn secondary" id="clearFilters">ล้างตัวกรอง</button>
       </div>
-      <div class="grid">
-        <div><label for="historyFrom">ตั้งแต่วันที่</label><input type="date" id="historyFrom"></div>
-        <div><label for="historyTo">ถึงวันที่</label><input type="date" id="historyTo"></div>
-      </div>
-      <div class="row" style="flex-wrap:wrap;gap:7px">
-        <button class="btn secondary" type="button" data-date-range="today">วันนี้</button>
-        <button class="btn secondary" type="button" data-date-range="7days">7 วันล่าสุด</button>
-        <button class="btn secondary" type="button" data-date-range="month">เดือนนี้</button>
-        <button class="btn secondary" type="button" data-date-range="lastmonth">เดือนก่อน</button>
-      </div>
-      <button class="btn secondary" id="clearFilters">ล้างตัวกรอง</button>
-    </div>
-    <div class="section"><h3 id="historyCount">รายการทั้งหมด</h3></div><div class="list" id="historyList"></div>
+    </section>
+    <div class="section history-list-heading"><h3 id="historyCount">รายการทั้งหมด</h3><div class="history-limit-control"><label for="historyLimit">แสดง</label><select id="historyLimit" aria-label="จำนวนรายการที่แสดง"><option value="5" selected>5 รายการ</option><option value="10">10 รายการ</option><option value="20">20 รายการ</option><option value="50">50 รายการ</option><option value="all">ทั้งหมด</option></select></div></div>
+    <div class="list" id="historyList"></div>
   </section>
 
   <section class="page" id="page-record">
@@ -521,13 +558,23 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 
   <section class="page" id="page-settings">
     <div class="section" style="margin-top:5px"><div><p class="eyebrow">SETTINGS</p><h2>ตั้งค่า</h2></div></div>
-    <div class="section"><h2>บัญชีและยอดตั้งต้น</h2></div>
-    <div class="card stack"><p class="small">ยอดตั้งต้นคือเงินที่มีอยู่ก่อนเริ่มบันทึกรายการ ยอดคงเหลือจะแสดงจากยอดตั้งต้นรวมกับรายการภายหลัง</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount">＋ เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div>
-    <div class="section"><h2>หมวดหมู่รายการ</h2></div>
-    <div class="card stack"><div><label for="categoryType">ประเภทหมวดหมู่</label><select id="categoryType"><option value="Expense">รายจ่าย</option><option value="Income">รายรับ</option></select></div><div id="categorySettings"></div><button class="btn secondary" id="addCategory">＋ เพิ่มหมวดหมู่</button><button class="btn primary" id="saveCategories">บันทึกหมวดหมู่</button><p class="message" id="categoryMessage"></p></div>
-    <div class="section"><h2>สำรองและกู้คืนข้อมูล</h2></div>
-    <div class="card stack"><p class="small">แนะนำให้สำรองข้อมูลก่อนแก้ไขแอปหรือเปลี่ยนอุปกรณ์</p><button class="btn secondary" id="exportJson">ดาวน์โหลดข้อมูลสำรอง JSON</button><button class="btn secondary" id="exportCsv">ส่งออกรายการ CSV</button><button class="btn secondary" id="restoreAutoBackup">กู้คืนข้อมูลสำรองอัตโนมัติ</button><p class="small">ระบบเก็บข้อมูลชุดก่อนหน้าล่าสุดไว้ในเบราว์เซอร์นี้เพื่อช่วยกู้คืนเมื่อเกิดข้อผิดพลาด</p><label for="importFile">นำเข้าข้อมูลสำรอง JSON</label><input id="importFile" type="file" accept=".json,application/json"><p class="small">การนำเข้า JSON จะแทนที่รายการและการตั้งค่าปัจจุบัน ควรส่งออกข้อมูลเดิมเก็บไว้ก่อน</p><p class="message" id="backupMessage"></p></div>
-    <div class="section"><h2>Language / ภาษา</h2></div><div class="card stack"><div class="settings-row"><div class="grow"><strong>Language</strong><div class="small">Thai / English</div></div><button class="btn secondary" id="langTh">ไทย</button><button class="btn secondary" id="langEn">English</button></div><p class="small">เปลี่ยนภาษาของแอพทั้งหมด</p></div><div class="notice" style="margin-top:14px">ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ</div>
+    <div class="card settings-collapse-card">
+      <button class="settings-collapse-toggle" type="button" id="accountsSettingsToggle" aria-expanded="false" aria-controls="accountsSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▤</span><span class="settings-collapse-copy"><strong>บัญชีและยอดตั้งต้น</strong><small>จัดการบัญชีและเงินตั้งต้นของแต่ละบัญชี</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <div class="settings-collapse-panel" id="accountsSettingsPanel" hidden><div class="stack"><p class="small">ยอดตั้งต้นคือเงินที่มีอยู่ก่อนเริ่มบันทึกรายการ ยอดคงเหลือจะแสดงจากยอดตั้งต้นรวมกับรายการภายหลัง</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount">＋ เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div></div>
+    </div>
+    <div class="card settings-collapse-card">
+      <button class="settings-collapse-toggle" type="button" id="categoriesSettingsToggle" aria-expanded="false" aria-controls="categoriesSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▦</span><span class="settings-collapse-copy"><strong>หมวดหมู่และรายการ</strong><small>จัดการหมวดหมู่รายรับและรายจ่าย</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <div class="settings-collapse-panel" id="categoriesSettingsPanel" hidden><div class="stack"><div><label for="categoryType">ประเภทหมวดหมู่</label><select id="categoryType"><option value="Expense">รายจ่าย</option><option value="Income">รายรับ</option></select></div><div id="categorySettings"></div><button class="btn secondary" id="addCategory">＋ เพิ่มหมวดหมู่</button><button class="btn primary" id="saveCategories">บันทึกหมวดหมู่</button><p class="message" id="categoryMessage"></p></div></div>
+    </div>
+    <div class="card settings-collapse-card">
+      <button class="settings-collapse-toggle" type="button" id="languageSettingsToggle" aria-expanded="false" aria-controls="languageSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">文</span><span class="settings-collapse-copy"><strong>ภาษา / Language</strong><small>เลือกภาษาไทยหรือภาษาอังกฤษ</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <div class="settings-collapse-panel" id="languageSettingsPanel" hidden><div class="stack"><div class="settings-row"><div class="grow"><strong>Language</strong><div class="small">Thai / English</div></div><button class="btn secondary" id="langTh">ไทย</button><button class="btn secondary" id="langEn">English</button></div><p class="small">เปลี่ยนภาษาของแอพทั้งหมด</p></div></div>
+    </div>
+    <div class="card settings-collapse-card">
+      <button class="settings-collapse-toggle" type="button" id="backupSettingsToggle" aria-expanded="false" aria-controls="backupSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">⇧</span><span class="settings-collapse-copy"><strong>สำรองและกู้คืนข้อมูล</strong><small>ส่งออกข้อมูลสำรอง หรือนำเข้าข้อมูลที่เคยบันทึกไว้</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <div class="settings-collapse-panel" id="backupSettingsPanel" hidden><div class="stack"><p class="small">แนะนำให้สำรองข้อมูลก่อนแก้ไขแอปหรือเปลี่ยนอุปกรณ์</p><button class="btn secondary" id="exportJson">ดาวน์โหลดข้อมูลสำรอง JSON</button><button class="btn secondary" id="exportCsv">ส่งออกรายการ CSV</button><button class="btn secondary" id="restoreAutoBackup">กู้คืนข้อมูลสำรองอัตโนมัติ</button><p class="small">ระบบเก็บข้อมูลชุดก่อนหน้าล่าสุดไว้ในเบราว์เซอร์นี้เพื่อช่วยกู้คืนเมื่อเกิดข้อผิดพลาด</p><label for="importFile">นำเข้าข้อมูลสำรอง JSON</label><input id="importFile" type="file" accept=".json,application/json"><p class="small">การนำเข้า JSON จะแทนที่รายการและการตั้งค่าปัจจุบัน ควรส่งออกข้อมูลเดิมเก็บไว้ก่อน</p><p class="message" id="backupMessage"></p></div></div>
+    </div>
+    <div class="notice" style="margin-top:14px">ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ</div>
   </section>
   <footer>MyMoney · Personal Finance · v10 Mobile UX</footer>
 </div>
@@ -625,7 +672,7 @@ $('dailyChartTo').addEventListener('change',()=>{document.querySelectorAll('.dai
 document.querySelectorAll('.daily-chart-preset').forEach(button=>button.addEventListener('click',()=>setDailyChartRange(button.dataset.range)));
 function renderFinancialHealth(){const month=currentMonth(),totals=monthlyTotals(month),balances=accountBalances(),cash=Object.values(balances).reduce((s,n)=>s+n,0),debt=debts.reduce((s,d)=>s+(Number(d.balance)||0),0),now=new Date(),daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),elapsed=Math.max(1,now.getDate()),remaining=Math.max(0,daysInMonth-now.getDate()),predictedRemainingNet=((totals.income-totals.expense)/elapsed)*remaining,forecast=cash+predictedRemainingNet;$('forecastMonth').textContent=monthLabel(month);$('netWorthValue').textContent=money(cash-debt);$('netWorthValue').style.color=cash-debt<0?'var(--red)':'var(--green)';$('forecastBalance').textContent=money(forecast);$('forecastBalance').style.color=forecast<0?'var(--red)':'var(--green)';$('forecastNote').textContent=`ประมาณจากข้อมูล ${now.getDate()} วันแรก และคาดการณ์อีก ${remaining} วัน โดยสมมติว่าอัตรารายรับ/รายจ่ายใกล้เคียงเดิม ไม่รวมบิลอนาคตที่ยังไม่บันทึกเป็นรายการ`}
 function renderHome(){const totals=monthlyTotals(currentMonth()),balances=accountBalances();const totalBalance=Object.values(balances).reduce((s,n)=>s+n,0);$('balance').textContent=money(totalBalance);$('balance').style.color=totalBalance>0?'var(--green)':totalBalance<0?'var(--red)':'';$('income').textContent=money(totals.income);$('expense').textContent=money(totals.expense);$('homeAccounts').innerHTML=accounts.length?accounts.map(a=>`<div class="summaryline"><span>${esc(a.name)}</span><strong>${money(balances[a.name]||0)}</strong></div>`).join(''):emptyHTML('ยังไม่มีบัญชี');const recent=sortedTx().slice(0,5);$('recentList').innerHTML=recent.length?recent.map(transactionHTML).join(''):emptyHTML('ยังไม่มีรายการ เริ่มบันทึกรายการแรกได้เลยค่ะ');renderFinancialHealth();renderDailyChart();renderHomePlan()}
-function renderHistory(){const q=$('search').value.trim().toLowerCase(),f=$('filter').value,month=$('historyMonth').value,from=$('historyFrom').value,to=$('historyTo').value;const arr=sortedTx().filter(t=>{const d=String(t.date||'');return(f==='All'||t.type===f)&&(!month||d.startsWith(month))&&(!from||d>=from)&&(!to||d<=to)&&(!q||[t.title,t.note,t.category,t.account,t.to].some(v=>String(v||'').toLowerCase().includes(q)))});const total=arr.filter(t=>t.type==='Expense').reduce((sum,t)=>sum+(Number(t.amount)||0),0);$('historyCount').textContent=`พบ ${arr.length} รายการ · รายจ่ายรวม ${money(total)}`;$('historyList').innerHTML=arr.length?arr.map(transactionHTML).join(''):emptyHTML('ไม่พบรายการที่ตรงกับเงื่อนไข')}
+function renderHistory(){const q=$('search').value.trim().toLowerCase(),f=$('filter').value,month=$('historyMonth').value,from=$('historyFrom').value,to=$('historyTo').value;const arr=sortedTx().filter(t=>{const d=String(t.date||'');return(f==='All'||t.type===f)&&(!month||d.startsWith(month))&&(!from||d>=from)&&(!to||d<=to)&&(!q||[t.title,t.note,t.category,t.account,t.to].some(v=>String(v||'').toLowerCase().includes(q)))});const total=arr.filter(t=>t.type==='Expense').reduce((sum,t)=>sum+(Number(t.amount)||0),0);const limit=$('historyLimit')?.value||'5',shown=limit==='all'?arr:arr.slice(0,Number(limit));$('historyCount').textContent=`พบ ${arr.length} รายการ · แสดง ${shown.length} · รายจ่ายรวม ${money(total)}`;$('historyList').innerHTML=shown.length?shown.map(transactionHTML).join(''):emptyHTML('ไม่พบรายการที่ตรงกับเงื่อนไข')}
 function groupByCategory(arr,typeName){const groups={};arr.filter(t=>t.type===typeName).forEach(t=>{const c=t.category||'ไม่ระบุหมวดหมู่';groups[c]=(groups[c]||0)+(Number(t.amount)||0)});const entries=Object.entries(groups).sort((a,b)=>b[1]-a[1]),max=Math.max(1,...entries.map(e=>e[1]));return entries.length?entries.map(([name,value])=>`<div style="padding:10px 0"><div class="summaryline" style="padding:0;border:0"><span>${esc(name)}</span><strong>${money(value)}</strong></div><div class="progress"><span style="width:${Math.max(0,Math.min(100,value/max*100))}%"></span></div></div>`).join(''):emptyHTML('ยังไม่มีข้อมูลในเดือนนี้')}
 function shiftMonth(month,delta){const [y,m]=month.split('-').map(Number),d=new Date(y,m-1+delta,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
 function monthLabel(month){const [y,m]=month.split('-').map(Number);return `${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m-1]} ${String(y+543).slice(-2)}`}
@@ -736,7 +783,8 @@ $('readSlip').addEventListener('click',async()=>{
  finally{$('readSlip').disabled=false}
 });
 $('form').addEventListener('submit' ,e=>{e.preventDefault();const amount=Number($('amount').value),title=$('title').value.trim();if(!(amount>0)||!title)return;let account,to='';if(type==='Transfer'){account=$('transferFrom').value;to=$('transferTo').value;if(account===to){$('message').textContent='บัญชีต้นทางและปลายทางต้องต่างกัน';return}if(!account||!to){$('message').textContent='กรุณาตั้งค่าบัญชีให้ครบก่อน';return}}else account=$('account').value;const old=editingId===null?null:tx.find(t=>String(t.id)===String(editingId)),record={id:old?old.id:Date.now(),type,amount,date:$('date').value,title,note:$('note').value.trim(),category:type==='Transfer'?'โอนเงิน':$('category').value,account,to,createdAt:old?.createdAt||new Date().toISOString()};if(editingId!==null)tx=tx.map(t=>String(t.id)===String(editingId)?record:t);else tx.push(record);saveAll();resetForm();render();$('message').textContent='บันทึกเรียบร้อยแล้ว';navigate('home')});
-$('search').addEventListener('input',renderHistory);$('filter').addEventListener('change',renderHistory);$('historyMonth').addEventListener('change',()=>{if($('historyMonth').value){$('historyFrom').value='';$('historyTo').value=''}renderHistory()});$('historyFrom').addEventListener('change',()=>{if($('historyFrom').value)$('historyMonth').value='';renderHistory()});$('historyTo').addEventListener('change',()=>{if($('historyTo').value)$('historyMonth').value='';renderHistory()});document.querySelectorAll('[data-date-range]').forEach(btn=>btn.addEventListener('click',()=>{const now=new Date(),fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let from,to=fmt(now);if(btn.dataset.dateRange==='today')from=to;else if(btn.dataset.dateRange==='7days'){const d=new Date(now);d.setDate(d.getDate()-6);from=fmt(d)}else if(btn.dataset.dateRange==='month')from=fmt(new Date(now.getFullYear(),now.getMonth(),1));else{from=fmt(new Date(now.getFullYear(),now.getMonth()-1,1));to=fmt(new Date(now.getFullYear(),now.getMonth(),0))}$('historyMonth').value='';$('historyFrom').value=from;$('historyTo').value=to;$('filter').value='Expense';renderHistory()}));$('clearFilters').addEventListener('click',()=>{$('search').value='';$('filter').value='All';$('historyMonth').value='';$('historyFrom').value='';$('historyTo').value='';renderHistory()});$('reportMonth').addEventListener('change',renderReports);
+$('accountsSettingsToggle').addEventListener('click',()=>{const expanded=$('accountsSettingsToggle').getAttribute('aria-expanded')==='true';$('accountsSettingsToggle').setAttribute('aria-expanded',String(!expanded));$('accountsSettingsPanel').hidden=expanded;});$('categoriesSettingsToggle').addEventListener('click',()=>{const expanded=$('categoriesSettingsToggle').getAttribute('aria-expanded')==='true';$('categoriesSettingsToggle').setAttribute('aria-expanded',String(!expanded));$('categoriesSettingsPanel').hidden=expanded;});['backup','language'].forEach(name=>{const toggle=$(name+'SettingsToggle'),panel=$(name+'SettingsPanel');toggle.addEventListener('click',()=>{const expanded=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!expanded));panel.hidden=expanded;});});
+$('historyFilterToggle').addEventListener('click',()=>{const expanded=$('historyFilterToggle').getAttribute('aria-expanded')==='true';$('historyFilterToggle').setAttribute('aria-expanded',String(!expanded));$('historyFilterPanel').hidden=expanded;});$('historyLimit').addEventListener('change',renderHistory);$('search').addEventListener('input',renderHistory);$('filter').addEventListener('change',renderHistory);$('historyMonth').addEventListener('change',()=>{if($('historyMonth').value){$('historyFrom').value='';$('historyTo').value=''}renderHistory()});$('historyFrom').addEventListener('change',()=>{if($('historyFrom').value)$('historyMonth').value='';renderHistory()});$('historyTo').addEventListener('change',()=>{if($('historyTo').value)$('historyMonth').value='';renderHistory()});document.querySelectorAll('[data-date-range]').forEach(btn=>btn.addEventListener('click',()=>{const now=new Date(),fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let from,to=fmt(now);if(btn.dataset.dateRange==='today')from=to;else if(btn.dataset.dateRange==='7days'){const d=new Date(now);d.setDate(d.getDate()-6);from=fmt(d)}else if(btn.dataset.dateRange==='month')from=fmt(new Date(now.getFullYear(),now.getMonth(),1));else{from=fmt(new Date(now.getFullYear(),now.getMonth()-1,1));to=fmt(new Date(now.getFullYear(),now.getMonth(),0))}$('historyMonth').value='';$('historyFrom').value=from;$('historyTo').value=to;$('filter').value='Expense';renderHistory()}));$('clearFilters').addEventListener('click',()=>{$('search').value='';$('filter').value='All';$('historyMonth').value='';$('historyFrom').value='';$('historyTo').value='';renderHistory()});$('reportMonth').addEventListener('change',renderReports);
 function renderSettings(){$('accountSettings').innerHTML=accounts.map((a,i)=>`<div class="settings-row"><div class="grow"><strong>${esc(a.name)}</strong><div class="small">ยอดตั้งต้น (บาท)</div></div><input type="number" step="0.01" data-opening="${i}" value="${Number(a.opening)||0}" aria-label="ยอดตั้งต้น ${esc(a.name)}"><button class="btn secondary" data-edit-account="${i}" aria-label="แก้ไขบัญชี">แก้ไข</button><button class="btn danger" data-remove-account="${i}" aria-label="ลบบัญชี">ลบ</button></div>`).join('')||emptyHTML('ยังไม่มีบัญชี');renderCategorySettings()}
 function renderCategorySettings(){const t=$('categoryType').value;$('categorySettings').innerHTML=(cats[t]||[]).map((c,i)=>`<div class="settings-row"><div class="grow">${esc(c)}</div><button class="btn secondary" data-edit-category="${i}" aria-label="แก้ไขหมวดหมู่">แก้ไข</button><button class="btn danger" data-remove-category="${i}">ลบ</button></div>`).join('')||emptyHTML('ยังไม่มีหมวดหมู่')}
 $('addAccount').addEventListener('click',()=>{const name=prompt('ชื่อบัญชีใหม่ เช่น บัญชีออมทรัพย์');if(name===null)return;const clean=name.trim();if(!clean)return;if(accounts.some(a=>a.name.toLowerCase()===clean.toLowerCase())){alert('มีบัญชีชื่อนี้แล้วค่ะ');return}accounts.push({name:clean,opening:0});saveAll();renderSettings();setType(type);render()});
