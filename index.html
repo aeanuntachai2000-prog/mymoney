@@ -270,9 +270,82 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   #page-history #historyFrom,
   #page-history #historyTo { padding-left: 7px; padding-right: 7px; font-size: 13px; }
 }
+
+/* MyMoney Splash Screen */
+#mymoney-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #101312;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+#mymoney-splash.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#mymoney-splash .splash-logo {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  border-radius: 25px;
+  animation: mymoney-logo-in 0.65s ease both;
+}
+
+#mymoney-splash .splash-name {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+#mymoney-splash .splash-caption {
+  color: #8f9b95;
+  font-size: 13px;
+  margin: 0;
+}
+
+@keyframes mymoney-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #mymoney-splash,
+  #mymoney-splash .splash-logo {
+    animation: none;
+    transition: none;
+  }
+}
 </style>
 </head>
 <body>
+<div id="mymoney-splash" aria-label="กำลังเปิด MyMoney">
+  <img
+    class="splash-logo"
+    src="mymoney-icon-512.png"
+    alt="MyMoney"
+  >
+  <p class="splash-name">MyMoney</p>
+  <p class="splash-caption">จัดการเงินของคุณให้ง่ายขึ้น</p>
+</div>
+
 <div class="app">
   <header class="top">
     <div class="brand"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney logo"><div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div></div>
@@ -369,6 +442,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
       <input id="slipFile" type="file" accept="image/*" hidden>
       <button class="btn secondary" type="button" id="chooseSlip">▧ เลือกรูปสลิป</button>
       <img id="slipPreview" class="slip-preview" alt="ตัวอย่างสลิปที่เลือก" hidden>
+      <button class="btn secondary" type="button" id="cancelSlip" hidden>✕ ยกเลิกการแนบไฟล์</button>
       <button class="btn primary" type="button" id="readSlip" disabled>อ่านสลิปและเติมข้อมูล</button>
       <div id="slipProgressWrap" hidden><div class="slip-progress"><span id="slipProgressBar"></span></div><p class="small" id="slipStatus" aria-live="polite">กำลังเตรียมระบบอ่านสลิป…</p></div>
       <details><summary class="small">ข้อความที่ระบบอ่านได้ (ตรวจสอบได้)</summary><div class="slip-raw" id="slipRaw">ยังไม่มีข้อความ</div></details>
@@ -557,7 +631,7 @@ $('debtList').addEventListener('click',e=>{const pay=e.target.closest('[data-deb
 $('goalForm').addEventListener('submit',e=>{e.preventDefault();const name=$('goalName').value.trim(),target=Number($('goalTarget').value),saved=Number($('goalSaved').value)||0,date=$('goalDate').value;if(!name||!(target>0)||saved<0)return;goals.push({id:Date.now(),name,target,saved,date});savePlans();$('goalForm').reset();$('goalSaved').value='0';$('goalMessage').textContent='เพิ่มเป้าหมายแล้ว';renderGoals();renderHomePlan()});
 $('goalList').addEventListener('click',e=>{const add=e.target.closest('[data-goal-add]'),edit=e.target.closest('[data-goal-edit]'),del=e.target.closest('[data-goal-del]');if(add){const g=goals.find(x=>String(x.id)===add.dataset.goalAdd);if(!g)return;const amount=Number(prompt(`ออมแล้ว ${money(g.saved)} จากเป้าหมาย ${money(g.target)}\nเพิ่มเงินออม (บาท)`,'0'));if(!(amount>0))return;g.saved=Number(g.saved)+amount;savePlans();renderGoals();renderHomePlan()}if(edit){const g=goals.find(x=>String(x.id)===edit.dataset.goalEdit);if(!g)return;const name=prompt('ชื่อเป้าหมาย',g.name);if(name===null)return;const targetRaw=prompt('ยอดเป้าหมาย (บาท)',String(g.target));if(targetRaw===null)return;const target=Number(targetRaw);if(!name.trim()||!(target>0))return;const savedRaw=prompt('เงินที่ออมแล้ว (บาท)',String(g.saved));if(savedRaw===null)return;const saved=Number(savedRaw);if(!Number.isFinite(saved)||saved<0)return;g.name=name.trim();g.target=target;g.saved=saved;savePlans();renderGoals();renderHomePlan()}if(del){if(!confirm('ลบเป้าหมายนี้ใช่ไหมคะ?'))return;goals=goals.filter(x=>String(x.id)!==del.dataset.goalDel);savePlans();renderGoals();renderHomePlan()}});
 function render(){renderHome();renderHistory();renderReports()}
-function resetForm(){editingId=null;$('form').reset();$('date').value=localDate();$('message').textContent='';$('cancelEdit').hidden=true;setType('Expense')}
+function resetForm(){editingId=null;$('form').reset();$('date').value=localDate();$('message').textContent='';$('cancelEdit').hidden=true;setType('Expense');if(typeof clearSlipAttachment==='function' && selectedSlipFile)clearSlipAttachment()}
 function startEdit(id){const t=tx.find(x=>String(x.id)===String(id));if(!t)return;editingId=t.id;navigate('record');setType(t.type);$('amount').value=t.amount;$('title').value=t.title||'';$('note').value=t.note||'';$('date').value=t.date||localDate();if(t.type==='Transfer'){fillSelect('transferFrom',accounts.map(a=>a.name),t.account);fillSelect('transferTo',accounts.map(a=>a.name),t.to)}else{fillSelect('category',cats[t.type]||[],t.category);fillSelect('account',accounts.map(a=>a.name),t.account)}$('save').textContent='บันทึกการแก้ไข';$('formHeading').textContent='แก้ไขรายการ';$('cancelEdit').hidden=false}
 function deleteTx(id){if(!confirm('ต้องการลบรายการนี้ใช่ไหมคะ?'))return;tx=tx.filter(t=>String(t.id)!==String(id));saveAll();render()}
 document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-del]');if(edit)startEdit(edit.dataset.edit);if(del)deleteTx(del.dataset.del)});
@@ -569,9 +643,23 @@ $('slipFile').addEventListener('change',e=>{
  const file=e.target.files?.[0]; if(!file)return;
  if(!file.type.startsWith('image/')){alert('กรุณาเลือกรูปภาพสลิปค่ะ');e.target.value='';return}
  selectedSlipFile=file;
- const url=URL.createObjectURL(file);$('slipPreview').src=url;$('slipPreview').hidden=false;$('readSlip').disabled=false;
+ const url=URL.createObjectURL(file);$('slipPreview').src=url;$('slipPreview').hidden=false;$('readSlip').disabled=false;$('cancelSlip').hidden=false;
  $('slipStatus').textContent=`เลือกรูปแล้ว: ${file.name}`;$('slipProgressWrap').hidden=false;$('slipProgressBar').style.width='0%';$('slipRaw').textContent='ยังไม่ได้อ่านสลิป';
 });
+function clearSlipAttachment(){
+ if($('slipPreview').src && $('slipPreview').src.startsWith('blob:')) URL.revokeObjectURL($('slipPreview').src);
+ selectedSlipFile=null;
+ $('slipFile').value='';
+ $('slipPreview').src='';
+ $('slipPreview').hidden=true;
+ $('readSlip').disabled=true;
+ $('cancelSlip').hidden=true;
+ $('slipProgressBar').style.width='0%';
+ $('slipProgressWrap').hidden=true;
+ $('slipRaw').textContent='ยังไม่มีข้อความ';
+ $('slipStatus').textContent='ยกเลิกการแนบไฟล์แล้ว';
+}
+$('cancelSlip').addEventListener('click',clearSlipAttachment);
 async function getSlipWorker(){
  if(slipWorkerPromise)return slipWorkerPromise;
  slipWorkerPromise=(async()=>{
@@ -627,10 +715,10 @@ $('readSlip').addEventListener('click',async()=>{
 });
 $('form').addEventListener('submit' ,e=>{e.preventDefault();const amount=Number($('amount').value),title=$('title').value.trim();if(!(amount>0)||!title)return;let account,to='';if(type==='Transfer'){account=$('transferFrom').value;to=$('transferTo').value;if(account===to){$('message').textContent='บัญชีต้นทางและปลายทางต้องต่างกัน';return}if(!account||!to){$('message').textContent='กรุณาตั้งค่าบัญชีให้ครบก่อน';return}}else account=$('account').value;const old=editingId===null?null:tx.find(t=>String(t.id)===String(editingId)),record={id:old?old.id:Date.now(),type,amount,date:$('date').value,title,note:$('note').value.trim(),category:type==='Transfer'?'โอนเงิน':$('category').value,account,to,createdAt:old?.createdAt||new Date().toISOString()};if(editingId!==null)tx=tx.map(t=>String(t.id)===String(editingId)?record:t);else tx.push(record);saveAll();resetForm();render();$('message').textContent='บันทึกเรียบร้อยแล้ว';navigate('home')});
 $('search').addEventListener('input',renderHistory);$('filter').addEventListener('change',renderHistory);$('historyMonth').addEventListener('change',()=>{if($('historyMonth').value){$('historyFrom').value='';$('historyTo').value=''}renderHistory()});$('historyFrom').addEventListener('change',()=>{if($('historyFrom').value)$('historyMonth').value='';renderHistory()});$('historyTo').addEventListener('change',()=>{if($('historyTo').value)$('historyMonth').value='';renderHistory()});document.querySelectorAll('[data-date-range]').forEach(btn=>btn.addEventListener('click',()=>{const now=new Date(),fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let from,to=fmt(now);if(btn.dataset.dateRange==='today')from=to;else if(btn.dataset.dateRange==='7days'){const d=new Date(now);d.setDate(d.getDate()-6);from=fmt(d)}else if(btn.dataset.dateRange==='month')from=fmt(new Date(now.getFullYear(),now.getMonth(),1));else{from=fmt(new Date(now.getFullYear(),now.getMonth()-1,1));to=fmt(new Date(now.getFullYear(),now.getMonth(),0))}$('historyMonth').value='';$('historyFrom').value=from;$('historyTo').value=to;$('filter').value='Expense';renderHistory()}));$('clearFilters').addEventListener('click',()=>{$('search').value='';$('filter').value='All';$('historyMonth').value='';$('historyFrom').value='';$('historyTo').value='';renderHistory()});$('reportMonth').addEventListener('change',renderReports);
-function renderSettings(){$('accountSettings').innerHTML=accounts.map((a,i)=>`<div class="settings-row"><div class="grow"><strong>${esc(a.name)}</strong><div class="small">ยอดตั้งต้น (บาท)</div></div><input type="number" step="0.01" data-opening="${i}" value="${Number(a.opening)||0}" aria-label="ยอดตั้งต้น ${esc(a.name)}"><button class="btn danger" data-remove-account="${i}" aria-label="ลบบัญชี">×</button></div>`).join('')||emptyHTML('ยังไม่มีบัญชี');renderCategorySettings()}
+function renderSettings(){$('accountSettings').innerHTML=accounts.map((a,i)=>`<div class="settings-row"><div class="grow"><strong>${esc(a.name)}</strong><div class="small">ยอดตั้งต้น (บาท)</div></div><input type="number" step="0.01" data-opening="${i}" value="${Number(a.opening)||0}" aria-label="ยอดตั้งต้น ${esc(a.name)}"><button class="btn secondary" data-edit-account="${i}" aria-label="แก้ไขบัญชี">แก้ไข</button><button class="btn danger" data-remove-account="${i}" aria-label="ลบบัญชี">×</button></div>`).join('')||emptyHTML('ยังไม่มีบัญชี');renderCategorySettings()}
 function renderCategorySettings(){const t=$('categoryType').value;$('categorySettings').innerHTML=(cats[t]||[]).map((c,i)=>`<div class="settings-row"><div class="grow">${esc(c)}</div><button class="btn secondary" data-edit-category="${i}" aria-label="แก้ไขหมวดหมู่">แก้ไข</button><button class="btn danger" data-remove-category="${i}">ลบ</button></div>`).join('')||emptyHTML('ยังไม่มีหมวดหมู่')}
 $('addAccount').addEventListener('click',()=>{const name=prompt('ชื่อบัญชีใหม่ เช่น บัญชีออมทรัพย์');if(name===null)return;const clean=name.trim();if(!clean)return;if(accounts.some(a=>a.name.toLowerCase()===clean.toLowerCase())){alert('มีบัญชีชื่อนี้แล้วค่ะ');return}accounts.push({name:clean,opening:0});saveAll();renderSettings();setType(type);render()});
-$('accountSettings').addEventListener('click',e=>{const b=e.target.closest('[data-remove-account]');if(!b)return;const i=Number(b.dataset.removeAccount),name=accounts[i]?.name;if(!name)return;if(tx.some(t=>t.account===name||t.to===name)){alert('บัญชีนี้มีรายการผูกอยู่ จึงลบไม่ได้ เพื่อป้องกันข้อมูลเดิมเสียหายค่ะ');return}if(!confirm(`ลบบัญชี "${name}" ใช่ไหมคะ?`))return;accounts.splice(i,1);saveAll();renderSettings();setType(type);render()});
+$('accountSettings').addEventListener('click',e=>{const editBtn=e.target.closest('[data-edit-account]');if(editBtn){const i=Number(editBtn.dataset.editAccount),oldName=accounts[i]?.name;if(!oldName)return;const name=prompt('ชื่อบัญชีใหม่',oldName);if(name===null)return;const clean=name.trim();if(!clean)return;if(clean===oldName)return;if(accounts.some((a,idx)=>idx!==i&&a.name.toLowerCase()===clean.toLowerCase())){alert('มีบัญชีชื่อนี้แล้วค่ะ');return}tx.forEach(t=>{if(t.account===oldName)t.account=clean;if(t.to===oldName)t.to=clean});accounts[i].name=clean;saveAll();renderSettings();setType(type);render();$('accountMessage').textContent='แก้ไขบัญชีเรียบร้อยแล้ว';return}const b=e.target.closest('[data-remove-account]');if(!b)return;const i=Number(b.dataset.removeAccount),name=accounts[i]?.name;if(!name)return;if(tx.some(t=>t.account===name||t.to===name)){alert('บัญชีนี้มีรายการผูกอยู่ จึงลบไม่ได้ เพื่อป้องกันข้อมูลเดิมเสียหายค่ะ');return}if(!confirm(`ลบบัญชี "${name}" ใช่ไหมคะ?`))return;accounts.splice(i,1);saveAll();renderSettings();setType(type);render()});
 $('saveAccounts').addEventListener('click',()=>{document.querySelectorAll('[data-opening]').forEach(input=>{const i=Number(input.dataset.opening);if(accounts[i])accounts[i].opening=Number(input.value)||0});saveAll();render();$('accountMessage').textContent='บันทึกบัญชีเรียบร้อยแล้ว'});
 $('categoryType').addEventListener('change',renderCategorySettings);
 $('addCategory').addEventListener('click',()=>{const t=$('categoryType').value,name=prompt('ชื่อหมวดหมู่ใหม่');if(name===null)return;const clean=name.trim();if(!clean)return;if(cats[t].some(c=>c.toLowerCase()===clean.toLowerCase())){alert('มีหมวดหมู่นี้แล้วค่ะ');return}cats[t].push(clean);saveAll();renderSettings();setType(type);render()});
@@ -644,5 +732,22 @@ $('importFile').addEventListener('change',async e=>{const file=e.target.files?.[
 window.addEventListener('storage',e=>{if([TX_KEY,ACC_KEY,CAT_KEY,BUDGET_KEY,BILL_KEY,DEBT_KEY,GOAL_KEY].includes(e.key)){const reload=confirm('พบข้อมูล MyMoney ถูกเปลี่ยนจากแท็บหรือหน้าต่างอื่น ต้องการโหลดข้อมูลล่าสุดไหมคะ?');if(reload)location.reload()}});
 $('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
 </script>
+
+(() => {
+  const splash = document.getElementById("mymoney-splash");
+
+  if (!splash) return;
+
+  // แสดงหน้าเปิดตัวประมาณ 2 วินาที
+  window.setTimeout(() => {
+    splash.classList.add("hide");
+
+    // นำหน้าเปิดตัวออกจากหน้าจอหลังเอฟเฟกต์จบ
+    window.setTimeout(() => {
+      splash.remove();
+    }, 400);
+  }, 2000);
+})();
+
 </body>
 </html>
