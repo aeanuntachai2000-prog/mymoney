@@ -118,6 +118,13 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 .daily-chart-axis span{text-align:center;justify-self:stretch;white-space:nowrap}
 .daily-chart-selected{margin-top:15px;padding:12px;border-radius:11px;background:#24292e;border:1px solid var(--line);color:#b6bec7;font-size:12px;line-height:1.7}
 .daily-chart-selected strong{color:var(--ink)}
+.daily-chart-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.daily-chart-detail-list{display:flex;flex-direction:column;gap:0;margin-top:7px}
+.daily-chart-detail-item{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.daily-chart-detail-name{min-width:0;overflow-wrap:anywhere;color:var(--ink);font-weight:650}
+.daily-chart-detail-meta{font-size:11px;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.daily-chart-detail-amount{white-space:nowrap;font-weight:750;color:var(--ink)}
+.daily-chart-detail-empty{padding:8px 0;color:var(--muted)}
 /* Reports analytics */
 .report-section-title{margin:24px 3px 12px}
 .report-section-title h2{margin:0}
@@ -421,7 +428,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
       <div class="daily-chart-axis" id="dailyChartAxis" aria-hidden="true">
         <span data-day="1">1</span><span data-day="7">7</span><span data-day="14">14</span><span data-day="21">21</span><span data-day="28">28</span>
       </div>
-      <div id="dailyChartSelected" class="daily-chart-selected" aria-live="polite">แตะแท่งกราฟเพื่อดูยอดของวันนั้น</div>
+      <div id="dailyChartSelected" class="daily-chart-selected" aria-live="polite">แตะแท่งกราฟเพื่อดูรายการและยอดเงินของวันนั้น</div>
     </section>
     <div class="section"><div><p class="eyebrow">MY FINANCIAL PLAN</p><h2>วางแผนการเงิน</h2></div><span class="pill" id="homePlanMonth"></span></div>
     <div class="feature-grid">
@@ -691,7 +698,13 @@ function renderDailyChart(){
  else {labelIndices=new Set([0,Math.floor((dates.length-1)/4),Math.floor((dates.length-1)/2),Math.floor(3*(dates.length-1)/4),dates.length-1]);}
  axis.innerHTML=[...labelIndices].sort((a,b)=>a-b).map(i=>`<span style="grid-column:${i+1}">${fullMonth?Number(dates[i].slice(8,10)):Number(dates[i].slice(8,10))+'/'+Number(dates[i].slice(5,7))}</span>`).join('');bars.innerHTML='';
  dailyTotals.forEach((amount,index)=>{const date=dates[index],wrap=document.createElement('div');wrap.className='daily-chart-bar-wrap';const bar=document.createElement('button');bar.type='button';bar.className='daily-chart-bar '+(dailyChartType==='Expense'?'expense':'income');bar.style.height=`${maxAmount>0?Math.max(3,(amount/maxAmount)*100):3}%`;bar.setAttribute('aria-label',`${date}: ${money(amount)}`);bar.title=`${date}: ${money(amount)}`;if(dailyChartSelectedDate===date)bar.classList.add('selected');bar.addEventListener('click',()=>{dailyChartSelectedDate=date;renderDailyChart()});wrap.appendChild(bar);bars.appendChild(wrap)});
- const selected=$('dailyChartSelected');if(dates.includes(dailyChartSelectedDate)){const i=dates.indexOf(dailyChartSelectedDate);selected.innerHTML=`<strong>${esc(dailyChartSelectedDate)}</strong> · ${dailyChartType==='Expense'?'รายจ่าย':'รายรับ'} ${esc(money(dailyTotals[i]||0))}`}else selected.textContent='แตะแท่งกราฟเพื่อดูยอดของวันนั้น';
+ const selected=$('dailyChartSelected');
+ if(dates.includes(dailyChartSelectedDate)){
+  const i=dates.indexOf(dailyChartSelectedDate),dayTransactions=sortedTx(tx.filter(item=>item.type===dailyChartType&&String(item.date||'')===dailyChartSelectedDate));
+  const dayTotal=dayTransactions.reduce((sum,item)=>sum+(Number(item.amount)||0),0);
+  const rows=dayTransactions.length?dayTransactions.map(item=>`<div class="daily-chart-detail-item"><div style="min-width:0"><div class="daily-chart-detail-name">${esc(item.title||item.category||(dailyChartType==='Expense'?'รายจ่าย':'รายรับ'))}</div><div class="daily-chart-detail-meta">${esc(item.category||'ไม่ระบุหมวดหมู่')}${item.account?' · '+esc(item.account):''}${item.note?' · '+esc(item.note):''}</div></div><div class="daily-chart-detail-amount">${esc(money(item.amount))}</div></div>`).join(''):'<div class="daily-chart-detail-empty">วันนี้ไม่มีรายการ'+(dailyChartType==='Expense'?'รายจ่าย':'รายรับ')+'ที่บันทึกไว้</div>';
+  selected.innerHTML=`<div class="daily-chart-detail-head"><div><strong>${esc(dailyChartSelectedDate)}</strong><div class="daily-chart-detail-meta">${dailyChartType==='Expense'?'รายการรายจ่าย':'รายการรายรับ'} · ${dayTransactions.length} รายการ</div></div><strong>${esc(money(dayTotal||dailyTotals[i]||0))}</strong></div><div class="daily-chart-detail-list">${rows}</div>`;
+ }else selected.textContent='แตะแท่งกราฟเพื่อดูรายการและยอดเงินของวันนั้น';
 }
 document.querySelectorAll('.daily-chart-tab').forEach(button=>button.addEventListener('click',()=>{dailyChartType=button.dataset.chartType;document.querySelectorAll('.daily-chart-tab').forEach(tab=>tab.classList.toggle('active',tab===button));renderDailyChart()}));
 $('dailyChartFrom').addEventListener('change',()=>{document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
