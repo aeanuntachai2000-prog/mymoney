@@ -732,7 +732,7 @@ $('importFile').addEventListener('change',async e=>{const file=e.target.files?.[
 window.addEventListener('storage',e=>{if([TX_KEY,ACC_KEY,CAT_KEY,BUDGET_KEY,BILL_KEY,DEBT_KEY,GOAL_KEY].includes(e.key)){const reload=confirm('พบข้อมูล MyMoney ถูกเปลี่ยนจากแท็บหรือหน้าต่างอื่น ต้องการโหลดข้อมูลล่าสุดไหมคะ?');if(reload)location.reload()}});
 $('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
 </script>
-
+<script>
 (() => {
   const splash = document.getElementById("mymoney-splash");
 
@@ -748,6 +748,7 @@ $('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth
     }, 400);
   }, 2000);
 })();
+</script>
 
 </body>
 </html>
