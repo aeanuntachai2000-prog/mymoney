@@ -41,13 +41,13 @@ h1{font-size:25px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0
 label{display:block;color:#b5bdc6;font-size:12px;font-weight:700;margin:4px 0 6px}
 input,select{display:block;width:100%;min-width:0;max-width:100%;border:1px solid #3a4149;background:var(--field);border-radius:11px;padding:11px;color:var(--ink)}
 input:focus,select:focus{outline:2px solid #7b8794;outline-offset:1px}
-input[type="date"],input[type="month"]{display:inline-block;font-variant-numeric:tabular-nums;padding:6px 4px;font-size:12px;min-width:0;max-width:100%;box-sizing:border-box;overflow:hidden;-webkit-appearance:none;appearance:none;white-space:nowrap;text-align:center}
+input[type="date"],input[type="month"]{display:inline-block;font-variant-numeric:tabular-nums;box-sizing:border-box;min-width:0;max-width:100%;overflow:hidden;-webkit-appearance:none;appearance:none;white-space:nowrap;text-align:center;height:44px;min-height:44px;line-height:44px;padding:0 9px;font-size:13px;vertical-align:middle}
 /* iOS Safari (incl. iPhone 16e) renders date/month inputs with collapsed inner
    height so the value sticks to the top of the field. Force the inner value box
    to take the full height and remove WebKit's extra pseudo-element padding.
    Also avoid `display:block` which makes temporal input values top-aligned on iOS. */
-input[type="date"],input[type="month"]{min-height:1.4375em;line-height:normal}
-input[type="date"]::-webkit-date-and-time-value,input[type="month"]::-webkit-date-and-time-value{min-height:1.4375em;text-align:center}
+input[type="date"],input[type="month"]{min-height:44px;line-height:44px}
+input[type="date"]::-webkit-date-and-time-value,input[type="month"]::-webkit-date-and-time-value{min-height:100%;height:100%;line-height:44px;text-align:center;display:flex;align-items:center;justify-content:center}
 input[type="date"]::-webkit-datetime-edit,input[type="date"]::-webkit-datetime-edit-fields-wrapper,input[type="date"]::-webkit-datetime-edit-text,input[type="date"]::-webkit-datetime-edit-day-field,input[type="date"]::-webkit-datetime-edit-month-field,input[type="date"]::-webkit-datetime-edit-year-field,input[type="month"]::-webkit-datetime-edit,input[type="month"]::-webkit-datetime-edit-fields-wrapper,input[type="month"]::-webkit-datetime-edit-text,input[type="month"]::-webkit-datetime-edit-month-field,input[type="month"]::-webkit-datetime-edit-year-field{padding:0;margin:0}
 input[type="date"]::-webkit-inner-spin-button,input[type="month"]::-webkit-inner-spin-button{height:auto}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
@@ -100,7 +100,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 .daily-chart-tab.active[data-chart-type="Income"]{background:#30343a;color:var(--green);box-shadow:0 1px 4px #00000020}
 .daily-chart-range{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:12px}
 .daily-chart-range label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:var(--muted)}
-.daily-chart-range input{width:100%;min-width:0;padding:9px 8px;font-size:13px;-webkit-appearance:none;appearance:none;overflow:hidden;white-space:nowrap;box-sizing:border-box}
+.daily-chart-range input{width:100%;min-width:0;max-width:100%;box-sizing:border-box;padding:0 8px;font-size:13px;height:44px;min-height:44px;line-height:44px;-webkit-appearance:none;appearance:none;overflow:hidden;white-space:nowrap;text-align:center}
 .daily-chart-presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .daily-chart-preset{padding:7px 10px;border:1px solid var(--line);border-radius:9px;background:#171a1e;color:var(--muted);font-size:11px;font-weight:700}
 .daily-chart-preset.active{border-color:#65d6a0;color:#65d6a0;background:#1b2b25}
@@ -157,7 +157,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   /* On narrow phone screens, stack date and note to prevent iOS Safari overflow */
   .grid#dateNoteGrid{grid-template-columns:minmax(0,1fr);gap:10px}
   #dateNoteGrid>div{width:100%;min-width:0;max-width:100%}
-  #dateNoteGrid input{width:100%;min-width:0;max-width:100%;box-sizing:border-box;font-size:16px;padding:8px 6px;-webkit-appearance:none;appearance:none;overflow:hidden;white-space:nowrap}
+  #dateNoteGrid input{width:100%;min-width:0;max-width:100%;box-sizing:border-box;font-size:16px;padding:0 6px;height:44px;min-height:44px;line-height:44px;-webkit-appearance:none;appearance:none;overflow:hidden;white-space:nowrap;text-align:center}
 }
 @media(max-width:420px){
   .app{padding-left:10px;padding-right:10px}
@@ -170,7 +170,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   .daily-chart-bars{gap:2px;height:125px}
   .daily-chart-axis{gap:2px;font-size:9px}
   .daily-chart-tab{padding:8px 10px}
-  .daily-chart-range input{font-size:12px;padding:9px 5px}
+  .daily-chart-range input{font-size:12px;padding:0 5px}
   .daily-chart-bars{overflow:hidden}
 }
 @media(max-width:350px){
@@ -225,9 +225,10 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   padding: 0 9px;
   font-family: inherit;
   font-size: 14px;
-  line-height: normal;
+  line-height: 44px;
   border: 1px solid #3a4149;
   border-radius: 12px;
+  vertical-align: middle;
   font-variant-numeric: tabular-nums;
 }
 /* Prevent iOS native date/month controls from forcing a wider field. */
@@ -257,9 +258,10 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   margin: 0;
   padding: 0 9px;
   font-size: 14px;
-  line-height: normal;
+  line-height: 44px;
   border: 1px solid #3a4149;
   border-radius: 12px;
+  vertical-align: middle;
 }
 @media (max-width: 420px) {
   #page-history .grid { gap: 8px; }
