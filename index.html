@@ -270,9 +270,83 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   #page-history #historyFrom,
   #page-history #historyTo { padding-left: 7px; padding-right: 7px; font-size: 13px; }
 }
+
+/* MyMoney Splash Screen */
+#mymoney-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #101312;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+#mymoney-splash.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#mymoney-splash .splash-logo {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  border-radius: 25px;
+  animation: mymoney-logo-in 0.65s ease both;
+}
+
+#mymoney-splash .splash-name {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+#mymoney-splash .splash-caption {
+  color: #8f9b95;
+  font-size: 13px;
+  margin: 0;
+}
+
+@keyframes mymoney-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #mymoney-splash,
+  #mymoney-splash .splash-logo {
+    animation: none;
+    transition: none;
+  }
+}
 </style>
 </head>
 <body>
+<div id="mymoney-splash" aria-label="กำลังเปิด MyMoney">
+  <img
+    class="splash-logo"
+    src="mymoney-icon-512.png"
+    alt="MyMoney"
+  >
+  <p class="splash-name">MyMoney</p>
+  <p class="splash-caption">จัดการเงินของคุณให้ง่ายขึ้น</p>
+  <button type="button" id="splashEnter" class="btn primary" style="margin-top:8px;min-width:160px">เข้าสู่แอพ</button>
+</div>
+
 <div class="app">
   <header class="top">
     <div class="brand"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney logo"><div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div></div>
@@ -660,19 +734,35 @@ window.addEventListener('storage',e=>{if([TX_KEY,ACC_KEY,CAT_KEY,BUDGET_KEY,BILL
 $('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
 </script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+(() => {
   const splash = document.getElementById("mymoney-splash");
-
   if (!splash) return;
 
-  setTimeout(function () {
+  let hidden = false;
+  function hideSplash() {
+    if (hidden) return;
+    hidden = true;
     splash.classList.add("hide");
-
-    setTimeout(function () {
-      splash.remove();
+    window.setTimeout(() => {
+      if (splash.parentNode) splash.parentNode.removeChild(splash);
     }, 400);
-  }, 2000);
-});
+  }
+
+  const enterBtn = document.getElementById("splashEnter");
+  if (enterBtn) enterBtn.addEventListener("click", hideSplash);
+
+  // เข้าสู่แอพอัตโนมัติหลัง 1.5 วินาที
+  window.setTimeout(hideSplash, 2000);
+
+  // สำรอง: ถ้าค้าง ให้ลบออกใน 4 วินาที
+  window.setTimeout(() => {
+    if (document.body.contains(splash)) {
+      splash.classList.add("hide");
+      if (splash.parentNode) splash.parentNode.removeChild(splash);
+    }
+  }, 4000);
+})();
 </script>
+
 </body>
 </html>
