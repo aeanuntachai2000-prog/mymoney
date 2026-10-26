@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="th">
+<html lang="th" style="background:#000000">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -12,11 +12,23 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="mymoney-favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="mymoney-icon.png">
+<link rel="apple-touch-startup-image" href="splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1080x2340.png" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1668x2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1536x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
 <title>MyMoney</title>
 <style>
 :root{
   color-scheme:dark;
-  --g:#b9c2cb;--gd:#252a30;--bg:#111315;--panel:#1b1e22;--panel2:#22262b;
+  --g:#b9c2cb;--gd:#252a30;--bg:#000000;--panel:#1b1e22;--panel2:#22262b;
   --ink:#f0f2f4;--muted:#9aa3ad;--line:#333940;--red:#ff737d;--green:#65d6a0;
   --field:#15181b;--shadow:0 12px 30px #00000026;
 }
@@ -328,7 +340,8 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   visibility: visible;
   pointer-events: auto;
   /* Fade opacity first; hide visibility only after the fade to avoid a flash. */
-  transition: opacity 0.28s ease, visibility 0s linear 0.28s;
+  transition: opacity 0.4s ease-out, visibility 0s linear 0.4s;
+  will-change: opacity;
 }
 
 #mymoney-splash.hide {
@@ -408,7 +421,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 
 </style>
 </head>
-<body style="background:#111315">
+<body style="background:#000000">
 <div id="mymoney-splash" aria-label="กำลังเปิด MyMoney">
   <div class="splash-mark" aria-label="MyMoney logo">
     <img class="splash-logo" src="mymoney-icon-512.png" alt="MyMoney logo" fetchpriority="high" decoding="sync">
@@ -417,6 +430,36 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   <p class="splash-caption">จัดการเงินของคุณให้ง่ายขึ้น</p>
   <button type="button" id="splashEnter" class="btn primary" style="margin-top:8px;min-width:160px">เข้าสู่แอพ</button>
 </div>
+
+<script>
+(() => {
+  const splash = document.getElementById("mymoney-splash");
+  if (!splash) return;
+
+  let hidden = false;
+  function hideSplash() {
+    if (hidden) return;
+    hidden = true;
+    splash.classList.add("hide");
+    window.setTimeout(() => {
+      if (splash.parentNode) splash.parentNode.removeChild(splash);
+    }, 400);
+  }
+
+  const enterBtn = document.getElementById("splashEnter");
+  if (enterBtn) enterBtn.addEventListener("click", hideSplash);
+
+  const autoEnterTimer = window.setTimeout(hideSplash, 2000);
+  if (enterBtn) enterBtn.addEventListener("click", () => window.clearTimeout(autoEnterTimer), { once: true });
+
+  window.setTimeout(() => {
+    if (document.body.contains(splash)) {
+      splash.classList.add("hide");
+      if (splash.parentNode) splash.parentNode.removeChild(splash);
+    }
+  }, 4000);
+})();
+</script>
 
 <div class="app">
   <header class="top">
@@ -884,37 +927,7 @@ const __i18nObserver=new MutationObserver(muts=>{if(appLang!=='en')return;for(co
 __i18nObserver.observe(document.body,{childList:true,subtree:true,characterData:true});
 
 </script>
-<script>
-(() => {
-  const splash = document.getElementById("mymoney-splash");
-  if (!splash) return;
 
-  let hidden = false;
-  function hideSplash() {
-    if (hidden) return;
-    hidden = true;
-    splash.classList.add("hide");
-    window.setTimeout(() => {
-      if (splash.parentNode) splash.parentNode.removeChild(splash);
-    }, 400);
-  }
-
-  const enterBtn = document.getElementById("splashEnter");
-  if (enterBtn) enterBtn.addEventListener("click", hideSplash);
-
-  // เข้าสู่แอพอัตโนมัติหลัง 2 วินาที โดยใช้ transition ชุดเดียว
-  const autoEnterTimer = window.setTimeout(hideSplash, 2000);
-  if (enterBtn) enterBtn.addEventListener("click", () => window.clearTimeout(autoEnterTimer), { once: true });
-
-  // สำรอง: ถ้าค้าง ให้ลบออกใน 4 วินาที
-  window.setTimeout(() => {
-    if (document.body.contains(splash)) {
-      splash.classList.add("hide");
-      if (splash.parentNode) splash.parentNode.removeChild(splash);
-    }
-  }, 4000);
-})();
-</script>
 
 </body>
 </html>
