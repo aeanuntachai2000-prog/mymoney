@@ -676,6 +676,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 </nav>
 
 <script>
+setTimeout(() => {
 'use strict';
 // Keep the app viewport stable on iOS Safari. Input controls are also 16px on mobile
 // to avoid Safari automatically zooming in when a field receives focus.
@@ -926,6 +927,7 @@ if(appLang==='en')translateTree(document.body);
 const __i18nObserver=new MutationObserver(muts=>{if(appLang!=='en')return;for(const m of muts){if(m.type==='childList'){m.addedNodes.forEach(n=>translateNode(n));}else if(m.type==='characterData'){const n=m.target;if(n&&n.nodeType===3){if(n.__orig===undefined)n.__orig=n.nodeValue;const t=translateText(n.__orig);if(n.nodeValue!==t)n.nodeValue=t;}}}});
 __i18nObserver.observe(document.body,{childList:true,subtree:true,characterData:true});
 
+}, 0);
 </script>
 
 
