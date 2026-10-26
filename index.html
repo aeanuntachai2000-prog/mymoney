@@ -3,7 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#111315">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="MyMoney">
+<link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="mymoney-favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="mymoney-icon.png">
 <title>MyMoney</title>
@@ -17,7 +23,7 @@
 *{box-sizing:border-box}
 html,body{-webkit-text-size-adjust:100%;touch-action:pan-x pan-y}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif}
+html{background:#000000}body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif}
 button,input,select{font:inherit}
 button{cursor:pointer}
 .app{max-width:680px;margin:auto;padding:18px 15px calc(100px + env(safe-area-inset-bottom))}
@@ -323,8 +329,6 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   pointer-events: auto;
   /* Fade opacity first; hide visibility only after the fade to avoid a flash. */
   transition: opacity 0.28s ease, visibility 0s linear 0.28s;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 #mymoney-splash.hide {
@@ -404,10 +408,10 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 
 </style>
 </head>
-<body>
+<body style="background:#111315">
 <div id="mymoney-splash" aria-label="กำลังเปิด MyMoney">
   <div class="splash-mark" aria-label="MyMoney logo">
-    <img class="splash-logo" src="mymoney-icon-512.png" alt="MyMoney logo">
+    <img class="splash-logo" src="mymoney-icon-512.png" alt="MyMoney logo" fetchpriority="high" decoding="sync">
   </div>
   <p class="splash-name">MyMoney</p>
   <p class="splash-caption">จัดการเงินของคุณให้ง่ายขึ้น</p>
