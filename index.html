@@ -465,6 +465,88 @@ body.record-page h1{font-size:22px}
 @media(max-width:480px){
   #page-record #dateNoteGrid{gap:6px}
 }
+
+
+/* ===== MyMoney Compact Plus: tighter spacing, clearer hierarchy ===== */
+.app{padding:14px 12px calc(88px + env(safe-area-inset-bottom))}
+.top{margin:2px 2px 14px}
+.brand{gap:9px}
+.brand-icon{width:42px;height:42px;border-radius:12px}
+h1{font-size:23px}
+.section{margin:18px 2px 9px;gap:8px}
+.card{padding:14px;border-radius:16px}
+.balance{padding:18px;border-radius:20px}
+.big{font-size:clamp(27px,7.5vw,38px);margin:6px 0 14px}
+.stats{gap:9px;padding-top:12px}
+.stats div{gap:5px}
+.stack{gap:8px}
+.feature-grid{gap:8px;margin-top:8px}
+.feature-link{gap:5px;padding:12px;border-radius:13px}
+.feature-link .feature-icon{font-size:20px}
+.feature-item{padding:11px;margin-bottom:8px;border-radius:13px}
+.feature-stats{gap:8px}
+.feature-stat{padding:10px;border-radius:11px}
+.daily-chart-card{margin-top:14px}
+.daily-chart-controls{margin-top:12px}
+.daily-chart-range{margin-top:9px}
+.daily-chart-presets{margin-top:8px}
+.daily-chart-total{margin-top:15px}
+.daily-chart-total strong{font-size:23px}
+.daily-chart-bars{height:118px;margin-top:12px}
+.daily-chart-selected{margin-top:10px;padding:10px}
+.report-section-title{margin:18px 2px 9px}
+.report-trend{gap:10px}
+.trend-list{gap:10px}
+.trend-month{grid-template-columns:48px minmax(0,1fr);gap:8px}
+.report-donut-layout{gap:12px}
+.report-compare-grid{gap:8px}
+.report-compare-item{padding:10px;border-radius:11px}
+.list{gap:7px}
+.item{padding:10px;border-radius:13px}
+.ico{width:36px;height:36px;border-radius:10px;font-size:18px}
+.empty{padding:18px}
+.history-filter-toggle,.settings-collapse-toggle{padding:11px;gap:9px}
+.history-filter-symbol,.settings-collapse-symbol{width:34px;height:34px;border-radius:10px;font-size:18px}
+.history-filter-panel,.settings-collapse-panel{padding:0 11px 11px}
+.slip-toggle{padding:11px}
+.settings-row{padding:8px 0;gap:7px}
+.bottom-nav{padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+.nav-btn{gap:3px;padding:4px 0}
+.nav-btn .symbol{font-size:19px}
+.btn{padding:9px 12px;border-radius:10px}
+input,select{border-radius:10px}
+footer{padding-top:16px}
+@media(max-width:480px){
+  .app{padding:10px 10px calc(82px + env(safe-area-inset-bottom))}
+  .top{margin:0 2px 11px}
+  .brand-icon{width:38px;height:38px}
+  h1{font-size:21px}
+  .balance{padding:16px;border-radius:18px}
+  .big{font-size:clamp(26px,7.2vw,34px);margin:5px 0 12px}
+  .card{padding:12px;border-radius:14px}
+  .section{margin:15px 2px 8px}
+  .daily-chart-card{padding:12px}
+  .daily-chart-bars{height:105px}
+  .feature-link{padding:10px}
+  .feature-stat strong{font-size:15px}
+  .report-section-title{margin:16px 2px 8px}
+  .report-donut{width:min(100%,150px)}
+  .item{padding:9px}
+  .bottom-nav{padding-left:3px;padding-right:3px}
+}
+@media(max-width:350px){
+  .app{padding-left:8px;padding-right:8px}
+  .card{padding:10px}
+  .balance{padding:13px}
+  .section{gap:6px}
+  .btn{padding:8px 9px;font-size:12px}
+  .nav-btn .symbol{font-size:18px}
+}
+/* Keep the transaction form compact and usable; don't disable scrolling on other pages. */
+@media(min-width:481px){
+  #page-record .card{padding:13px}
+}
+
 </style>
 </head>
 <body style="background:#000000">
