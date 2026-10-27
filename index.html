@@ -1,23 +1,41 @@
 <!doctype html>
-<html lang="th">
+<html lang="th" style="background:#000000">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#111315">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="MyMoney">
+<link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="mymoney-favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="mymoney-icon.png">
+<link rel="apple-touch-startup-image" href="splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1080x2340.png" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1668x2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash-1536x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
 <title>MyMoney</title>
 <style>
 :root{
   color-scheme:dark;
-  --g:#b9c2cb;--gd:#252a30;--bg:#111315;--panel:#1b1e22;--panel2:#22262b;
+  --g:#b9c2cb;--gd:#252a30;--bg:#000000;--panel:#1b1e22;--panel2:#22262b;
   --ink:#f0f2f4;--muted:#9aa3ad;--line:#333940;--red:#ff737d;--green:#65d6a0;
   --field:#15181b;--shadow:0 12px 30px #00000026;
 }
 *{box-sizing:border-box}
 html,body{-webkit-text-size-adjust:100%;touch-action:pan-x pan-y}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif}
+html{background:#000000!important}body{margin:0;background:#000000!important;color:var(--ink);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif}
 button,input,select{font:inherit}
 button{cursor:pointer}
 .app{max-width:680px;margin:auto;padding:18px 15px calc(100px + env(safe-area-inset-bottom))}
@@ -83,7 +101,7 @@ input[type="date"]::-webkit-inner-spin-button,input[type="month"]::-webkit-inner
 .nav-btn .symbol{font-size:21px;line-height:1.1}
 .nav-btn.active{color:#f2f4f6}
 .message{font-size:12px;color:var(--green);min-height:16px;margin:0}
-.slip-card{margin-bottom:12px}.slip-preview{display:block;width:100%;max-height:260px;object-fit:contain;border-radius:12px;background:#111417;border:1px solid var(--line);margin-top:10px}.slip-progress{height:6px;border-radius:20px;background:#343a41;overflow:hidden;margin:8px 0}.slip-progress span{display:block;height:100%;width:0;background:#c5cbd2;transition:width .2s}.slip-raw{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;background:#111417;border:1px solid var(--line);border-radius:10px;padding:10px;max-height:150px;overflow:auto;color:#c4cbd2}
+.slip-card{margin-bottom:12px;padding:0;overflow:hidden}.slip-toggle{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:transparent;color:var(--ink);padding:15px;min-width:0}.slip-toggle-icon{width:42px;height:42px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#2b3036;font-size:21px}.slip-toggle-copy{flex:1;min-width:0}.slip-toggle-copy strong{display:block;font-size:14px}.slip-toggle-copy small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:4px}.slip-toggle-arrow{color:var(--muted);font-size:18px;transition:transform .18s}.slip-toggle[aria-expanded="true"] .slip-toggle-arrow{transform:rotate(180deg)}.slip-panel{padding:0 15px 15px}.slip-preview{display:block;width:100%;max-height:260px;object-fit:contain;border-radius:12px;background:#111417;border:1px solid var(--line);margin-top:10px}.slip-progress{height:6px;border-radius:20px;background:#343a41;overflow:hidden;margin:8px 0}.slip-progress span{display:block;height:100%;width:0;background:#c5cbd2;transition:width .2s}.slip-raw{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;background:#111417;border:1px solid var(--line);border-radius:10px;padding:10px;max-height:150px;overflow:auto;color:#c4cbd2}
 footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 
 /* Daily chart */
@@ -118,6 +136,13 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 .daily-chart-axis span{text-align:center;justify-self:stretch;white-space:nowrap}
 .daily-chart-selected{margin-top:15px;padding:12px;border-radius:11px;background:#24292e;border:1px solid var(--line);color:#b6bec7;font-size:12px;line-height:1.7}
 .daily-chart-selected strong{color:var(--ink)}
+.daily-chart-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.daily-chart-detail-list{display:flex;flex-direction:column;gap:0;margin-top:7px}
+.daily-chart-detail-item{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.daily-chart-detail-name{min-width:0;overflow-wrap:anywhere;color:var(--ink);font-weight:650}
+.daily-chart-detail-meta{font-size:11px;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.daily-chart-detail-amount{white-space:nowrap;font-weight:750;color:var(--ink)}
+.daily-chart-detail-empty{padding:8px 0;color:var(--muted)}
 /* Reports analytics */
 .report-section-title{margin:24px 3px 12px}
 .report-section-title h2{margin:0}
@@ -195,6 +220,35 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 @media(max-width:680px){input,select,textarea{font-size:16px}}
 @media(max-width:360px){.feature-grid{gap:7px}.feature-link{padding:11px}.feature-item{padding:11px}.feature-stats{gap:7px}}
 
+
+
+
+/* Collapsible settings sections */
+.settings-collapse-card{padding:0;overflow:hidden;margin-bottom:12px}
+.settings-collapse-toggle{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:0;background:transparent;color:var(--ink);padding:14px;min-width:0}
+.settings-collapse-symbol{width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#2b3036;font-size:21px;color:#e1e5e9}
+.settings-collapse-copy{flex:1;min-width:0}
+.settings-collapse-copy strong{display:block;font-size:14px}
+.settings-collapse-copy small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:4px}
+.settings-collapse-arrow{color:var(--muted);font-size:19px;transition:transform .18s}
+.settings-collapse-toggle[aria-expanded="true"] .settings-collapse-arrow{transform:rotate(180deg)}
+.settings-collapse-panel{padding:0 14px 14px}
+
+/* Collapsible history filters and transaction display limit */
+.history-filter-card{padding:0;overflow:hidden}
+.history-filter-toggle{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:0;background:transparent;color:var(--ink);padding:14px;min-width:0}
+.history-filter-symbol{width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#2b3036;font-size:21px;color:#e1e5e9}
+.history-filter-copy{flex:1;min-width:0}
+.history-filter-copy strong{display:block;font-size:14px}
+.history-filter-copy small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:4px}
+.history-filter-arrow{color:var(--muted);font-size:19px;transition:transform .18s}
+.history-filter-toggle[aria-expanded="true"] .history-filter-arrow{transform:rotate(180deg)}
+.history-filter-panel{padding:0 14px 14px}
+.history-list-heading{align-items:center;flex-wrap:wrap}
+.history-list-heading h3{flex:1;min-width:0;line-height:1.5}
+.history-limit-control{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.history-limit-control label{margin:0;white-space:nowrap}
+.history-limit-control select{width:auto;max-width:145px;padding:8px 9px;font-size:12px}
 
 /* ===== History filter fields: exact matching control dimensions ===== */
 #page-history .grid {
@@ -281,77 +335,248 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   align-items: center;
   justify-content: center;
   gap: 18px;
-  background: #101312;
+  background: #000000;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  pointer-events: auto;
+  /* No transition/animation to avoid any flash or flicker. */
 }
 
 #mymoney-splash.hide {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  display: none !important;
+}
+
+#mymoney-splash .splash-mark {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
 }
 
 #mymoney-splash .splash-logo {
+  display: block;
   width: 112px;
   height: 112px;
   object-fit: contain;
   border-radius: 25px;
-  animation: mymoney-logo-in 0.65s ease both;
-}
-
-#mymoney-splash .splash-name {
-  color: #ffffff;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin: 0;
-}
-
-#mymoney-splash .splash-caption {
-  color: #8f9b95;
-  font-size: 13px;
-  margin: 0;
-}
-
-@keyframes mymoney-logo-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.88);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  /* Keep the base logo still; only the small orbit highlight moves. */
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #mymoney-splash,
-  #mymoney-splash .splash-logo {
-    animation: none;
-    transition: none;
-  }
+  #mymoney-splash .splash-name { animation: none; }
 }
 
-/* Mobile scroll safeguard for slip OCR: keep the record page naturally scrollable. */
-html,body{min-height:100%;height:auto;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:auto}
-.page{height:auto;min-height:0;overflow:visible;touch-action:pan-y}
-#page-record{padding-bottom:calc(120px + env(safe-area-inset-bottom));}
-#page-record .slip-card{position:relative;overflow:visible;touch-action:pan-y;}
-#slipProgressWrap,#slipStatus{scroll-margin-top:24px;}
+#mymoney-splash .splash-name {
+  color: #f4fff9;
+  background: linear-gradient(100deg, #ffffff 0%, #c7ffe4 28%, #68e0ad 58%, #d7fff0 78%, #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  margin: 0;
+  line-height: 1.2;
+  text-shadow: 0 0 26px rgba(87, 224, 165, 0.12);
+  filter: drop-shadow(0 2px 12px rgba(77, 220, 157, 0.14));
+  background-size: 220% 100%;
+}
+
+@keyframes mymoney-text-glide {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+#mymoney-splash .splash-caption {
+  color: #b8c9c0;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  margin: 0;
+  text-shadow: 0 0 14px rgba(107, 226, 172, 0.12);
+}
+
+#mymoney-splash #splashEnter {
+  color: #07140e;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+  border: 1px solid rgba(191, 255, 224, 0.52);
+  background: linear-gradient(115deg, #c6ffe2 0%, #63dba5 45%, #a2f5ce 100%);
+  box-shadow: 0 8px 28px rgba(75, 220, 156, 0.22), inset 0 1px 0 rgba(255,255,255,.55);
+  transition: filter .18s ease, box-shadow .18s ease;
+}
+
+#mymoney-splash #splashEnter:active {
+  filter: brightness(.94);
+  box-shadow: 0 4px 16px rgba(75, 220, 156, 0.18), inset 0 1px 0 rgba(255,255,255,.4);
+}
+
+/* Splash / loading screen */
+#splashScreen{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(1200px 800px at 50% -10%,#1f2630 0%,transparent 60%),radial-gradient(900px 700px at 100% 100%,#1a1f26 0%,transparent 55%),#000000;color:var(--ink);overflow:hidden;transition:opacity .6s ease,visibility .6s ease,transform .6s ease}
+#splashScreen.splash-hide{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.03)}
+.splash-inner{display:grid;place-items:center;gap:18px;text-align:center;padding:24px;max-width:420px;width:100%}
+.splash-logo-wrap{position:relative;width:112px;height:112px;display:grid;place-items:center}
+.splash-glow{position:absolute;inset:-28px;border-radius:50%;background:radial-gradient(circle,rgba(185,194,203,.22) 0%,transparent 65%);filter:blur(10px);animation:splashPulse 2.2s ease-in-out infinite}
+.splash-ring{position:absolute;inset:-16px;border-radius:50%;border:2px solid rgba(185,194,203,.16);border-top-color:rgba(185,194,203,.9);animation:splashSpin 1.5s linear infinite}
+.splash-logo{width:90px;height:90px;border-radius:24px;object-fit:cover;box-shadow:0 20px 46px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08);animation:splashFloat 2.6s ease-in-out infinite}
+.splash-title{font-size:30px;font-weight:800;letter-spacing:.6px;margin:0;background:linear-gradient(180deg,#ffffff 0%,#b9c2cb 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.splash-subtitle{font-size:13px;color:var(--muted);margin:0;letter-spacing:.4px}
+.splash-bar{width:190px;height:4px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:6px;position:relative}
+.splash-bar span{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,transparent,#d7dde3 50%,transparent);animation:splashShimmer 1.6s ease-in-out infinite}
+.splash-dots{display:flex;gap:7px;margin-top:2px}
+.splash-dots i{width:6px;height:6px;border-radius:50%;background:rgba(185,194,203,.35);animation:splashBlink 1.2s ease-in-out infinite}
+.splash-dots i:nth-child(2){animation-delay:.18s}
+.splash-dots i:nth-child(3){animation-delay:.36s}
+@keyframes splashSpin{to{transform:rotate(360deg)}}
+@keyframes splashPulse{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.07)}}
+@keyframes splashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes splashShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+@keyframes splashBlink{0%,80%,100%{opacity:.28;transform:scale(.75)}40%{opacity:1;transform:scale(1.2)}}
+@media (prefers-reduced-motion:reduce){#splashScreen .splash-ring,#splashScreen .splash-glow,#splashScreen .splash-logo,#splashScreen .splash-bar span,#splashScreen .splash-dots i{animation:none}}
+/* Compact record page: fits a phone viewport without scrolling by default */
+/* Keep the slip OCR panel/status able to grow; allow vertical scrolling only after reading a slip */
+#page-record,#page-record .section,#page-record .stack,#page-record .slip-card,#page-record .slip-panel{min-height:0;overflow:visible;}
+#page-record .slip-panel{max-height:none;}
+/* Default: lock vertical scrolling on the compact Record page */
+html.record-page{overflow-y:hidden!important;overflow-x:hidden!important;height:100%!important;min-height:100%;}
+body.record-page{overflow-y:hidden!important;overflow-x:hidden!important;height:100%!important;min-height:100%;-webkit-overflow-scrolling:touch;}
+body.record-page .app{min-height:100dvh;height:100%!important;overflow:hidden!important;}
+/* After reading a slip (or opening the slip reader): re-enable vertical scrolling */
+html.record-page.slip-read,body.record-page.slip-read{overflow-y:auto!important;height:auto!important;min-height:100%;}
+body.record-page.slip-read .app{height:auto!important;overflow:visible!important;}
+html.record-page{overflow-y:hidden!important;overflow-x:hidden!important;height:100%!important;min-height:100%;}
+body.record-page{overflow-y:hidden!important;overflow-x:hidden!important;height:100%!important;min-height:100%;-webkit-overflow-scrolling:touch;}
+body.record-page .app{min-height:100dvh;height:100%!important;overflow:hidden!important;}
+/* After reading a slip (or opening the slip reader): re-enable vertical scrolling */
+html.record-page.slip-read,body.record-page.slip-read{overflow-y:auto!important;height:auto!important;min-height:100%;}
+body.record-page.slip-read .app{height:auto!important;overflow:visible!important;}
+body.record-page .app{padding-top:8px;padding-bottom:60px}
+body.record-page .top{margin:0 3px 6px}
+body.record-page .brand-icon{width:40px;height:40px;border-radius:12px}
+body.record-page h1{font-size:22px}
+#page-record .section{margin:4px 3px 3px}
+#page-record .section h2{font-size:16px}
+#page-record .eyebrow{margin:0 0 2px}
+#page-record .slip-card{margin-bottom:6px}
+#page-record .slip-toggle{padding:8px 10px;gap:8px}
+#page-record .slip-toggle-icon{width:32px;height:32px;font-size:17px;border-radius:10px}
+#page-record .slip-toggle-copy strong{font-size:13px}
+#page-record .slip-toggle-copy small{font-size:10px;margin-top:2px;line-height:1.25}
+#page-record .slip-toggle-arrow{font-size:16px}
+#page-record .actions{margin:4px 0;gap:6px}
+#page-record .actions button{padding:8px 10px;font-size:13px;border-radius:10px}
+#page-record .card{padding:10px;border-radius:16px}
+#page-record .stack{gap:6px}
+#page-record label{margin:2px 0 3px;font-size:11px}
+#page-record input,#page-record select{padding:8px 10px}
+#page-record .amount{font-size:20px}
+#page-record .grid{gap:6px}
+#page-record .save{padding:10px;margin-top:2px;font-size:14px}
+#page-record .message{min-height:12px;font-size:11px;margin-top:2px}
+#page-record #dateNoteGrid{gap:6px}
+@media(max-width:480px){
+  #page-record #dateNoteGrid{gap:6px}
+}
+
+
+/* ===== MyMoney Compact Plus: tighter spacing, clearer hierarchy ===== */
+.app{padding:14px 12px calc(88px + env(safe-area-inset-bottom))}
+.top{margin:2px 2px 14px}
+.brand{gap:9px}
+.brand-icon{width:42px;height:42px;border-radius:12px}
+h1{font-size:23px}
+.section{margin:18px 2px 9px;gap:8px}
+.card{padding:14px;border-radius:16px}
+.balance{padding:18px;border-radius:20px}
+.big{font-size:clamp(27px,7.5vw,38px);margin:6px 0 14px}
+.stats{gap:9px;padding-top:12px}
+.stats div{gap:5px}
+.stack{gap:8px}
+.feature-grid{gap:8px;margin-top:8px}
+.feature-link{gap:5px;padding:12px;border-radius:13px}
+.feature-link .feature-icon{font-size:20px}
+.feature-item{padding:11px;margin-bottom:8px;border-radius:13px}
+.feature-stats{gap:8px}
+.feature-stat{padding:10px;border-radius:11px}
+.daily-chart-card{margin-top:14px}
+.daily-chart-controls{margin-top:12px}
+.daily-chart-range{margin-top:9px}
+.daily-chart-presets{margin-top:8px}
+.daily-chart-total{margin-top:15px}
+.daily-chart-total strong{font-size:23px}
+.daily-chart-bars{height:118px;margin-top:12px}
+.daily-chart-selected{margin-top:10px;padding:10px}
+.report-section-title{margin:18px 2px 9px}
+.report-trend{gap:10px}
+.trend-list{gap:10px}
+.trend-month{grid-template-columns:48px minmax(0,1fr);gap:8px}
+.report-donut-layout{gap:12px}
+.report-compare-grid{gap:8px}
+.report-compare-item{padding:10px;border-radius:11px}
+.list{gap:7px}
+.item{padding:10px;border-radius:13px}
+.ico{width:36px;height:36px;border-radius:10px;font-size:18px}
+.empty{padding:18px}
+.history-filter-toggle,.settings-collapse-toggle{padding:11px;gap:9px}
+.history-filter-symbol,.settings-collapse-symbol{width:34px;height:34px;border-radius:10px;font-size:18px}
+.history-filter-panel,.settings-collapse-panel{padding:0 11px 11px}
+.slip-toggle{padding:11px}
+.settings-row{padding:8px 0;gap:7px}
+.bottom-nav{padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+.nav-btn{gap:3px;padding:4px 0}
+.nav-btn .symbol{font-size:19px}
+.btn{padding:9px 12px;border-radius:10px}
+input,select{border-radius:10px}
+footer{padding-top:16px}
+@media(max-width:480px){
+  .app{padding:10px 10px calc(82px + env(safe-area-inset-bottom))}
+  .top{margin:0 2px 11px}
+  .brand-icon{width:38px;height:38px}
+  h1{font-size:21px}
+  .balance{padding:16px;border-radius:18px}
+  .big{font-size:clamp(26px,7.2vw,34px);margin:5px 0 12px}
+  .card{padding:12px;border-radius:14px}
+  .section{margin:15px 2px 8px}
+  .daily-chart-card{padding:12px}
+  .daily-chart-bars{height:105px}
+  .feature-link{padding:10px}
+  .feature-stat strong{font-size:15px}
+  .report-section-title{margin:16px 2px 8px}
+  .report-donut{width:min(100%,150px)}
+  .item{padding:9px}
+  .bottom-nav{padding-left:3px;padding-right:3px}
+}
+@media(max-width:350px){
+  .app{padding-left:8px;padding-right:8px}
+  .card{padding:10px}
+  .balance{padding:13px}
+  .section{gap:6px}
+  .btn{padding:8px 9px;font-size:12px}
+  .nav-btn .symbol{font-size:18px}
+}
+/* Keep the transaction form compact and usable; don't disable scrolling on other pages. */
+@media(min-width:481px){
+  #page-record .card{padding:13px}
+}
+
 </style>
 </head>
-<body>
-<div id="mymoney-splash" aria-label="กำลังเปิด MyMoney">
-  <img
-    class="splash-logo"
-    src="mymoney-icon-512.png"
-    alt="MyMoney"
-  >
-  <p class="splash-name">MyMoney</p>
-  <p class="splash-caption">จัดการเงินของคุณให้ง่ายขึ้น</p>
-  <button type="button" id="splashEnter" class="btn primary" style="margin-top:8px;min-width:160px">เข้าสู่แอพ</button>
+<body style="background:#000000">
+<div id="splashScreen" role="status" aria-live="polite" aria-label="MyMoney loading">
+  <div class="splash-inner">
+    <div class="splash-logo-wrap">
+      <div class="splash-glow" aria-hidden="true"></div>
+      <div class="splash-ring" aria-hidden="true"></div>
+      <img class="splash-logo" src="mymoney-icon.png" alt="MyMoney">
+    </div>
+    <h1 class="splash-title">MyMoney</h1>
+    <p class="splash-subtitle">กำลังโหลดข้อมูลการเงินของคุณ</p>
+    <div class="splash-bar" aria-hidden="true"><span></span></div>
+    <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>
 </div>
 
 <div class="app">
@@ -399,18 +624,18 @@ html,body{min-height:100%;height:auto;overflow-y:auto;-webkit-overflow-scrolling
       <div class="daily-chart-axis" id="dailyChartAxis" aria-hidden="true">
         <span data-day="1">1</span><span data-day="7">7</span><span data-day="14">14</span><span data-day="21">21</span><span data-day="28">28</span>
       </div>
-      <div id="dailyChartSelected" class="daily-chart-selected" aria-live="polite">แตะแท่งกราฟเพื่อดูยอดของวันนั้น</div>
+      <div id="dailyChartSelected" class="daily-chart-selected" aria-live="polite">แตะแท่งกราฟเพื่อดูรายการและยอดเงินของวันนั้น</div>
     </section>
     <div class="section"><div><p class="eyebrow">MY FINANCIAL PLAN</p><h2>วางแผนการเงิน</h2></div><span class="pill" id="homePlanMonth"></span></div>
     <div class="feature-grid">
-      <button class="feature-link" data-go="planning"><span class="feature-icon">▤</span><strong>งบประมาณ</strong><small id="homeBudgetPreview">ตั้งงบรายเดือน</small></button>
-      <button class="feature-link" data-go="planning"><span class="feature-icon">◷</span><strong>บิลประจำ</strong><small id="homeBillsPreview">ติดตามวันครบกำหนด</small></button>
-      <button class="feature-link" data-go="planning"><span class="feature-icon">↘</span><strong>ติดตามหนี้</strong><small id="homeDebtPreview">ดูยอดหนี้คงเหลือ</small></button>
+      <button class="feature-link" data-go="budget"><span class="feature-icon">▤</span><strong>งบประมาณ</strong><small id="homeBudgetPreview">ตั้งงบรายเดือน</small></button>
+      <button class="feature-link" data-go="bills"><span class="feature-icon">◷</span><strong>บิลประจำ</strong><small id="homeBillsPreview">ติดตามวันครบกำหนด</small></button>
+      <button class="feature-link" data-go="debts"><span class="feature-icon">↘</span><strong>ติดตามหนี้</strong><small id="homeDebtPreview">ดูยอดหนี้คงเหลือ</small></button>
       <button class="feature-link" data-go="goals"><span class="feature-icon">◎</span><strong>เป้าหมายการออม</strong><small id="homeGoalsPreview">ตั้งเป้าหมายแรก</small></button>
     </div>
-    <div class="section"><div><p class="eyebrow">MONTHLY BUDGET</p><h2>งบประมาณเดือนนี้</h2></div><button class="btn secondary" data-go="planning">จัดการ</button></div>
+    <div class="section"><div><p class="eyebrow">MONTHLY BUDGET</p><h2>งบประมาณเดือนนี้</h2></div><button class="btn secondary" data-go="budget">จัดการ</button></div>
     <div class="card" id="homeBudgetList"></div>
-    <div class="section"><div><p class="eyebrow">UPCOMING</p><h2>บิลที่ต้องจ่าย</h2></div><button class="btn secondary" data-go="planning">ดูทั้งหมด</button></div>
+    <div class="section"><div><p class="eyebrow">UPCOMING</p><h2>บิลที่ต้องจ่าย</h2></div><button class="btn secondary" data-go="bills">ดูทั้งหมด</button></div>
     <div class="card" id="homeBillsList"></div>
     <div class="section"><div><p class="eyebrow">SAVING GOALS</p><h2>เป้าหมายการออม</h2></div><button class="btn secondary" data-go="goals">ดูทั้งหมด</button></div>
     <div class="card" id="homeGoalsList"></div>
@@ -422,39 +647,54 @@ html,body{min-height:100%;height:auto;overflow-y:auto;-webkit-overflow-scrolling
 
   <section class="page" id="page-history">
     <div class="section" style="margin-top:5px"><div><p class="eyebrow">TRANSACTIONS</p><h2>ประวัติรายการ</h2></div><button class="btn primary" data-go="record">＋ เพิ่ม</button></div>
-    <div class="card stack">
-      <div><label for="search">ค้นหาชื่อรายการ / หมายเหตุ</label><input id="search" placeholder="พิมพ์คำค้นหา"></div>
-      <div class="grid">
-        <div><label for="filter">ประเภท</label><select id="filter"><option value="All">ทั้งหมด</option><option value="Income">รายรับ</option><option value="Expense">รายจ่าย</option><option value="Transfer">โอนเงิน</option></select></div>
-        <div><label for="historyMonth">เดือน</label><input type="month" id="historyMonth"></div>
+    <section class="card history-filter-card">
+      <button class="history-filter-toggle" type="button" id="historyFilterToggle" aria-expanded="false" aria-controls="historyFilterPanel">
+        <span class="history-filter-symbol">☷</span>
+        <span class="history-filter-copy"><strong>ตัวกรองและค้นหา</strong><small>ค้นหาชื่อรายการ ประเภท และช่วงวันที่</small></span>
+        <span class="history-filter-arrow" aria-hidden="true">⌄</span>
+      </button>
+      <div id="historyFilterPanel" class="stack history-filter-panel" hidden>
+        <div><label for="search">ค้นหาชื่อรายการ / หมายเหตุ</label><input id="search" placeholder="พิมพ์คำค้นหา"></div>
+        <div class="grid">
+          <div><label for="filter">ประเภท</label><select id="filter"><option value="All">ทั้งหมด</option><option value="Income">รายรับ</option><option value="Expense">รายจ่าย</option><option value="Transfer">โอนเงิน</option></select></div>
+          <div><label for="historyMonth">เดือน</label><input type="month" id="historyMonth"></div>
+        </div>
+        <div class="grid">
+          <div><label for="historyFrom">ตั้งแต่วันที่</label><input type="date" id="historyFrom"></div>
+          <div><label for="historyTo">ถึงวันที่</label><input type="date" id="historyTo"></div>
+        </div>
+        <div class="row" style="flex-wrap:wrap;gap:7px">
+          <button class="btn secondary" type="button" data-date-range="today">วันนี้</button>
+          <button class="btn secondary" type="button" data-date-range="7days">7 วันล่าสุด</button>
+          <button class="btn secondary" type="button" data-date-range="month">เดือนนี้</button>
+          <button class="btn secondary" type="button" data-date-range="lastmonth">เดือนก่อน</button>
+        </div>
+        <button class="btn secondary" id="clearFilters">ล้างตัวกรอง</button>
       </div>
-      <div class="grid">
-        <div><label for="historyFrom">ตั้งแต่วันที่</label><input type="date" id="historyFrom"></div>
-        <div><label for="historyTo">ถึงวันที่</label><input type="date" id="historyTo"></div>
-      </div>
-      <div class="row" style="flex-wrap:wrap;gap:7px">
-        <button class="btn secondary" type="button" data-date-range="today">วันนี้</button>
-        <button class="btn secondary" type="button" data-date-range="7days">7 วันล่าสุด</button>
-        <button class="btn secondary" type="button" data-date-range="month">เดือนนี้</button>
-        <button class="btn secondary" type="button" data-date-range="lastmonth">เดือนก่อน</button>
-      </div>
-      <button class="btn secondary" id="clearFilters">ล้างตัวกรอง</button>
-    </div>
-    <div class="section"><h3 id="historyCount">รายการทั้งหมด</h3></div><div class="list" id="historyList"></div>
+    </section>
+    <div class="section history-list-heading"><h3 id="historyCount">รายการทั้งหมด</h3><div class="history-limit-control"><label for="historyLimit">แสดง</label><select id="historyLimit" aria-label="จำนวนรายการที่แสดง"><option value="5" selected>5 รายการ</option><option value="10">10 รายการ</option><option value="20">20 รายการ</option><option value="50">50 รายการ</option><option value="all">ทั้งหมด</option></select></div></div>
+    <div class="list" id="historyList"></div>
   </section>
 
   <section class="page" id="page-record">
     <div class="section" style="margin-top:5px"><div><p class="eyebrow">QUICK ADD</p><h2 id="formHeading">บันทึกรายการ</h2></div></div>
-    <section class="card stack slip-card">
-      <div><h3>อ่านข้อมูลจากสลิป</h3><p class="small" style="margin:6px 0 0">เลือกรูปสลิปจาก Photos หรือ Files ระบบจะอ่านข้อความบนรูปและช่วยกรอกข้อมูลให้</p></div>
-      <input id="slipFile" type="file" accept="image/*" hidden>
-      <button class="btn secondary" type="button" id="chooseSlip">▧ เลือกรูปสลิป</button>
-      <img id="slipPreview" class="slip-preview" alt="ตัวอย่างสลิปที่เลือก" hidden>
-      <button class="btn secondary" type="button" id="cancelSlip" hidden>✕ ยกเลิกการแนบไฟล์</button>
-      <button class="btn primary" type="button" id="readSlip" disabled>อ่านสลิปและเติมข้อมูล</button>
-      <div id="slipProgressWrap" hidden><div class="slip-progress"><span id="slipProgressBar"></span></div><p class="small" id="slipStatus" aria-live="polite">กำลังเตรียมระบบอ่านสลิป…</p></div>
-      <details><summary class="small">ข้อความที่ระบบอ่านได้ (ตรวจสอบได้)</summary><div class="slip-raw" id="slipRaw">ยังไม่มีข้อความ</div></details>
-      <p class="small">ประมวลผลรูปในเบราว์เซอร์ รูปสลิปไม่ถูกส่งไปยังเซิร์ฟเวอร์ OCR โดยโค้ดนี้ แต่ระบบต้องดาวน์โหลดตัวอ่านและชุดภาษาเมื่อใช้ครั้งแรก ยอดเงินและวันที่อาจอ่านผิด กรุณาตรวจสอบก่อนบันทึก</p>
+    <section class="card slip-card">
+      <button class="slip-toggle" type="button" id="slipToggle" aria-expanded="false" aria-controls="slipPanel">
+        <span class="slip-toggle-icon" aria-hidden="true">▧</span>
+        <span class="slip-toggle-copy"><strong>อ่านข้อมูลจากสลิป</strong><small>แตะเพื่อเลือกรูปสลิปและช่วยกรอกข้อมูลอัตโนมัติ</small></span>
+        <span class="slip-toggle-arrow" aria-hidden="true">⌄</span>
+      </button>
+      <div id="slipPanel" class="slip-panel stack" hidden>
+        <p class="small" style="margin:0">เลือกรูปสลิปจาก Photos หรือ Files ระบบจะอ่านข้อความบนรูปและช่วยกรอกข้อมูลให้</p>
+        <input id="slipFile" type="file" accept="image/*" hidden>
+        <button class="btn secondary" type="button" id="chooseSlip">▧ เลือกรูปสลิป</button>
+        <img id="slipPreview" class="slip-preview" alt="ตัวอย่างสลิปที่เลือก" hidden>
+        <button class="btn secondary" type="button" id="cancelSlip" hidden>✕ ยกเลิกการแนบไฟล์</button>
+        <button class="btn primary" type="button" id="readSlip" disabled>อ่านสลิปและเติมข้อมูล</button>
+        <div id="slipProgressWrap" hidden><div class="slip-progress"><span id="slipProgressBar"></span></div><p class="small" id="slipStatus" aria-live="polite">กำลังเตรียมระบบอ่านสลิป…</p></div>
+        <details><summary class="small">ข้อความที่ระบบอ่านได้ (ตรวจสอบได้)</summary><div class="slip-raw" id="slipRaw">ยังไม่มีข้อความ</div></details>
+        <p class="small">ประมวลผลรูปในเบราว์เซอร์ รูปสลิปไม่ถูกส่งไปยังเซิร์ฟเวอร์ OCR โดยโค้ดนี้ แต่ระบบต้องดาวน์โหลดตัวอ่านและชุดภาษาเมื่อใช้ครั้งแรก ยอดเงินและวันที่อาจอ่านผิด กรุณาตรวจสอบก่อนบันทึก</p>
+      </div>
     </section>
     <div class="actions"><button class="active" data-type="Expense">− รายจ่าย</button><button data-type="Income">＋ รายรับ</button><button data-type="Transfer">⇄ โอนเงิน</button></div>
     <section class="card">
@@ -489,19 +729,27 @@ html,body{min-height:100%;height:auto;overflow-y:auto;-webkit-overflow-scrolling
     <div class="notice" style="margin-top:14px">รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย กราฟเปรียบเทียบใช้ข้อมูลที่มีอยู่ในเครื่องเท่านั้น</div>
   </section>
 
-  <section class="page" id="page-planning">
-    <div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">PLAN & TRACK</p><h2>วางแผนการเงิน</h2></div><button class="btn secondary" type="button" data-go="home" aria-label="กลับไปหน้าก่อนหน้า">← ย้อนกลับ</button></div>
+  <section class="page" id="page-budget">
+    <div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">BUDGET</p><h2>งบประมาณ</h2></div><button class="btn secondary" type="button" data-go="home" aria-label="กลับไปหน้าภาพรวม">← ย้อนกลับ</button></div>
     <div class="card stack feature-card">
       <h3>งบประมาณรายเดือน</h3><p class="small">กำหนดงบตามหมวดหมู่ รายการรายจ่ายที่บันทึกแล้วจะถูกนำมาคำนวณอัตโนมัติ</p>
       <div><label for="budgetMonth">เดือนที่ต้องการวางแผน</label><input type="month" id="budgetMonth"></div>
       <form id="budgetForm" class="feature-form"><div class="grid"><div><label for="budgetCategory">หมวดหมู่รายจ่าย</label><select id="budgetCategory" required></select></div><div><label for="budgetLimit">งบประมาณ (บาท)</label><input type="number" id="budgetLimit" min="0.01" step="0.01" placeholder="เช่น 3000" required></div></div><button class="btn primary" type="submit">บันทึกงบประมาณ</button><p class="message" id="budgetMessage" role="status"></p></form>
       <div id="budgetList"></div>
     </div>
+  </section>
+
+  <section class="page" id="page-bills">
+    <div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">RECURRING BILLS</p><h2>บิลประจำ</h2></div><button class="btn secondary" type="button" data-go="home" aria-label="กลับไปหน้าภาพรวม">← ย้อนกลับ</button></div>
     <div class="card stack feature-card">
       <h3>บิลและรายการประจำ</h3><p class="small">บันทึกค่าเช่า ค่างวด หรือบิลรายเดือน แล้วทำเครื่องหมายว่าจ่ายแล้วในแต่ละเดือน</p>
       <form id="billForm" class="feature-form"><div><label for="billName">ชื่อบิล *</label><input id="billName" maxlength="80" placeholder="เช่น ค่าเช่าห้อง" required></div><div class="grid"><div><label for="billAmount">จำนวนเงิน (บาท) *</label><input id="billAmount" type="number" min="0.01" step="0.01" required placeholder="0.00"></div><div><label for="billDay">วันครบกำหนด (1–31)</label><input id="billDay" type="number" min="1" max="31" value="1" required></div></div><div class="grid"><div><label for="billCategory">หมวดหมู่</label><select id="billCategory"></select></div><div><label for="billAccount">บัญชีที่จ่าย</label><select id="billAccount"></select></div></div><button class="btn primary" type="submit">＋ เพิ่มบิลประจำ</button><p class="message" id="billMessage" role="status"></p></form>
       <div id="billList"></div>
     </div>
+  </section>
+
+  <section class="page" id="page-debts">
+    <div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">DEBT TRACKER</p><h2>ติดตามหนี้</h2></div><button class="btn secondary" type="button" data-go="home" aria-label="กลับไปหน้าภาพรวม">← ย้อนกลับ</button></div>
     <div class="card stack feature-card">
       <h3>ติดตามหนี้</h3><p class="small">บันทึกยอดหนี้คงเหลือ ดอกเบี้ยต่อปี และยอดชำระขั้นต่ำ เพื่อดูภาพรวมภาระหนี้</p>
       <div class="feature-stats"><div class="feature-stat"><span>หนี้คงเหลือรวม</span><strong class="exp" id="debtTotal">฿0.00</strong></div><div class="feature-stat"><span>ยอดชำระขั้นต่ำ/เดือน</span><strong id="debtMinimum">฿0.00</strong></div></div>
@@ -509,9 +757,8 @@ html,body{min-height:100%;height:auto;overflow-y:auto;-webkit-overflow-scrolling
       <div id="debtList"></div><div class="notice">การคำนวณเป็นภาพรวมเบื้องต้น ไม่ใช่ยอดปิดบัญชีจากเจ้าหนี้จริง ดอกเบี้ยและค่าธรรมเนียมจริงอาจต่างกัน</div>
     </div>
   </section>
-
   <section class="page" id="page-goals">
-    <div class="section" style="margin-top:5px"><div><p class="eyebrow">SAVING GOALS</p><h2>เป้าหมายการออม</h2></div></div>
+    <div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">SAVING GOALS</p><h2>เป้าหมายการออม</h2></div><button class="btn secondary" type="button" data-go="home" aria-label="กลับไปหน้าภาพรวม">← ย้อนกลับ</button></div>
     <div class="card stack feature-card"><div class="feature-stats"><div class="feature-stat"><span>เป้าหมายทั้งหมด</span><strong id="goalsTotalTarget">฿0.00</strong></div><div class="feature-stat"><span>ออมแล้ว</span><strong class="inc" id="goalsTotalSaved">฿0.00</strong></div></div>
       <form id="goalForm" class="feature-form"><div><label for="goalName">ชื่อเป้าหมาย *</label><input id="goalName" maxlength="80" placeholder="เช่น เงินฉุกเฉิน" required></div><div class="grid"><div><label for="goalTarget">ยอดเป้าหมาย (บาท) *</label><input id="goalTarget" type="number" min="0.01" step="0.01" required></div><div><label for="goalSaved">เงินที่มีแล้ว (บาท)</label><input id="goalSaved" type="number" min="0" step="0.01" value="0"></div></div><div><label for="goalDate">วันที่ต้องการให้ถึงเป้าหมาย (ไม่บังคับ)</label><input id="goalDate" type="date"></div><button class="btn primary" type="submit">＋ เพิ่มเป้าหมาย</button><p class="message" id="goalMessage" role="status"></p></form>
     </div>
@@ -521,13 +768,23 @@ html,body{min-height:100%;height:auto;overflow-y:auto;-webkit-overflow-scrolling
 
   <section class="page" id="page-settings">
     <div class="section" style="margin-top:5px"><div><p class="eyebrow">SETTINGS</p><h2>ตั้งค่า</h2></div></div>
-    <div class="section"><h2>บัญชีและยอดตั้งต้น</h2></div>
-    <div class="card stack"><p class="small">ยอดตั้งต้นคือเงินที่มีอยู่ก่อนเริ่มบันทึกรายการ ยอดคงเหลือจะแสดงจากยอดตั้งต้นรวมกับรายการภายหลัง</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount">＋ เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div>
-    <div class="section"><h2>หมวดหมู่รายการ</h2></div>
-    <div class="card stack"><div><label for="categoryType">ประเภทหมวดหมู่</label><select id="categoryType"><option value="Expense">รายจ่าย</option><option value="Income">รายรับ</option></select></div><div id="categorySettings"></div><button class="btn secondary" id="addCategory">＋ เพิ่มหมวดหมู่</button><button class="btn primary" id="saveCategories">บันทึกหมวดหมู่</button><p class="message" id="categoryMessage"></p></div>
-    <div class="section"><h2>สำรองและกู้คืนข้อมูล</h2></div>
-    <div class="card stack"><p class="small">แนะนำให้สำรองข้อมูลก่อนแก้ไขแอปหรือเปลี่ยนอุปกรณ์</p><button class="btn secondary" id="exportJson">ดาวน์โหลดข้อมูลสำรอง JSON</button><button class="btn secondary" id="exportCsv">ส่งออกรายการ CSV</button><button class="btn secondary" id="restoreAutoBackup">กู้คืนข้อมูลสำรองอัตโนมัติ</button><p class="small">ระบบเก็บข้อมูลชุดก่อนหน้าล่าสุดไว้ในเบราว์เซอร์นี้เพื่อช่วยกู้คืนเมื่อเกิดข้อผิดพลาด</p><label for="importFile">นำเข้าข้อมูลสำรอง JSON</label><input id="importFile" type="file" accept=".json,application/json"><p class="small">การนำเข้า JSON จะแทนที่รายการและการตั้งค่าปัจจุบัน ควรส่งออกข้อมูลเดิมเก็บไว้ก่อน</p><p class="message" id="backupMessage"></p></div>
-    <div class="section"><h2>Language / ภาษา</h2></div><div class="card stack"><div class="settings-row"><div class="grow"><strong>Language</strong><div class="small">Thai / English</div></div><button class="btn secondary" id="langTh">ไทย</button><button class="btn secondary" id="langEn">English</button></div><p class="small">เปลี่ยนภาษาของแอพทั้งหมด</p></div><div class="notice" style="margin-top:14px">ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ</div>
+    <div class="card settings-collapse-card">
+      <button class="settings-collapse-toggle" type="button" id="accountsSettingsToggle" aria-expanded="false" aria-controls="accountsSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▤</span><span class="settings-collapse-copy"><strong>บัญชีและยอดตั้งต้น</strong><small>จัดการบัญชีและเงินตั้งต้นของแต่ละบัญชี</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <div class="settings-collapse-panel" id="accountsSettingsPanel" hidden><div class="stack"><p class="small">ยอดตั้งต้นคือเงินที่มีอยู่ก่อนเริ่มบันทึกรายการ ยอดคงเหลือจะแสดงจากยอดตั้งต้นรวมกับรายการภายหลัง</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount">＋ เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div></div>
+    </div>
+    <div class="card settings-collapse-card">
+      <button class="settings-collapse-toggle" type="button" id="categoriesSettingsToggle" aria-expanded="false" aria-controls="categoriesSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▦</span><span class="settings-collapse-copy"><strong>หมวดหมู่และรายการ</strong><small>จัดการหมวดหมู่รายรับและรายจ่าย</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <div class="settings-collapse-panel" id="categoriesSettingsPanel" hidden><div class="stack"><div><label for="categoryType">ประเภทหมวดหมู่</label><select id="categoryType"><option value="Expense">รายจ่าย</option><option value="Income">รายรับ</option></select></div><div id="categorySettings"></div><button class="btn secondary" id="addCategory">＋ เพิ่มหมวดหมู่</button><button class="btn primary" id="saveCategories">บันทึกหมวดหมู่</button><p class="message" id="categoryMessage"></p></div></div>
+    </div>
+    <div class="card settings-collapse-card">
+      <button class="settings-collapse-toggle" type="button" id="languageSettingsToggle" aria-expanded="false" aria-controls="languageSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">文</span><span class="settings-collapse-copy"><strong>ภาษา / Language</strong><small>เลือกภาษาไทยหรือภาษาอังกฤษ</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <div class="settings-collapse-panel" id="languageSettingsPanel" hidden><div class="stack"><div class="settings-row"><div class="grow"><strong>Language</strong><div class="small">Thai / English</div></div><button class="btn secondary" id="langTh">ไทย</button><button class="btn secondary" id="langEn">English</button></div><p class="small">เปลี่ยนภาษาของแอพทั้งหมด</p></div></div>
+    </div>
+    <div class="card settings-collapse-card">
+      <button class="settings-collapse-toggle" type="button" id="backupSettingsToggle" aria-expanded="false" aria-controls="backupSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">⇧</span><span class="settings-collapse-copy"><strong>สำรองและกู้คืนข้อมูล</strong><small>ส่งออกข้อมูลสำรอง หรือนำเข้าข้อมูลที่เคยบันทึกไว้</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <div class="settings-collapse-panel" id="backupSettingsPanel" hidden><div class="stack"><p class="small">แนะนำให้สำรองข้อมูลก่อนแก้ไขแอปหรือเปลี่ยนอุปกรณ์</p><button class="btn secondary" id="exportJson">ดาวน์โหลดข้อมูลสำรอง JSON</button><button class="btn secondary" id="exportCsv">ส่งออกรายการ CSV</button><button class="btn secondary" id="restoreAutoBackup">กู้คืนข้อมูลสำรองอัตโนมัติ</button><p class="small">ระบบเก็บข้อมูลชุดก่อนหน้าล่าสุดไว้ในเบราว์เซอร์นี้เพื่อช่วยกู้คืนเมื่อเกิดข้อผิดพลาด</p><label for="importFile">นำเข้าข้อมูลสำรอง JSON</label><input id="importFile" type="file" accept=".json,application/json"><p class="small">การนำเข้า JSON จะแทนที่รายการและการตั้งค่าปัจจุบัน ควรส่งออกข้อมูลเดิมเก็บไว้ก่อน</p><p class="message" id="backupMessage"></p></div></div>
+    </div>
+    <div class="notice" style="margin-top:14px">ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ</div>
   </section>
   <footer>MyMoney · Personal Finance · v10 Mobile UX</footer>
 </div>
@@ -537,7 +794,9 @@ html,body{min-height:100%;height:auto;overflow-y:auto;-webkit-overflow-scrolling
 </nav>
 
 <script>
+setTimeout(() => {
 'use strict';
+const splashShownAt=Date.now();
 // Keep the app viewport stable on iOS Safari. Input controls are also 16px on mobile
 // to avoid Safari automatically zooming in when a field receives focus.
 ['gesturestart','gesturechange','gestureend'].forEach(type => {
@@ -551,7 +810,7 @@ const I18N={"ก.ค.":"Jul.","ก.พ.":"Feb.","ก.ย.":"Sep.","กรกฎ�
 let skipAutoSnapshot=false,lastSnapshotAt=0;
 let appLang=localStorage.getItem('mymoney_lang')||'th';
 let I18N_KEYS=Object.keys(I18N).sort((a,b)=>b.length-a.length);
-Object.assign(I18N,{"เปลี่ยนภาษาของแอพทั้งหมด":"Change app language for all pages"});
+Object.assign(I18N,{"เปลี่ยนภาษาของแอพทั้งหมด":"Change app language for all pages","กำลังโหลดข้อมูลการเงินของคุณ":"Loading your finances"});
 I18N_KEYS=Object.keys(I18N).sort((a,b)=>b.length-a.length);
 
 function translateText(s){if(appLang!=='en'||typeof s!=='string')return s;let r='',i=0;while(i<s.length){let m=false;for(const k of I18N_KEYS){if(s.startsWith(k,i)){r+=I18N[k];i+=k.length;m=true;break;}}if(!m){r+=s[i];i++;}}return r;}
@@ -582,7 +841,28 @@ function money(n){return new Intl.NumberFormat('th-TH',{style:'currency',currenc
 function localDate(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function currentMonth(){return localDate().slice(0,7)}
 function download(name,content,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function navigate(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));if(page==='home')renderHome();if(page==='settings')renderSettings();if(page==='reports')renderReports();if(page==='history')renderHistory();if(page==='planning')renderPlanning();if(page==='goals')renderGoals();window.scrollTo({top:0,behavior:'auto'})}
+const pageScrollPositions={};
+function navigate(page){
+  const current=document.querySelector('.page.active');
+  const currentPage=current?.id?.replace('page-','')||'home';
+  if(currentPage)pageScrollPositions[currentPage]=window.scrollY||window.pageYOffset||0;
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
+  document.documentElement.classList.toggle('record-page',page==='record');
+  document.body.classList.toggle('record-page',page==='record');
+  if(page!=='record'){document.documentElement.classList.remove('slip-read');document.body.classList.remove('slip-read');}
+  else{document.documentElement.classList.remove('slip-read');document.body.classList.remove('slip-read');}
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
+  if(page==='home')renderHome();
+  if(page==='settings')renderSettings();
+  if(page==='reports')renderReports();
+  if(page==='history')renderHistory();
+  if(['planning','budget','bills','debts'].includes(page))renderPlanning();
+  if(page==='goals')renderGoals();
+  // Returning from a financial-planning subpage restores the exact Overview scroll position.
+  const isPlanningSubpage=['budget','bills','debts','goals'].includes(currentPage);
+  const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
+  requestAnimationFrame(()=>window.scrollTo({top:targetY,behavior:'auto'}));
+}
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ'}
@@ -598,7 +878,7 @@ function setDailyChartRange(preset){
  const now=new Date(),today=localDate(now);let from,to=today;
  if(preset==='7'||preset==='30'){const days=Number(preset);const d=new Date(now);d.setDate(d.getDate()-days+1);from=localDate(d)}
  else if(preset==='prev'){const first=new Date(now.getFullYear(),now.getMonth()-1,1);const last=new Date(now.getFullYear(),now.getMonth(),0);from=localDate(first);to=localDate(last)}
- else {from=`${currentMonth()}-01`}
+ else {from=`${currentMonth()}-01`;const monthEnd=new Date(now.getFullYear(),now.getMonth()+1,0);to=localDate(monthEnd)}
  $('dailyChartFrom').value=from;$('dailyChartTo').value=to;
  document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.toggle('active',b.dataset.range===preset));dailyChartSelectedDate='';renderDailyChart();
 }
@@ -614,10 +894,19 @@ function renderDailyChart(){
  $('dailyChartTotalLabel').textContent=`${dailyChartType==='Expense'?'รายจ่าย':'รายรับ'}รวม ${from===to?from:`${from} ถึง ${to}`}`;
  $('dailyChartTotal').textContent=money(total);$('dailyChartTotal').style.color=dailyChartType==='Expense'?'var(--red)':'var(--green)';
  bars.style.gridTemplateColumns=`repeat(${dates.length}, minmax(0, 1fr))`;axis.style.setProperty('--days-in-month',dates.length);
- const labelIndices=new Set([0,Math.floor((dates.length-1)/4),Math.floor((dates.length-1)/2),Math.floor(3*(dates.length-1)/4),dates.length-1]);
- axis.innerHTML=[...labelIndices].sort((a,b)=>a-b).map(i=>`<span style="grid-column:${i+1}">${Number(dates[i].slice(8,10))}/${Number(dates[i].slice(5,7))}</span>`).join('');bars.innerHTML='';
+ const firstDay=Number(start.getDate()),lastDay=Number(end.getDate()),sameMonth=start.getFullYear()===end.getFullYear()&&start.getMonth()===end.getMonth(),fullMonth=sameMonth&&firstDay===1&&lastDay===new Date(start.getFullYear(),start.getMonth()+1,0).getDate();
+ let labelIndices;
+ if(fullMonth){const wantedDays=[1,7,14,21,28,lastDay],uniqueDays=[...new Set(wantedDays)].filter(day=>day<=lastDay);labelIndices=new Set(uniqueDays.map(day=>dates.findIndex(date=>Number(date.slice(8,10))===day)).filter(i=>i>=0));}
+ else {labelIndices=new Set([0,Math.floor((dates.length-1)/4),Math.floor((dates.length-1)/2),Math.floor(3*(dates.length-1)/4),dates.length-1]);}
+ axis.innerHTML=[...labelIndices].sort((a,b)=>a-b).map(i=>`<span style="grid-column:${i+1}">${fullMonth?Number(dates[i].slice(8,10)):Number(dates[i].slice(8,10))+'/'+Number(dates[i].slice(5,7))}</span>`).join('');bars.innerHTML='';
  dailyTotals.forEach((amount,index)=>{const date=dates[index],wrap=document.createElement('div');wrap.className='daily-chart-bar-wrap';const bar=document.createElement('button');bar.type='button';bar.className='daily-chart-bar '+(dailyChartType==='Expense'?'expense':'income');bar.style.height=`${maxAmount>0?Math.max(3,(amount/maxAmount)*100):3}%`;bar.setAttribute('aria-label',`${date}: ${money(amount)}`);bar.title=`${date}: ${money(amount)}`;if(dailyChartSelectedDate===date)bar.classList.add('selected');bar.addEventListener('click',()=>{dailyChartSelectedDate=date;renderDailyChart()});wrap.appendChild(bar);bars.appendChild(wrap)});
- const selected=$('dailyChartSelected');if(dates.includes(dailyChartSelectedDate)){const i=dates.indexOf(dailyChartSelectedDate);selected.innerHTML=`<strong>${esc(dailyChartSelectedDate)}</strong> · ${dailyChartType==='Expense'?'รายจ่าย':'รายรับ'} ${esc(money(dailyTotals[i]||0))}`}else selected.textContent='แตะแท่งกราฟเพื่อดูยอดของวันนั้น';
+ const selected=$('dailyChartSelected');
+ if(dates.includes(dailyChartSelectedDate)){
+  const i=dates.indexOf(dailyChartSelectedDate),dayTransactions=sortedTx(tx.filter(item=>item.type===dailyChartType&&String(item.date||'')===dailyChartSelectedDate));
+  const dayTotal=dayTransactions.reduce((sum,item)=>sum+(Number(item.amount)||0),0);
+  const rows=dayTransactions.length?dayTransactions.map(item=>`<div class="daily-chart-detail-item"><div style="min-width:0"><div class="daily-chart-detail-name">${esc(item.title||item.category||(dailyChartType==='Expense'?'รายจ่าย':'รายรับ'))}</div><div class="daily-chart-detail-meta">${esc(item.category||'ไม่ระบุหมวดหมู่')}${item.account?' · '+esc(item.account):''}${item.note?' · '+esc(item.note):''}</div></div><div class="daily-chart-detail-amount">${esc(money(item.amount))}</div></div>`).join(''):'<div class="daily-chart-detail-empty">วันนี้ไม่มีรายการ'+(dailyChartType==='Expense'?'รายจ่าย':'รายรับ')+'ที่บันทึกไว้</div>';
+  selected.innerHTML=`<div class="daily-chart-detail-head"><div><strong>${esc(dailyChartSelectedDate)}</strong><div class="daily-chart-detail-meta">${dailyChartType==='Expense'?'รายการรายจ่าย':'รายการรายรับ'} · ${dayTransactions.length} รายการ</div></div><strong>${esc(money(dayTotal||dailyTotals[i]||0))}</strong></div><div class="daily-chart-detail-list">${rows}</div>`;
+ }else selected.textContent='แตะแท่งกราฟเพื่อดูรายการและยอดเงินของวันนั้น';
 }
 document.querySelectorAll('.daily-chart-tab').forEach(button=>button.addEventListener('click',()=>{dailyChartType=button.dataset.chartType;document.querySelectorAll('.daily-chart-tab').forEach(tab=>tab.classList.toggle('active',tab===button));renderDailyChart()}));
 $('dailyChartFrom').addEventListener('change',()=>{document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
@@ -625,7 +914,7 @@ $('dailyChartTo').addEventListener('change',()=>{document.querySelectorAll('.dai
 document.querySelectorAll('.daily-chart-preset').forEach(button=>button.addEventListener('click',()=>setDailyChartRange(button.dataset.range)));
 function renderFinancialHealth(){const month=currentMonth(),totals=monthlyTotals(month),balances=accountBalances(),cash=Object.values(balances).reduce((s,n)=>s+n,0),debt=debts.reduce((s,d)=>s+(Number(d.balance)||0),0),now=new Date(),daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),elapsed=Math.max(1,now.getDate()),remaining=Math.max(0,daysInMonth-now.getDate()),predictedRemainingNet=((totals.income-totals.expense)/elapsed)*remaining,forecast=cash+predictedRemainingNet;$('forecastMonth').textContent=monthLabel(month);$('netWorthValue').textContent=money(cash-debt);$('netWorthValue').style.color=cash-debt<0?'var(--red)':'var(--green)';$('forecastBalance').textContent=money(forecast);$('forecastBalance').style.color=forecast<0?'var(--red)':'var(--green)';$('forecastNote').textContent=`ประมาณจากข้อมูล ${now.getDate()} วันแรก และคาดการณ์อีก ${remaining} วัน โดยสมมติว่าอัตรารายรับ/รายจ่ายใกล้เคียงเดิม ไม่รวมบิลอนาคตที่ยังไม่บันทึกเป็นรายการ`}
 function renderHome(){const totals=monthlyTotals(currentMonth()),balances=accountBalances();const totalBalance=Object.values(balances).reduce((s,n)=>s+n,0);$('balance').textContent=money(totalBalance);$('balance').style.color=totalBalance>0?'var(--green)':totalBalance<0?'var(--red)':'';$('income').textContent=money(totals.income);$('expense').textContent=money(totals.expense);$('homeAccounts').innerHTML=accounts.length?accounts.map(a=>`<div class="summaryline"><span>${esc(a.name)}</span><strong>${money(balances[a.name]||0)}</strong></div>`).join(''):emptyHTML('ยังไม่มีบัญชี');const recent=sortedTx().slice(0,5);$('recentList').innerHTML=recent.length?recent.map(transactionHTML).join(''):emptyHTML('ยังไม่มีรายการ เริ่มบันทึกรายการแรกได้เลยค่ะ');renderFinancialHealth();renderDailyChart();renderHomePlan()}
-function renderHistory(){const q=$('search').value.trim().toLowerCase(),f=$('filter').value,month=$('historyMonth').value,from=$('historyFrom').value,to=$('historyTo').value;const arr=sortedTx().filter(t=>{const d=String(t.date||'');return(f==='All'||t.type===f)&&(!month||d.startsWith(month))&&(!from||d>=from)&&(!to||d<=to)&&(!q||[t.title,t.note,t.category,t.account,t.to].some(v=>String(v||'').toLowerCase().includes(q)))});const total=arr.filter(t=>t.type==='Expense').reduce((sum,t)=>sum+(Number(t.amount)||0),0);$('historyCount').textContent=`พบ ${arr.length} รายการ · รายจ่ายรวม ${money(total)}`;$('historyList').innerHTML=arr.length?arr.map(transactionHTML).join(''):emptyHTML('ไม่พบรายการที่ตรงกับเงื่อนไข')}
+function renderHistory(){const q=$('search').value.trim().toLowerCase(),f=$('filter').value,month=$('historyMonth').value,from=$('historyFrom').value,to=$('historyTo').value;const arr=sortedTx().filter(t=>{const d=String(t.date||'');return(f==='All'||t.type===f)&&(!month||d.startsWith(month))&&(!from||d>=from)&&(!to||d<=to)&&(!q||[t.title,t.note,t.category,t.account,t.to].some(v=>String(v||'').toLowerCase().includes(q)))});const total=arr.filter(t=>t.type==='Expense').reduce((sum,t)=>sum+(Number(t.amount)||0),0);const limit=$('historyLimit')?.value||'5',shown=limit==='all'?arr:arr.slice(0,Number(limit));$('historyCount').textContent=`พบ ${arr.length} รายการ · แสดง ${shown.length} · รายจ่ายรวม ${money(total)}`;$('historyList').innerHTML=shown.length?shown.map(transactionHTML).join(''):emptyHTML('ไม่พบรายการที่ตรงกับเงื่อนไข')}
 function groupByCategory(arr,typeName){const groups={};arr.filter(t=>t.type===typeName).forEach(t=>{const c=t.category||'ไม่ระบุหมวดหมู่';groups[c]=(groups[c]||0)+(Number(t.amount)||0)});const entries=Object.entries(groups).sort((a,b)=>b[1]-a[1]),max=Math.max(1,...entries.map(e=>e[1]));return entries.length?entries.map(([name,value])=>`<div style="padding:10px 0"><div class="summaryline" style="padding:0;border:0"><span>${esc(name)}</span><strong>${money(value)}</strong></div><div class="progress"><span style="width:${Math.max(0,Math.min(100,value/max*100))}%"></span></div></div>`).join(''):emptyHTML('ยังไม่มีข้อมูลในเดือนนี้')}
 function shiftMonth(month,delta){const [y,m]=month.split('-').map(Number),d=new Date(y,m-1+delta,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
 function monthLabel(month){const [y,m]=month.split('-').map(Number);return `${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m-1]} ${String(y+543).slice(-2)}`}
@@ -640,7 +929,7 @@ function monthPaid(bill,month){return Array.isArray(bill.paidMonths)&&bill.paidM
 function renderHomePlan(){const month=currentMonth();$('homePlanMonth').textContent=monthLabel(month);const monthBudgets=budgets.filter(b=>b.month===month);const spent=tx.filter(t=>t.type==='Expense'&&String(t.date||'').startsWith(month)).reduce((s,t)=>s+(Number(t.amount)||0),0);const totalBudget=monthBudgets.reduce((s,b)=>s+(Number(b.limit)||0),0);$('homeBudgetPreview').textContent=monthBudgets.length?`${money(spent)} ใช้จากงบ ${money(totalBudget)}`:'ตั้งงบรายเดือน';$('homeBudgetList').innerHTML=monthBudgets.length?monthBudgets.slice(0,4).map(b=>{const used=monthExpenseByCategory(month,b.category),limit=Number(b.limit)||0,pct=limit>0?used/limit*100:0;return `<div style="padding:9px 0"><div class="summaryline" style="padding:0;border:0"><span>${esc(b.category)}</span><strong class="${pct>100?'exp':''}">${money(used)} / ${money(limit)}</strong></div><div class="feature-progress ${pct>100?'over':''}"><span style="width:${Math.min(100,Math.max(0,pct))}%;background:${pct>100?'var(--red)':'var(--green)'}"></span></div><div class="feature-meta">${pct>100?`เกินงบ ${money(used-limit)}`:`เหลืองบ ${money(Math.max(0,limit-used))}`}</div></div>`}).join(''):emptyHTML('ยังไม่ได้ตั้งงบเดือนนี้ค่ะ');const dueBills=bills.filter(b=>!monthPaid(b,month)).sort((a,b)=>(Number(a.day)||1)-(Number(b.day)||1));$('homeBillsPreview').textContent=bills.length?`${dueBills.length} บิลยังไม่ทำเครื่องหมายว่าจ่ายแล้ว`:'เพิ่มบิลที่จ่ายประจำ';$('homeBillsList').innerHTML=dueBills.length?dueBills.slice(0,3).map(b=>`<div class="summaryline"><span>${esc(b.name)}<div class="feature-meta">ครบกำหนดวันที่ ${Number(b.day)||1}</div></span><strong>${money(b.amount)}</strong></div>`).join(''):emptyHTML(bills.length?'ทำเครื่องหมายบิลเดือนนี้ครบแล้ว':'ยังไม่มีบิลประจำ');const debtTotal=debts.reduce((s,d)=>s+(Number(d.balance)||0),0);$('homeDebtPreview').textContent=debts.length?`${debts.length} รายการ · ${money(debtTotal)}`:'เพิ่มรายการหนี้';$('homeGoalsPreview').textContent=goals.length?`${goals.filter(g=>Number(g.saved)>=Number(g.target)).length}/${goals.length} เป้าหมายสำเร็จ`:'ตั้งเป้าหมายแรก';$('homeGoalsList').innerHTML=goals.length?goals.slice(0,3).map(g=>{const target=Number(g.target)||0,saved=Number(g.saved)||0,pct=target>0?saved/target*100:0;return `<div style="padding:9px 0"><div class="summaryline" style="padding:0;border:0"><span>${esc(g.name)}</span><strong>${Math.min(100,pct).toFixed(0)}%</strong></div><div class="feature-progress"><span style="width:${Math.min(100,Math.max(0,pct))}%"></span></div><div class="feature-meta">${money(saved)} / ${money(target)}</div></div>`}).join(''):emptyHTML('เพิ่มเป้าหมายการออมเพื่อเริ่มติดตามค่ะ')}
 function refreshFeatureSelects(){if($('budgetCategory'))fillSelect('budgetCategory',cats.Expense);if($('billCategory'))fillSelect('billCategory',cats.Expense);if($('billAccount'))fillSelect('billAccount',accounts.map(a=>a.name))}
 function renderPlanning(){if(!$('budgetMonth'))return;if(!$('budgetMonth').value)$('budgetMonth').value=currentMonth();refreshFeatureSelects();const month=planMonth();const list=budgets.filter(b=>b.month===month).sort((a,b)=>String(a.category).localeCompare(String(b.category),'th'));$('budgetList').innerHTML=list.length?list.map(b=>{const used=monthExpenseByCategory(month,b.category),limit=Number(b.limit)||0,pct=limit>0?used/limit*100:0;return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(b.category)}</strong><div class="feature-meta">ใช้ไป ${money(used)} จาก ${money(limit)}</div></div><strong class="${pct>100?'exp':'inc'}">${pct.toFixed(0)}%</strong></div><div class="feature-progress ${pct>100?'over':''}"><span style="width:${Math.min(100,Math.max(0,pct))}%"></span></div><div class="feature-meta">${pct>100?`เกินงบ ${money(used-limit)}`:`คงเหลือ ${money(Math.max(0,limit-used))}`}</div><div class="feature-actions"><button class="btn secondary" data-budget-edit="${esc(b.id)}">แก้ไขงบ</button><button class="btn danger" data-budget-del="${esc(b.id)}">ลบ</button></div></div>`}).join(''):emptyHTML('ยังไม่มีงบประมาณในเดือนนี้');$('billList').innerHTML=bills.length?bills.slice().sort((a,b)=>(Number(a.day)||1)-(Number(b.day)||1)).map(b=>{const paid=monthPaid(b,month);return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(b.name)}</strong><div class="feature-meta">ครบกำหนดวันที่ ${Number(b.day)||1} · ${esc(b.category||'ไม่ระบุหมวดหมู่')} · ${esc(b.account||'ไม่ระบุบัญชี')}</div></div><div style="text-align:right"><strong>${money(b.amount)}</strong><div class="feature-meta ${paid?'status-paid':'status-due'}">${paid?'จ่ายแล้ว':'ยังไม่จ่าย'}</div></div></div><div class="feature-actions"><button class="btn ${paid?'secondary':'primary'}" data-bill-toggle="${esc(b.id)}">${paid?'ยกเลิกสถานะจ่าย':'ทำเครื่องหมายว่าจ่ายแล้ว'}</button><button class="btn danger" data-bill-del="${esc(b.id)}">ลบบิล</button></div></div>`}).join(''):emptyHTML('ยังไม่มีบิลประจำ');renderDebts();renderHomePlan()}
-function renderDebts(){const total=debts.reduce((s,d)=>s+(Number(d.balance)||0),0),minimum=debts.reduce((s,d)=>s+(Number(d.minimum)||0),0);$('debtTotal').textContent=money(total);$('debtMinimum').textContent=money(minimum);$('debtList').innerHTML=debts.length?debts.map(d=>`<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(d.name)}</strong><div class="feature-meta">ดอกเบี้ย ${Number(d.rate)||0}% ต่อปี · ขั้นต่ำ ${money(d.minimum||0)}/เดือน</div></div><strong class="exp">${money(d.balance)}</strong></div><div class="feature-actions"><button class="btn secondary" data-debt-pay="${esc(d.id)}">บันทึกชำระหนี้</button><button class="btn secondary" data-debt-edit="${esc(d.id)}">แก้ไขยอด</button><button class="btn danger" data-debt-del="${esc(d.id)}">ลบ</button></div></div>`).join(''):emptyHTML('ยังไม่มีรายการหนี้ค่ะ')}
+function renderDebts(){const total=debts.reduce((s,d)=>s+(Number(d.balance)||0),0),minimum=debts.reduce((s,d)=>s+(Number(d.minimum)||0),0);$('debtTotal').textContent=money(total);$('debtMinimum').textContent=money(minimum);$('debtList').innerHTML=debts.length?debts.map(d=>{const payments=Array.isArray(d.payments)?d.payments.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||Number(b.id||0)-Number(a.id||0)):[],paidTotal=payments.reduce((s,p)=>s+(Number(p.amount)||0),0);return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(d.name)}</strong><div class="feature-meta">ดอกเบี้ย ${Number(d.rate)||0}% ต่อปี · ขั้นต่ำ ${money(d.minimum||0)}/เดือน</div></div><strong class="exp">${money(d.balance)}</strong></div><div class="feature-actions"><button class="btn primary" data-debt-pay="${esc(d.id)}">＋ บันทึกชำระหนี้</button><button class="btn secondary" data-debt-edit="${esc(d.id)}">แก้ไขยอด</button><button class="btn danger" data-debt-del="${esc(d.id)}">ลบ</button></div><details class="debt-payment-history" style="margin-top:10px"><summary style="cursor:pointer;font-weight:600;padding:7px 0">ประวัติการชำระ (${payments.length} ครั้ง) · ชำระสะสม ${money(paidTotal)}</summary>${payments.length?`<div style="display:grid;gap:8px;padding-top:8px">${payments.map(p=>`<div class="summaryline" style="align-items:flex-start"><span>${esc(p.date||'ไม่ระบุวันที่')}<div class="feature-meta">ยอดคงเหลือหลังชำระ ${money(p.balanceAfter??d.balance)}</div></span><strong class="inc">−${money(p.amount)}</strong></div>`).join('')}</div>`:`<p class="small">ยังไม่มีประวัติการชำระหนี้ค่ะ</p>`}</details></div>`}).join(''):emptyHTML('ยังไม่มีรายการหนี้ค่ะ')}
 function renderGoals(){const totalTarget=goals.reduce((s,g)=>s+(Number(g.target)||0),0),totalSaved=goals.reduce((s,g)=>s+(Number(g.saved)||0),0);$('goalsTotalTarget').textContent=money(totalTarget);$('goalsTotalSaved').textContent=money(totalSaved);$('goalList').innerHTML=goals.length?goals.map(g=>{const target=Number(g.target)||0,saved=Number(g.saved)||0,pct=target>0?saved/target*100:0,remain=Math.max(0,target-saved);return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(g.name)}</strong><div class="feature-meta">${g.date?'เป้าหมายวันที่ '+esc(g.date):'ยังไม่ได้กำหนดวันที่'}</div></div><strong class="${saved>=target?'inc':''}">${Math.min(100,pct).toFixed(1)}%</strong></div><div class="feature-progress"><span style="width:${Math.min(100,Math.max(0,pct))}%"></span></div><div class="feature-meta">ออมแล้ว ${money(saved)} / ${money(target)} · ${saved>=target?'ถึงเป้าหมายแล้ว':`เหลืออีก ${money(remain)}`}</div><div class="feature-actions"><button class="btn primary" data-goal-add="${esc(g.id)}">＋ เพิ่มเงินออม</button><button class="btn secondary" data-goal-edit="${esc(g.id)}">แก้ไข</button><button class="btn danger" data-goal-del="${esc(g.id)}">ลบ</button></div></div>`}).join(''):emptyHTML('ยังไม่มีเป้าหมายการออมค่ะ')}
 $('budgetMonth').addEventListener('change',renderPlanning);
 $('budgetForm').addEventListener('submit',e=>{e.preventDefault();const category=$('budgetCategory').value,limit=Number($('budgetLimit').value),month=planMonth();if(!category||!(limit>0))return;const existing=budgets.find(b=>b.month===month&&b.category===category);if(existing)existing.limit=limit;else budgets.push({id:Date.now(),month,category,limit});savePlans();$('budgetLimit').value='';$('budgetMessage').textContent='บันทึกงบประมาณแล้ว';renderPlanning()});
@@ -648,7 +937,7 @@ $('budgetList').addEventListener('click',e=>{const edit=e.target.closest('[data-
 $('billForm').addEventListener('submit',e=>{e.preventDefault();const name=$('billName').value.trim(),amount=Number($('billAmount').value),day=Number($('billDay').value);if(!name||!(amount>0)||day<1||day>31)return;bills.push({id:Date.now(),name,amount,day,category:$('billCategory').value||'ไม่ระบุหมวดหมู่',account:$('billAccount').value||'',paidMonths:[]});savePlans();$('billForm').reset();$('billDay').value='1';refreshFeatureSelects();$('billMessage').textContent='เพิ่มบิลประจำแล้ว';renderPlanning()});
 $('billList').addEventListener('click',e=>{const toggle=e.target.closest('[data-bill-toggle]'),del=e.target.closest('[data-bill-del]');if(toggle){const b=bills.find(x=>String(x.id)===toggle.dataset.billToggle);if(!b)return;b.paidMonths=Array.isArray(b.paidMonths)?b.paidMonths:[];b.paidTransactions=b.paidTransactions&&typeof b.paidTransactions==='object'?b.paidTransactions:{};const month=planMonth();if(monthPaid(b,month)){const linkedId=b.paidTransactions[month];if(linkedId&&confirm('บิลนี้มีรายการรายจ่ายที่สร้างจากแอปค่ะ ต้องการยกเลิกสถานะจ่ายและลบรายการรายจ่ายที่เชื่อมกันด้วยไหมคะ? กด Cancel เพื่อคงรายการรายจ่ายไว้')){tx=tx.filter(t=>String(t.id)!==String(linkedId));saveAll()}b.paidMonths=b.paidMonths.filter(m=>m!==month);delete b.paidTransactions[month]}else{if(!confirm(`ทำเครื่องหมายว่าจ่าย ${b.name} จำนวน ${money(b.amount)} แล้ว และสร้างรายการรายจ่ายให้อัตโนมัติใช่ไหมคะ?`))return;const dueDay=Math.min(Math.max(1,Number(b.day)||1),new Date(Number(month.slice(0,4)),Number(month.slice(5,7)),0).getDate()),date=`${month}-${String(dueDay).padStart(2,'0')}`;const linked={id:Date.now(),type:'Expense',amount:Number(b.amount)||0,date,title:`บิล: ${b.name}`,note:'สร้างจากบิลประจำ MyMoney',category:cats.Expense.includes(b.category)?b.category:(cats.Expense.includes('บิล/ค่าน้ำไฟ')?'บิล/ค่าน้ำไฟ':cats.Expense[0]||'อื่น ๆ'),account:accounts.some(a=>a.name===b.account)?b.account:(accounts[0]?.name||''),to:'',createdAt:new Date().toISOString(),linkedBillId:b.id,linkedBillMonth:month};if(!(linked.amount>0)||!linked.account){alert('กรุณาตั้งค่าบัญชีและจำนวนเงินของบิลให้ถูกต้องก่อนค่ะ');return}tx.push(linked);b.paidMonths=[...b.paidMonths,month];b.paidTransactions[month]=linked.id;saveAll()}savePlans();render();renderPlanning()}if(del){if(!confirm('ลบบิลประจำนี้ใช่ไหมคะ? รายการรายจ่ายที่บันทึกไปแล้วจะไม่ถูกลบ'))return;bills=bills.filter(x=>String(x.id)!==del.dataset.billDel);savePlans();renderPlanning()}});
 $('debtForm').addEventListener('submit',e=>{e.preventDefault();const name=$('debtName').value.trim(),balance=Number($('debtBalance').value),rate=Number($('debtRate').value)||0,minimum=Number($('debtMinimumInput').value)||0;if(!name||!(balance>0))return;debts.push({id:Date.now(),name,balance,rate,minimum});savePlans();$('debtForm').reset();$('debtRate').value='0';$('debtMinimumInput').value='0';$('debtMessage').textContent='เพิ่มรายการหนี้แล้ว';renderPlanning()});
-$('debtList').addEventListener('click',e=>{const pay=e.target.closest('[data-debt-pay]'),edit=e.target.closest('[data-debt-edit]'),del=e.target.closest('[data-debt-del]');if(pay){const d=debts.find(x=>String(x.id)===pay.dataset.debtPay);if(!d)return;const raw=prompt(`ยอดหนี้คงเหลือ ${money(d.balance)}\nกรอกยอดที่ชำระครั้งนี้ (บาท)`,String(Math.min(Number(d.minimum)||0,Number(d.balance)||0)||''));if(raw===null)return;const amount=Number(raw);if(!(amount>0)||!Number.isFinite(amount)){alert('กรุณากรอกยอดชำระที่ถูกต้องค่ะ');return}if(amount>Number(d.balance)){if(!confirm('ยอดชำระสูงกว่ายอดหนี้คงเหลือ ต้องการปิดหนี้โดยปรับยอดเป็น 0 ใช่ไหมคะ?'))return}const makeExpense=confirm('ต้องการสร้างรายการรายจ่าย “ชำระหนี้” ให้อัตโนมัติด้วยไหมคะ? กด Cancel หากคุณบันทึกรายจ่ายนี้ไว้แล้ว เพื่อป้องกันยอดซ้ำ');if(makeExpense){if(!accounts.length){alert('ยังไม่มีบัญชีสำหรับบันทึกรายจ่าย กรุณาเพิ่มบัญชีก่อนค่ะ');return}tx.push({id:Date.now(),type:'Expense',amount,date:localDate(),title:`ชำระหนี้: ${d.name}`,note:'สร้างจากการติดตามหนี้ MyMoney',category:cats.Expense.includes('หนี้สิน')?'หนี้สิน':(cats.Expense[0]||'อื่น ๆ'),account:accounts[0].name,to:'',createdAt:new Date().toISOString(),linkedDebtId:d.id})}d.balance=Math.max(0,Number(d.balance)-amount);saveAll();savePlans();render();renderPlanning()}if(edit){const d=debts.find(x=>String(x.id)===edit.dataset.debtEdit);if(!d)return;const raw=prompt('แก้ไขยอดหนี้คงเหลือ (บาท)',String(d.balance));if(raw===null)return;const balance=Number(raw);if(!Number.isFinite(balance)||balance<0)return;d.balance=balance;savePlans();renderPlanning()}if(del){if(!confirm('ลบรายการหนี้นี้ใช่ไหมคะ?'))return;debts=debts.filter(x=>String(x.id)!==del.dataset.debtDel);savePlans();renderPlanning()}});
+$('debtList').addEventListener('click',e=>{const pay=e.target.closest('[data-debt-pay]'),edit=e.target.closest('[data-debt-edit]'),del=e.target.closest('[data-debt-del]');if(pay){const d=debts.find(x=>String(x.id)===pay.dataset.debtPay);if(!d)return;const currentBalance=Math.max(0,Number(d.balance)||0);if(currentBalance<=0){alert('หนี้รายการนี้ชำระครบแล้วค่ะ');return}const raw=prompt(`ยอดหนี้คงเหลือ ${money(currentBalance)}\nกรอกยอดที่ชำระครั้งนี้ (บาท)`,String(Math.min(Number(d.minimum)||0,currentBalance)||''));if(raw===null)return;const amount=Number(raw);if(!(amount>0)||!Number.isFinite(amount)){alert('กรุณากรอกยอดชำระที่ถูกต้องค่ะ');return}if(amount>currentBalance&&!confirm('ยอดชำระสูงกว่ายอดหนี้คงเหลือ ต้องการบันทึกเป็นการปิดหนี้โดยปรับยอดคงเหลือเป็น 0 ใช่ไหมคะ?'))return;const makeExpense=confirm('ต้องการสร้างรายการรายจ่าย “ชำระหนี้” ให้อัตโนมัติด้วยไหมคะ? กด Cancel หากคุณบันทึกรายจ่ายนี้ไว้แล้ว เพื่อป้องกันยอดซ้ำ');if(makeExpense&&!accounts.length){alert('ยังไม่มีบัญชีสำหรับบันทึกรายจ่าย กรุณาเพิ่มบัญชีก่อนค่ะ');return}const paymentId=Date.now(),paidAmount=Math.min(amount,currentBalance),balanceAfter=Math.max(0,currentBalance-paidAmount),paymentDate=localDate();d.payments=Array.isArray(d.payments)?d.payments:[];let linkedTransactionId=null;if(makeExpense){linkedTransactionId=paymentId;tx.push({id:linkedTransactionId,type:'Expense',amount:paidAmount,date:paymentDate,title:`ชำระหนี้: ${d.name}`,note:'สร้างจากการติดตามหนี้ MyMoney',category:cats.Expense.includes('หนี้สิน')?'หนี้สิน':(cats.Expense[0]||'อื่น ๆ'),account:accounts[0].name,to:'',createdAt:new Date().toISOString(),linkedDebtId:d.id,linkedDebtPaymentId:paymentId})}d.payments.push({id:paymentId,date:paymentDate,amount:paidAmount,balanceBefore:currentBalance,balanceAfter,transactionId:linkedTransactionId});d.balance=balanceAfter;saveAll();savePlans();render();renderPlanning();alert(`บันทึกชำระหนี้ ${money(paidAmount)} แล้วค่ะ\nยอดคงเหลือ ${money(balanceAfter)}`)}if(edit){const d=debts.find(x=>String(x.id)===edit.dataset.debtEdit);if(!d)return;const raw=prompt('แก้ไขยอดหนี้คงเหลือ (บาท)',String(d.balance));if(raw===null)return;const balance=Number(raw);if(!Number.isFinite(balance)||balance<0)return;d.balance=balance;savePlans();renderPlanning()}if(del){if(!confirm('ลบรายการหนี้นี้ใช่ไหมคะ? ประวัติการชำระของรายการนี้จะถูกลบด้วย'))return;debts=debts.filter(x=>String(x.id)!==del.dataset.debtDel);savePlans();renderPlanning()}});
 $('goalForm').addEventListener('submit',e=>{e.preventDefault();const name=$('goalName').value.trim(),target=Number($('goalTarget').value),saved=Number($('goalSaved').value)||0,date=$('goalDate').value;if(!name||!(target>0)||saved<0)return;goals.push({id:Date.now(),name,target,saved,date});savePlans();$('goalForm').reset();$('goalSaved').value='0';$('goalMessage').textContent='เพิ่มเป้าหมายแล้ว';renderGoals();renderHomePlan()});
 $('goalList').addEventListener('click',e=>{const add=e.target.closest('[data-goal-add]'),edit=e.target.closest('[data-goal-edit]'),del=e.target.closest('[data-goal-del]');if(add){const g=goals.find(x=>String(x.id)===add.dataset.goalAdd);if(!g)return;const amount=Number(prompt(`ออมแล้ว ${money(g.saved)} จากเป้าหมาย ${money(g.target)}\nเพิ่มเงินออม (บาท)`,'0'));if(!(amount>0))return;g.saved=Number(g.saved)+amount;savePlans();renderGoals();renderHomePlan()}if(edit){const g=goals.find(x=>String(x.id)===edit.dataset.goalEdit);if(!g)return;const name=prompt('ชื่อเป้าหมาย',g.name);if(name===null)return;const targetRaw=prompt('ยอดเป้าหมาย (บาท)',String(g.target));if(targetRaw===null)return;const target=Number(targetRaw);if(!name.trim()||!(target>0))return;const savedRaw=prompt('เงินที่ออมแล้ว (บาท)',String(g.saved));if(savedRaw===null)return;const saved=Number(savedRaw);if(!Number.isFinite(saved)||saved<0)return;g.name=name.trim();g.target=target;g.saved=saved;savePlans();renderGoals();renderHomePlan()}if(del){if(!confirm('ลบเป้าหมายนี้ใช่ไหมคะ?'))return;goals=goals.filter(x=>String(x.id)!==del.dataset.goalDel);savePlans();renderGoals();renderHomePlan()}});
 function render(){renderHome();renderHistory();renderReports()}
@@ -659,6 +948,7 @@ document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit]')
 $('cancelEdit').addEventListener('click',resetForm);
 // Slip OCR: image is processed in this browser tab; OCR assets are loaded from a CDN.
 let selectedSlipFile=null, slipWorkerPromise=null;
+$('slipToggle').addEventListener('click',()=>{const expanded=$('slipToggle').getAttribute('aria-expanded')==='true';$('slipToggle').setAttribute('aria-expanded',String(!expanded));$('slipPanel').hidden=expanded;if(!expanded){document.documentElement.classList.add('slip-read');document.body.classList.add('slip-read');try{if($('slipProgressWrap'))$('slipProgressWrap').scrollIntoView({block:'nearest',behavior:'smooth'});}catch(e){}}});
 $('chooseSlip').addEventListener('click',()=>$('slipFile').click());
 $('slipFile').addEventListener('change',e=>{
  const file=e.target.files?.[0]; if(!file)return;
@@ -719,9 +1009,8 @@ function parseSlipTitle(text){
 }
 $('readSlip').addEventListener('click',async()=>{
  if(!selectedSlipFile)return;
- $('readSlip').disabled=true;$('slipProgressWrap').hidden=false;$('slipStatus').textContent='กำลังเริ่มระบบอ่านสลิป… สามารถเลื่อนหน้าจอได้ระหว่างรอ';$('slipProgressBar').style.width='3%';
- // Yield to the browser before OCR starts so mobile scrolling and progress updates remain responsive.
- await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ document.documentElement.classList.add('slip-read');document.body.classList.add('slip-read');
+ $('readSlip').disabled=true;$('slipProgressWrap').hidden=false;$('slipStatus').textContent='กำลังเริ่มระบบอ่านสลิป…';$('slipProgressBar').style.width='3%';
  try{
   const worker=await getSlipWorker();
   const result=await worker.recognize(selectedSlipFile);const text=result?.data?.text||'';$('slipRaw').textContent=text||'ไม่พบข้อความในรูปนี้';
@@ -732,12 +1021,14 @@ $('readSlip').addEventListener('click',async()=>{
   $('title').value=parseSlipTitle(text);filled.push('ชื่อรายการ');
   const noteParts=[];if(selectedSlipFile.name)noteParts.push('สลิป: '+selectedSlipFile.name);$('note').value=noteParts.join(' · ').slice(0,160);
   $('slipProgressBar').style.width='100%';$('slipStatus').textContent=filled.length?`อ่านเสร็จแล้ว เติมข้อมูล: ${filled.join(' / ')} — ตรวจสอบทุกช่องก่อนบันทึก`:'อ่านข้อความได้ แต่ไม่พบยอดเงินหรือวันที่ที่เชื่อถือได้ กรุณากรอกเอง';
-  if(amount===null){try{$('amount').focus({preventScroll:true})}catch(_){}}else if(!date){try{$('date').focus({preventScroll:true})}catch(_){}}
+  try{$('slipProgressWrap').scrollIntoView({block:'nearest',behavior:'smooth'});}catch(e){}
+  if(amount===null)$('amount').focus();else if(!date)$('date').focus();
  }catch(err){$('slipStatus').textContent=err.message||'อ่านสลิปไม่สำเร็จ กรุณาลองใหม่';}
- finally{$('readSlip').disabled=false;$('slipProgressWrap').scrollIntoView({block:'nearest',behavior:'smooth'})}
+ finally{$('readSlip').disabled=false}
 });
 $('form').addEventListener('submit' ,e=>{e.preventDefault();const amount=Number($('amount').value),title=$('title').value.trim();if(!(amount>0)||!title)return;let account,to='';if(type==='Transfer'){account=$('transferFrom').value;to=$('transferTo').value;if(account===to){$('message').textContent='บัญชีต้นทางและปลายทางต้องต่างกัน';return}if(!account||!to){$('message').textContent='กรุณาตั้งค่าบัญชีให้ครบก่อน';return}}else account=$('account').value;const old=editingId===null?null:tx.find(t=>String(t.id)===String(editingId)),record={id:old?old.id:Date.now(),type,amount,date:$('date').value,title,note:$('note').value.trim(),category:type==='Transfer'?'โอนเงิน':$('category').value,account,to,createdAt:old?.createdAt||new Date().toISOString()};if(editingId!==null)tx=tx.map(t=>String(t.id)===String(editingId)?record:t);else tx.push(record);saveAll();resetForm();render();$('message').textContent='บันทึกเรียบร้อยแล้ว';navigate('home')});
-$('search').addEventListener('input',renderHistory);$('filter').addEventListener('change',renderHistory);$('historyMonth').addEventListener('change',()=>{if($('historyMonth').value){$('historyFrom').value='';$('historyTo').value=''}renderHistory()});$('historyFrom').addEventListener('change',()=>{if($('historyFrom').value)$('historyMonth').value='';renderHistory()});$('historyTo').addEventListener('change',()=>{if($('historyTo').value)$('historyMonth').value='';renderHistory()});document.querySelectorAll('[data-date-range]').forEach(btn=>btn.addEventListener('click',()=>{const now=new Date(),fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let from,to=fmt(now);if(btn.dataset.dateRange==='today')from=to;else if(btn.dataset.dateRange==='7days'){const d=new Date(now);d.setDate(d.getDate()-6);from=fmt(d)}else if(btn.dataset.dateRange==='month')from=fmt(new Date(now.getFullYear(),now.getMonth(),1));else{from=fmt(new Date(now.getFullYear(),now.getMonth()-1,1));to=fmt(new Date(now.getFullYear(),now.getMonth(),0))}$('historyMonth').value='';$('historyFrom').value=from;$('historyTo').value=to;$('filter').value='Expense';renderHistory()}));$('clearFilters').addEventListener('click',()=>{$('search').value='';$('filter').value='All';$('historyMonth').value='';$('historyFrom').value='';$('historyTo').value='';renderHistory()});$('reportMonth').addEventListener('change',renderReports);
+$('accountsSettingsToggle').addEventListener('click',()=>{const expanded=$('accountsSettingsToggle').getAttribute('aria-expanded')==='true';$('accountsSettingsToggle').setAttribute('aria-expanded',String(!expanded));$('accountsSettingsPanel').hidden=expanded;});$('categoriesSettingsToggle').addEventListener('click',()=>{const expanded=$('categoriesSettingsToggle').getAttribute('aria-expanded')==='true';$('categoriesSettingsToggle').setAttribute('aria-expanded',String(!expanded));$('categoriesSettingsPanel').hidden=expanded;});['backup','language'].forEach(name=>{const toggle=$(name+'SettingsToggle'),panel=$(name+'SettingsPanel');toggle.addEventListener('click',()=>{const expanded=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!expanded));panel.hidden=expanded;});});
+$('historyFilterToggle').addEventListener('click',()=>{const expanded=$('historyFilterToggle').getAttribute('aria-expanded')==='true';$('historyFilterToggle').setAttribute('aria-expanded',String(!expanded));$('historyFilterPanel').hidden=expanded;});$('historyLimit').addEventListener('change',renderHistory);$('search').addEventListener('input',renderHistory);$('filter').addEventListener('change',renderHistory);$('historyMonth').addEventListener('change',()=>{if($('historyMonth').value){$('historyFrom').value='';$('historyTo').value=''}renderHistory()});$('historyFrom').addEventListener('change',()=>{if($('historyFrom').value)$('historyMonth').value='';renderHistory()});$('historyTo').addEventListener('change',()=>{if($('historyTo').value)$('historyMonth').value='';renderHistory()});document.querySelectorAll('[data-date-range]').forEach(btn=>btn.addEventListener('click',()=>{const now=new Date(),fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let from,to=fmt(now);if(btn.dataset.dateRange==='today')from=to;else if(btn.dataset.dateRange==='7days'){const d=new Date(now);d.setDate(d.getDate()-6);from=fmt(d)}else if(btn.dataset.dateRange==='month')from=fmt(new Date(now.getFullYear(),now.getMonth(),1));else{from=fmt(new Date(now.getFullYear(),now.getMonth()-1,1));to=fmt(new Date(now.getFullYear(),now.getMonth(),0))}$('historyMonth').value='';$('historyFrom').value=from;$('historyTo').value=to;$('filter').value='Expense';renderHistory()}));$('clearFilters').addEventListener('click',()=>{$('search').value='';$('filter').value='All';$('historyMonth').value='';$('historyFrom').value='';$('historyTo').value='';renderHistory()});$('reportMonth').addEventListener('change',renderReports);
 function renderSettings(){$('accountSettings').innerHTML=accounts.map((a,i)=>`<div class="settings-row"><div class="grow"><strong>${esc(a.name)}</strong><div class="small">ยอดตั้งต้น (บาท)</div></div><input type="number" step="0.01" data-opening="${i}" value="${Number(a.opening)||0}" aria-label="ยอดตั้งต้น ${esc(a.name)}"><button class="btn secondary" data-edit-account="${i}" aria-label="แก้ไขบัญชี">แก้ไข</button><button class="btn danger" data-remove-account="${i}" aria-label="ลบบัญชี">ลบ</button></div>`).join('')||emptyHTML('ยังไม่มีบัญชี');renderCategorySettings()}
 function renderCategorySettings(){const t=$('categoryType').value;$('categorySettings').innerHTML=(cats[t]||[]).map((c,i)=>`<div class="settings-row"><div class="grow">${esc(c)}</div><button class="btn secondary" data-edit-category="${i}" aria-label="แก้ไขหมวดหมู่">แก้ไข</button><button class="btn danger" data-remove-category="${i}">ลบ</button></div>`).join('')||emptyHTML('ยังไม่มีหมวดหมู่')}
 $('addAccount').addEventListener('click',()=>{const name=prompt('ชื่อบัญชีใหม่ เช่น บัญชีออมทรัพย์');if(name===null)return;const clean=name.trim();if(!clean)return;if(accounts.some(a=>a.name.toLowerCase()===clean.toLowerCase())){alert('มีบัญชีชื่อนี้แล้วค่ะ');return}accounts.push({name:clean,opening:0});saveAll();renderSettings();setType(type);render()});
@@ -761,37 +1052,13 @@ if(appLang==='en')translateTree(document.body);
 const __i18nObserver=new MutationObserver(muts=>{if(appLang!=='en')return;for(const m of muts){if(m.type==='childList'){m.addedNodes.forEach(n=>translateNode(n));}else if(m.type==='characterData'){const n=m.target;if(n&&n.nodeType===3){if(n.__orig===undefined)n.__orig=n.nodeValue;const t=translateText(n.__orig);if(n.nodeValue!==t)n.nodeValue=t;}}}});
 __i18nObserver.observe(document.body,{childList:true,subtree:true,characterData:true});
 
+  const splash=document.getElementById('splashScreen');
+  const hideSplash=()=>{if(!splash||splash.classList.contains('splash-hide'))return;splash.classList.add('splash-hide');setTimeout(()=>splash.remove(),650);};
+  setTimeout(hideSplash,Math.max(300,900-(Date.now()-splashShownAt)));
+
+}, 0);
 </script>
-<script>
-(() => {
-  const splash = document.getElementById("mymoney-splash");
-  if (!splash) return;
 
-  let hidden = false;
-  function hideSplash() {
-    if (hidden) return;
-    hidden = true;
-    splash.classList.add("hide");
-    window.setTimeout(() => {
-      if (splash.parentNode) splash.parentNode.removeChild(splash);
-    }, 400);
-  }
-
-  const enterBtn = document.getElementById("splashEnter");
-  if (enterBtn) enterBtn.addEventListener("click", hideSplash);
-
-  // เข้าสู่แอพอัตโนมัติหลัง 1.5 วินาที
-  window.setTimeout(hideSplash, 2000);
-
-  // สำรอง: ถ้าค้าง ให้ลบออกใน 4 วินาที
-  window.setTimeout(() => {
-    if (document.body.contains(splash)) {
-      splash.classList.add("hide");
-      if (splash.parentNode) splash.parentNode.removeChild(splash);
-    }
-  }, 4000);
-})();
-</script>
 
 </body>
 </html>
