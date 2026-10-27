@@ -414,10 +414,44 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
   box-shadow: 0 4px 16px rgba(75, 220, 156, 0.18), inset 0 1px 0 rgba(255,255,255,.4);
 }
 
+/* Splash / loading screen */
+#splashScreen{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(1200px 800px at 50% -10%,#1f2630 0%,transparent 60%),radial-gradient(900px 700px at 100% 100%,#1a1f26 0%,transparent 55%),#000000;color:var(--ink);overflow:hidden;transition:opacity .6s ease,visibility .6s ease,transform .6s ease}
+#splashScreen.splash-hide{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.03)}
+.splash-inner{display:grid;place-items:center;gap:18px;text-align:center;padding:24px;max-width:420px;width:100%}
+.splash-logo-wrap{position:relative;width:112px;height:112px;display:grid;place-items:center}
+.splash-glow{position:absolute;inset:-28px;border-radius:50%;background:radial-gradient(circle,rgba(185,194,203,.22) 0%,transparent 65%);filter:blur(10px);animation:splashPulse 2.2s ease-in-out infinite}
+.splash-ring{position:absolute;inset:-16px;border-radius:50%;border:2px solid rgba(185,194,203,.16);border-top-color:rgba(185,194,203,.9);animation:splashSpin 1.5s linear infinite}
+.splash-logo{width:90px;height:90px;border-radius:24px;object-fit:cover;box-shadow:0 20px 46px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08);animation:splashFloat 2.6s ease-in-out infinite}
+.splash-title{font-size:30px;font-weight:800;letter-spacing:.6px;margin:0;background:linear-gradient(180deg,#ffffff 0%,#b9c2cb 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.splash-subtitle{font-size:13px;color:var(--muted);margin:0;letter-spacing:.4px}
+.splash-bar{width:190px;height:4px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:6px;position:relative}
+.splash-bar span{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,transparent,#d7dde3 50%,transparent);animation:splashShimmer 1.6s ease-in-out infinite}
+.splash-dots{display:flex;gap:7px;margin-top:2px}
+.splash-dots i{width:6px;height:6px;border-radius:50%;background:rgba(185,194,203,.35);animation:splashBlink 1.2s ease-in-out infinite}
+.splash-dots i:nth-child(2){animation-delay:.18s}
+.splash-dots i:nth-child(3){animation-delay:.36s}
+@keyframes splashSpin{to{transform:rotate(360deg)}}
+@keyframes splashPulse{0%,100%{opacity:.5;transform:scale(.95)}50%{opacity:1;transform:scale(1.07)}}
+@keyframes splashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes splashShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+@keyframes splashBlink{0%,80%,100%{opacity:.28;transform:scale(.75)}40%{opacity:1;transform:scale(1.2)}}
+@media (prefers-reduced-motion:reduce){#splashScreen .splash-ring,#splashScreen .splash-glow,#splashScreen .splash-logo,#splashScreen .splash-bar span,#splashScreen .splash-dots i{animation:none}}
 </style>
 </head>
 <body style="background:#000000">
-<!-- splash removed to eliminate flicker -->
+<div id="splashScreen" role="status" aria-live="polite" aria-label="MyMoney loading">
+  <div class="splash-inner">
+    <div class="splash-logo-wrap">
+      <div class="splash-glow" aria-hidden="true"></div>
+      <div class="splash-ring" aria-hidden="true"></div>
+      <img class="splash-logo" src="mymoney-icon.png" alt="MyMoney">
+    </div>
+    <h1 class="splash-title">MyMoney</h1>
+    <p class="splash-subtitle">กำลังโหลดข้อมูลการเงินของคุณ</p>
+    <div class="splash-bar" aria-hidden="true"><span></span></div>
+    <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>
+</div>
 
 <div class="app">
   <header class="top">
@@ -636,6 +670,7 @@ footer{text-align:center;color:#727c86;font-size:11px;padding:24px 0 0}
 <script>
 setTimeout(() => {
 'use strict';
+const splashShownAt=Date.now();
 // Keep the app viewport stable on iOS Safari. Input controls are also 16px on mobile
 // to avoid Safari automatically zooming in when a field receives focus.
 ['gesturestart','gesturechange','gestureend'].forEach(type => {
@@ -649,7 +684,7 @@ const I18N={"ก.ค.":"Jul.","ก.พ.":"Feb.","ก.ย.":"Sep.","กรกฎ�
 let skipAutoSnapshot=false,lastSnapshotAt=0;
 let appLang=localStorage.getItem('mymoney_lang')||'th';
 let I18N_KEYS=Object.keys(I18N).sort((a,b)=>b.length-a.length);
-Object.assign(I18N,{"เปลี่ยนภาษาของแอพทั้งหมด":"Change app language for all pages"});
+Object.assign(I18N,{"เปลี่ยนภาษาของแอพทั้งหมด":"Change app language for all pages","กำลังโหลดข้อมูลการเงินของคุณ":"Loading your finances"});
 I18N_KEYS=Object.keys(I18N).sort((a,b)=>b.length-a.length);
 
 function translateText(s){if(appLang!=='en'||typeof s!=='string')return s;let r='',i=0;while(i<s.length){let m=false;for(const k of I18N_KEYS){if(s.startsWith(k,i)){r+=I18N[k];i+=k.length;m=true;break;}}if(!m){r+=s[i];i++;}}return r;}
@@ -884,6 +919,10 @@ if(appLang==='th'){$('langTh').classList.remove('secondary');$('langTh').classLi
 if(appLang==='en')translateTree(document.body);
 const __i18nObserver=new MutationObserver(muts=>{if(appLang!=='en')return;for(const m of muts){if(m.type==='childList'){m.addedNodes.forEach(n=>translateNode(n));}else if(m.type==='characterData'){const n=m.target;if(n&&n.nodeType===3){if(n.__orig===undefined)n.__orig=n.nodeValue;const t=translateText(n.__orig);if(n.nodeValue!==t)n.nodeValue=t;}}}});
 __i18nObserver.observe(document.body,{childList:true,subtree:true,characterData:true});
+
+  const splash=document.getElementById('splashScreen');
+  const hideSplash=()=>{if(!splash||splash.classList.contains('splash-hide'))return;splash.classList.add('splash-hide');setTimeout(()=>splash.remove(),650);};
+  setTimeout(hideSplash,Math.max(300,900-(Date.now()-splashShownAt)));
 
 }, 0);
 </script>
