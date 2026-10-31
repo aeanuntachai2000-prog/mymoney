@@ -626,6 +626,11 @@ body.daily-sheet-open{overflow:hidden}
 .dashboard-swipe-hint{font-size:10px;color:#7f8b95;white-space:nowrap}
 .report-swipe-back-hint{display:none;font-size:10px;color:#8e9aa5;margin-top:3px}
 body.report-swipe-mode{overflow:hidden;overscroll-behavior:none}
+/* Temporary fixed layers let the two screens slide past each other like an iOS page transition. */
+body.swipe-animating{overflow:hidden!important;overscroll-behavior:none}
+body.swipe-animating .swipe-transition-page{display:block!important;position:fixed;z-index:15;top:0;bottom:calc(76px + env(safe-area-inset-bottom));left:50%;width:min(100%,680px);height:auto!important;min-height:0;margin:0;padding:18px 15px 10px;overflow:hidden;background:#000;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+body.swipe-animating .swipe-transition-page#page-reports{display:grid!important;}
+@media(prefers-reduced-motion:reduce){body.swipe-animating .swipe-transition-page{will-change:auto}}
 body.report-swipe-mode .app{height:100dvh;overflow:hidden;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
 body.report-swipe-mode #page-reports.active{height:calc(100dvh - 76px - env(safe-area-inset-bottom));overflow:hidden;display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto minmax(0,1.08fr);gap:6px;min-height:0}
 body.report-swipe-mode #page-reports .report-swipe-heading{margin:0 3px 1px;min-height:34px}
@@ -1007,30 +1012,74 @@ $('quickAdd')?.addEventListener('click',()=>navigate('record'));
 document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('dailyChartSheet')&&!$('dailyChartSheet').hidden){closeDailyChartSheet();return}if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
-// Horizontal swipe between the fixed Overview and its compact Financial Report companion.
+// Horizontal swipe between Overview and Financial Report, with a native-feeling slide.
+let swipeTransitionBusy=false;
+function finishSwipeTransition(from,to,direction){
+  from.classList.remove('swipe-transition-page');
+  to.classList.remove('swipe-transition-page');
+  from.classList.remove('active');
+  to.classList.add('active');
+  document.body.classList.remove('swipe-animating');
+  if(direction==='forward')document.body.classList.remove('dashboard-mode');
+  else document.body.classList.remove('report-swipe-mode');
+  swipeTransitionBusy=false;
+}
+function animateSwipePage(direction){
+  if(swipeTransitionBusy)return;
+  const home=$('page-home'),reports=$('page-reports');
+  const from=direction==='forward'?home:reports;
+  const to=direction==='forward'?reports:home;
+  if(!from||!to)return;
+  swipeTransitionBusy=true;
+  const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(direction==='forward'){
+    document.body.classList.add('report-swipe-mode');
+    // Keep dashboard-mode during the transition so the outgoing Overview keeps its exact compact layout.
+    renderReports();
+  }else{
+    document.body.classList.add('dashboard-mode');
+    renderHome();
+  }
+  document.body.classList.add('swipe-animating');
+  from.classList.add('active','swipe-transition-page');
+  to.classList.add('active','swipe-transition-page');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===(direction==='forward'?'reports':'home')));
+  const width=Math.max(1,window.innerWidth);
+  const outX=direction==='forward'?-width:width;
+  const inX=direction==='forward'?width:-width;
+  if(reduceMotion){
+    finishSwipeTransition(from,to,direction);
+    requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
+    return;
+  }
+  const timing={duration:430,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'};
+  const outgoing=from.animate([
+    {transform:'translate3d(-50%,0,0)'},
+    {transform:`translate3d(calc(-50% + ${outX}px),0,0)`}
+  ],timing);
+  const incoming=to.animate([
+    {transform:`translate3d(calc(-50% + ${inX}px),0,0)`},
+    {transform:'translate3d(-50%,0,0)'}
+  ],timing);
+  Promise.all([outgoing.finished,incoming.finished]).catch(()=>{}).finally(()=>{
+    outgoing.cancel();incoming.cancel();
+    finishSwipeTransition(from,to,direction);
+    requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
+  });
+}
 function showSwipeReport(){
   const menu=$('appMenu'),trigger=$('menuTrigger');
   if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');
-  document.body.classList.remove('dashboard-mode');
-  document.body.classList.add('report-swipe-mode');
-  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-reports'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go==='reports'));
-  renderReports();
-  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
+  animateSwipePage('forward');
 }
-function showSwipeOverview(){
-  document.body.classList.remove('report-swipe-mode');
-  document.body.classList.add('dashboard-mode');
-  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-home'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go==='home'));
-  renderHome();
-  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
-}
+function showSwipeOverview(){animateSwipePage('back');}
 let swipeStartX=0,swipeStartY=0,swipeStartedAt=0;
 function attachReportSwipe(element,fromPage){
   if(!element)return;
   element.addEventListener('touchstart',event=>{
-    if(event.touches.length!==1)return;
+    if(swipeTransitionBusy||event.touches.length!==1)return;
+    const target=event.target;
+    if(target.closest('button,input,select,textarea,a,[role="button"],.daily-detail-backdrop'))return;
     const touch=event.touches[0];swipeStartX=touch.clientX;swipeStartY=touch.clientY;swipeStartedAt=Date.now();
   },{passive:true});
   element.addEventListener('touchend',event=>{
@@ -1041,6 +1090,7 @@ function attachReportSwipe(element,fromPage){
     if(fromPage==='home'&&dx<0&&$('page-home').classList.contains('active'))showSwipeReport();
     else if(fromPage==='reports'&&dx>0&&document.body.classList.contains('report-swipe-mode'))showSwipeOverview();
   },{passive:true});
+  element.addEventListener('touchcancel',()=>{swipeStartedAt=0;},{passive:true});
 }
 attachReportSwipe($('page-home'),'home');
 attachReportSwipe($('page-reports'),'reports');
