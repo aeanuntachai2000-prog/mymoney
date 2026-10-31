@@ -621,6 +621,56 @@ body.dashboard-mode #page-home .daily-chart-subtitle{margin-top:2px}
 body.daily-sheet-open{overflow:hidden}
 @media(min-width:600px){.daily-detail-backdrop{align-items:center;padding:20px}.daily-detail-sheet{border:1px solid #343a42;border-radius:22px;max-height: min(75dvh,680px)}}
 
+
+/* Full-screen swipe companion: Overview <-> Financial Report */
+.dashboard-swipe-hint{font-size:10px;color:#7f8b95;white-space:nowrap}
+.report-swipe-back-hint{display:none;font-size:10px;color:#8e9aa5;margin-top:3px}
+body.report-swipe-mode{overflow:hidden;overscroll-behavior:none}
+body.report-swipe-mode .app{height:100dvh;overflow:hidden;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+body.report-swipe-mode #page-reports.active{height:calc(100dvh - 76px - env(safe-area-inset-bottom));overflow:hidden;display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto minmax(0,1.08fr);gap:6px;min-height:0}
+body.report-swipe-mode #page-reports .report-swipe-heading{margin:0 3px 1px;min-height:34px}
+body.report-swipe-mode #page-reports .report-swipe-back-hint{display:block}
+body.report-swipe-mode #page-reports .report-swipe-summary{padding:9px 12px;gap:5px;min-height:0}
+body.report-swipe-mode #page-reports .report-swipe-summary label{margin:0 0 3px;font-size:10px}
+body.report-swipe-mode #page-reports .report-swipe-summary input{height:36px;min-height:36px;line-height:36px}
+body.report-swipe-mode #page-reports .report-swipe-summary .stats{padding-top:5px;gap:8px}
+body.report-swipe-mode #page-reports .report-swipe-summary .stats div{gap:3px}
+body.report-swipe-mode #page-reports .report-swipe-summary .stats strong{font-size:14px}
+body.report-swipe-mode #page-reports .report-swipe-summary .summaryline{padding:5px 0;font-size:12px}
+body.report-swipe-mode #page-reports .report-swipe-trend-heading,
+body.report-swipe-mode #page-reports .report-swipe-donut-heading{margin:2px 3px 0;min-height:22px}
+body.report-swipe-mode #page-reports .report-swipe-trend-heading .report-subtitle,
+body.report-swipe-mode #page-reports .report-swipe-donut-heading .report-subtitle{display:none}
+body.report-swipe-mode #page-reports .report-swipe-trend{min-height:0;overflow:hidden;padding:9px 11px;gap:6px}
+body.report-swipe-mode #page-reports .report-swipe-trend .trend-legend{font-size:10px;gap:11px}
+body.report-swipe-mode #page-reports .report-swipe-trend .trend-list{gap:4px;min-height:0;overflow:hidden}
+body.report-swipe-mode #page-reports .report-swipe-trend .trend-month{grid-template-columns:43px minmax(0,1fr);gap:6px}
+body.report-swipe-mode #page-reports .report-swipe-trend .trend-month-label{font-size:9px}
+body.report-swipe-mode #page-reports .report-swipe-trend .trend-bars{gap:2px}
+body.report-swipe-mode #page-reports .report-swipe-trend .trend-bar-line{gap:5px}
+body.report-swipe-mode #page-reports .report-swipe-trend .trend-bar-track{height:6px}
+body.report-swipe-mode #page-reports .report-swipe-trend .trend-value{font-size:9px;min-width:57px}
+body.report-swipe-mode #page-reports .report-swipe-donut{min-height:0;overflow:hidden;padding:8px 10px;display:flex;align-items:center}
+body.report-swipe-mode #page-reports .report-donut-layout{width:100%;grid-template-columns:minmax(105px, .78fr) minmax(0,1.22fr);gap:8px}
+body.report-swipe-mode #page-reports .report-donut{width:min(100%,132px)}
+body.report-swipe-mode #page-reports .report-donut-center strong{font-size:12px}
+body.report-swipe-mode #page-reports .report-donut-center span{font-size:9px}
+body.report-swipe-mode #page-reports .report-legend{gap:5px;max-height:100%;overflow:hidden}
+body.report-swipe-mode #page-reports .report-legend-row{grid-template-columns:7px minmax(0,1fr) auto;gap:5px;font-size:9px}
+body.report-swipe-mode #page-reports .report-legend-swatch{width:7px;height:7px}
+body.report-swipe-mode #page-reports .report-legend-value{font-size:9px}
+body.report-swipe-mode #page-reports .report-swipe-omit{display:none!important}
+body.report-swipe-mode footer{display:none}
+@media(max-height:740px){
+ body.report-swipe-mode #page-reports.active{grid-template-rows:auto auto auto minmax(0,1fr) auto minmax(0,.95fr);gap:4px}
+ body.report-swipe-mode #page-reports .report-swipe-summary{padding:7px 10px}
+ body.report-swipe-mode #page-reports .report-swipe-trend{padding:7px 9px}
+ body.report-swipe-mode #page-reports .report-swipe-trend .trend-list{gap:2px}
+ body.report-swipe-mode #page-reports .report-swipe-donut{padding:6px 8px}
+ body.report-swipe-mode #page-reports .report-donut{width:min(100%,112px)}
+}
+@media(max-width:380px){body.report-swipe-mode #page-reports .report-donut-layout{grid-template-columns:minmax(100px,.75fr) minmax(0,1.25fr)}}
+
 </style>
 </head>
 <body style="background:#000000">
@@ -678,7 +728,7 @@ body.daily-sheet-open{overflow:hidden}
       <p class="small" id="forecastNote">ประมาณการจากอัตรารายรับและรายจ่ายของเดือนปัจจุบัน ไม่ใช่ยอดรับประกัน</p>
     </section>
     <section class="card daily-chart-card">
-      <div class="daily-chart-header"><div><div class="daily-chart-eyebrow">DAILY OVERVIEW</div><h2 style="margin-top:5px">กระแสเงินรายวัน</h2><p class="daily-chart-subtitle">ดูรายรับหรือรายจ่ายแยกตามวันที่</p></div><span class="daily-chart-icon" aria-hidden="true">▥</span></div>
+      <div class="daily-chart-header"><div><div class="daily-chart-eyebrow">DAILY OVERVIEW</div><h2 style="margin-top:5px">กระแสเงินรายวัน</h2><p class="daily-chart-subtitle">ดูรายรับหรือรายจ่ายแยกตามวันที่ <span class="dashboard-swipe-hint">· ปัดซ้ายเพื่อดูรายงาน</span></p></div><span class="daily-chart-icon" aria-hidden="true">▥</span></div>
       <div class="daily-chart-controls">
         <div class="daily-chart-tabs" role="group" aria-label="ประเภทกราฟ">
           <button type="button" class="daily-chart-tab active" data-chart-type="Expense">รายจ่าย</button>
@@ -789,20 +839,20 @@ body.daily-sheet-open{overflow:hidden}
   </section>
 
   <section class="page" id="page-reports">
-    <div class="section" style="margin-top:5px"><div><p class="eyebrow">REPORTS</p><h2>รายงานการเงิน</h2></div></div>
-    <div class="card stack"><div><label for="reportMonth">เลือกเดือนที่ต้องการดู</label><input id="reportMonth" type="month"></div>
+    <div class="section report-swipe-heading" style="margin-top:5px"><div><p class="eyebrow">REPORTS</p><h2>รายงานการเงิน</h2><small class="report-swipe-back-hint">ปัดขวาเพื่อกลับภาพรวม</small></div><span class="daily-chart-icon" aria-hidden="true">▥</span></div>
+    <div class="card stack report-swipe-summary"><div><label for="reportMonth">เลือกเดือนที่ต้องการดู</label><input id="reportMonth" type="month"></div>
       <div class="stats" style="border-top:0;padding-top:5px"><div><span class="small">รายรับ</span><strong class="inc" id="reportIncome">฿0.00</strong></div><div><span class="small">รายจ่าย</span><strong class="exp" id="reportExpense">฿0.00</strong></div></div>
       <div class="summaryline"><span>เงินสุทธิของเดือน</span><strong id="reportNet">฿0.00</strong></div><div class="summaryline"><span>จำนวนรายการ</span><strong id="reportCount">0</strong></div>
     </div>
-    <div class="report-section-title"><h2>เทียบกับเดือนก่อน</h2><p class="report-subtitle">ดูการเปลี่ยนแปลงของรายรับและรายจ่ายจากเดือนก่อนหน้า</p></div>
-    <div class="card stack"><div class="report-compare-grid"><div class="report-compare-item"><span>รายรับเทียบเดือนก่อน</span><strong class="inc" id="reportIncomeChange">—</strong><div class="report-change" id="reportIncomeChangeNote">ยังไม่มีข้อมูล</div></div><div class="report-compare-item"><span>รายจ่ายเทียบเดือนก่อน</span><strong class="exp" id="reportExpenseChange">—</strong><div class="report-change" id="reportExpenseChangeNote">ยังไม่มีข้อมูล</div></div></div></div>
-    <div class="report-section-title"><h2>แนวโน้มย้อนหลัง 6 เดือน</h2><p class="report-subtitle">เปรียบเทียบรายรับและรายจ่ายในแต่ละเดือน</p></div>
-    <div class="card report-trend"><div class="trend-legend"><span><i class="legend-dot" style="background:var(--green)"></i>รายรับ</span><span><i class="legend-dot" style="background:var(--red)"></i>รายจ่าย</span></div><div class="trend-list" id="reportTrend"></div></div>
-    <div class="report-section-title"><h2>สัดส่วนรายจ่าย</h2><p class="report-subtitle">หมวดหมู่ที่ใช้จ่ายมากที่สุดในเดือนที่เลือก</p></div>
-    <div class="card"><div class="report-donut-layout"><div class="report-donut" id="expenseDonut" role="img" aria-label="กราฟวงกลมสัดส่วนรายจ่าย"><div class="report-donut-center"><strong id="expenseDonutTotal">฿0.00</strong><span>รายจ่ายรวม</span></div></div><div class="report-legend" id="expenseDonutLegend"></div></div></div>
-    <div class="report-section-title"><h2>รายจ่ายแยกตามหมวดหมู่</h2></div><div class="card" id="categoryReport"></div>
-    <div class="report-section-title"><h2>รายรับแยกตามหมวดหมู่</h2></div><div class="card" id="incomeReport"></div>
-    <div class="notice" style="margin-top:14px">รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย กราฟเปรียบเทียบใช้ข้อมูลที่มีอยู่ในเครื่องเท่านั้น</div>
+    <div class="report-section-title report-swipe-omit"><h2>เทียบกับเดือนก่อน</h2><p class="report-subtitle">ดูการเปลี่ยนแปลงของรายรับและรายจ่ายจากเดือนก่อนหน้า</p></div>
+    <div class="card stack report-swipe-omit"><div class="report-compare-grid"><div class="report-compare-item"><span>รายรับเทียบเดือนก่อน</span><strong class="inc" id="reportIncomeChange">—</strong><div class="report-change" id="reportIncomeChangeNote">ยังไม่มีข้อมูล</div></div><div class="report-compare-item"><span>รายจ่ายเทียบเดือนก่อน</span><strong class="exp" id="reportExpenseChange">—</strong><div class="report-change" id="reportExpenseChangeNote">ยังไม่มีข้อมูล</div></div></div></div>
+    <div class="report-section-title report-swipe-trend-heading"><h2>แนวโน้มย้อนหลัง 6 เดือน</h2><p class="report-subtitle">เปรียบเทียบรายรับและรายจ่ายในแต่ละเดือน</p></div>
+    <div class="card report-trend report-swipe-trend"><div class="trend-legend"><span><i class="legend-dot" style="background:var(--green)"></i>รายรับ</span><span><i class="legend-dot" style="background:var(--red)"></i>รายจ่าย</span></div><div class="trend-list" id="reportTrend"></div></div>
+    <div class="report-section-title report-swipe-donut-heading"><h2>สัดส่วนรายจ่าย</h2><p class="report-subtitle">หมวดหมู่ที่ใช้จ่ายมากที่สุดในเดือนที่เลือก</p></div>
+    <div class="card report-swipe-donut"><div class="report-donut-layout"><div class="report-donut" id="expenseDonut" role="img" aria-label="กราฟวงกลมสัดส่วนรายจ่าย"><div class="report-donut-center"><strong id="expenseDonutTotal">฿0.00</strong><span>รายจ่ายรวม</span></div></div><div class="report-legend" id="expenseDonutLegend"></div></div></div>
+    <div class="report-section-title report-swipe-omit"><h2>รายจ่ายแยกตามหมวดหมู่</h2></div><div class="card report-swipe-omit" id="categoryReport"></div>
+    <div class="report-section-title report-swipe-omit"><h2>รายรับแยกตามหมวดหมู่</h2></div><div class="card report-swipe-omit" id="incomeReport"></div>
+    <div class="notice report-swipe-omit" style="margin-top:14px">รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย กราฟเปรียบเทียบใช้ข้อมูลที่มีอยู่ในเครื่องเท่านั้น</div>
   </section>
 
   <section class="page" id="page-budget">
@@ -927,6 +977,7 @@ function currentMonth(){return localDate().slice(0,7)}
 function download(name,content,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 const pageScrollPositions={};
 function navigate(page){
+  document.body.classList.remove('report-swipe-mode');
   const menu=$('appMenu'),trigger=$('menuTrigger');
   if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');
   document.body.classList.toggle('dashboard-mode',page==='home');
@@ -956,6 +1007,43 @@ $('quickAdd')?.addEventListener('click',()=>navigate('record'));
 document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('dailyChartSheet')&&!$('dailyChartSheet').hidden){closeDailyChartSheet();return}if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
+// Horizontal swipe between the fixed Overview and its compact Financial Report companion.
+function showSwipeReport(){
+  const menu=$('appMenu'),trigger=$('menuTrigger');
+  if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');
+  document.body.classList.remove('dashboard-mode');
+  document.body.classList.add('report-swipe-mode');
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-reports'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go==='reports'));
+  renderReports();
+  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
+}
+function showSwipeOverview(){
+  document.body.classList.remove('report-swipe-mode');
+  document.body.classList.add('dashboard-mode');
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-home'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go==='home'));
+  renderHome();
+  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
+}
+let swipeStartX=0,swipeStartY=0,swipeStartedAt=0;
+function attachReportSwipe(element,fromPage){
+  if(!element)return;
+  element.addEventListener('touchstart',event=>{
+    if(event.touches.length!==1)return;
+    const touch=event.touches[0];swipeStartX=touch.clientX;swipeStartY=touch.clientY;swipeStartedAt=Date.now();
+  },{passive:true});
+  element.addEventListener('touchend',event=>{
+    if(!swipeStartedAt||!event.changedTouches.length)return;
+    const touch=event.changedTouches[0],dx=touch.clientX-swipeStartX,dy=touch.clientY-swipeStartY,elapsed=Date.now()-swipeStartedAt;
+    swipeStartedAt=0;
+    if(Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.35||elapsed>900)return;
+    if(fromPage==='home'&&dx<0&&$('page-home').classList.contains('active'))showSwipeReport();
+    else if(fromPage==='reports'&&dx>0&&document.body.classList.contains('report-swipe-mode'))showSwipeOverview();
+  },{passive:true});
+}
+attachReportSwipe($('page-home'),'home');
+attachReportSwipe($('page-reports'),'reports');
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ'}
 document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>setType(b.dataset.type)));
