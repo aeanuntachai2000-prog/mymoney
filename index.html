@@ -684,6 +684,32 @@ body.swipe-animating{touch-action:pan-y;}
 body.swipe-animating .swipe-transition-page{-webkit-transform:translateZ(0);transform:translateZ(0);contain:paint;}
 #page-home,#page-reports{-webkit-user-select:none;user-select:none;touch-action:pan-y;overscroll-behavior-x:contain;}
 #page-home button,#page-home input,#page-home select,#page-reports button,#page-reports input,#page-reports select{-webkit-user-select:auto;user-select:auto;}
+
+
+/* LINE-like native horizontal paging for Overview and Reports.
+   iOS controls finger tracking, momentum and snap; no JS transform layers are used. */
+body.home-report-mode{height:100dvh;overflow:hidden;overscroll-behavior:none}
+body.home-report-mode .app{height:100dvh;max-height:100dvh;display:flex;flex-direction:column;overflow:hidden;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+body.home-report-mode .app>.top{flex:0 0 auto;margin-bottom:10px}
+body.home-report-mode #homeReportPager{display:flex;flex:1 1 auto;min-width:0;min-height:0;width:100%;gap:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y;scrollbar-width:none;}
+body.home-report-mode #homeReportPager::-webkit-scrollbar{display:none}
+body.home-report-mode #homeReportPager>.page{display:block!important;flex:0 0 100%;width:100%;max-width:100%;min-width:0;height:100%;min-height:0;margin:0;scroll-snap-align:start;scroll-snap-stop:always;overflow-x:hidden;}
+body.home-report-mode #page-home{overflow:hidden!important;}
+body.home-report-mode #page-home.active{height:100%!important;min-height:0;display:flex!important;flex-direction:column;gap:10px}
+body.home-report-mode #page-reports{height:100%!important;min-height:0;overflow-y:auto!important;overflow-x:hidden!important;display:block!important;padding:2px 1px calc(24px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
+body.home-report-mode #page-reports.active{display:block!important;grid-template-rows:none!important;align-content:initial!important;overflow-y:auto!important;}
+body.home-report-mode #page-reports .report-swipe-omit{display:block!important}
+body.home-report-mode #page-reports .report-swipe-heading{margin:5px 3px 12px;min-height:0}
+body.home-report-mode #page-reports .report-swipe-back-hint{display:block}
+body.home-report-mode #page-reports .report-swipe-summary,
+body.home-report-mode #page-reports .report-swipe-trend,
+body.home-report-mode #page-reports .report-swipe-donut{min-height:0;overflow:visible}
+body.home-report-mode #page-reports .report-swipe-trend .trend-list{max-height:none;overflow:visible}
+body.home-report-mode #page-reports .report-legend{max-height:none;overflow:visible}
+body.home-report-mode footer{display:none!important}
+body.home-report-mode .bottom-nav{display:none!important}
+@media(prefers-reduced-motion:reduce){body.home-report-mode #homeReportPager{scroll-behavior:auto}}
+
 </style>
 </head>
 <body style="background:#000000">
@@ -990,10 +1016,12 @@ function currentMonth(){return localDate().slice(0,7)}
 function download(name,content,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 const pageScrollPositions={};
 function navigate(page){
-  document.body.classList.remove('report-swipe-mode');
+  const isHomeReport=page==='home'||page==='reports';
   const menu=$('appMenu'),trigger=$('menuTrigger');
   if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');
+  document.body.classList.toggle('home-report-mode',isHomeReport);
   document.body.classList.toggle('dashboard-mode',page==='home');
+  document.body.classList.toggle('report-swipe-mode',page==='reports');
   const current=document.querySelector('.page.active');
   const currentPage=current?.id?.replace('page-','')||'home';
   if(currentPage)pageScrollPositions[currentPage]=window.scrollY||window.pageYOffset||0;
@@ -1009,10 +1037,14 @@ function navigate(page){
   if(page==='history')renderHistory();
   if(['planning','budget','bills','debts'].includes(page))renderPlanning();
   if(page==='goals')renderGoals();
-  // Returning from a financial-planning subpage restores the exact Overview scroll position.
-  const isPlanningSubpage=['budget','bills','debts','goals'].includes(currentPage);
-  const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
-  requestAnimationFrame(()=>window.scrollTo({top:targetY,behavior:'auto'}));
+  if(isHomeReport&&homeReportPager){
+    lastPagerPage=page;
+    homeReportPager.scrollTo({left:page==='reports'?homeReportPager.clientWidth:0,behavior:'smooth'});
+  }else{
+    const isPlanningSubpage=['budget','bills','debts','goals'].includes(currentPage);
+    const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
+    requestAnimationFrame(()=>window.scrollTo({top:targetY,behavior:'auto'}));
+  }
 }
 const menuTrigger=$('menuTrigger'),appMenu=$('appMenu');
 menuTrigger?.addEventListener('click',()=>{const opening=appMenu.hidden;appMenu.hidden=!opening;menuTrigger.setAttribute('aria-expanded',String(opening));});
@@ -1020,110 +1052,48 @@ $('quickAdd')?.addEventListener('click',()=>navigate('record'));
 document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('dailyChartSheet')&&!$('dailyChartSheet').hidden){closeDailyChartSheet();return}if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
-// iPhone-like interactive swipe: both pages share the exact same measured content viewport.
-let swipeTransitionBusy=false,swipeGesture=null;
-function swipePages(direction){return direction==='forward'?[$('page-home'),$('page-reports')]:[$('page-reports'),$('page-home')];}
-function prepareSwipeDrag(direction){
-  const [from,to]=swipePages(direction);if(!from||!to)return null;
-  if(direction==='forward'){
-    document.body.classList.add('report-swipe-mode');
-    renderReports();
-  }else{
-    document.body.classList.add('dashboard-mode');
-    renderHome();
-  }
-  // Make both pages measurable in normal document flow before switching them to fixed layers.
-  from.classList.add('active');to.classList.add('active');
-  const rect=from.getBoundingClientRect();
-  // Measure the actual visible page box. The bottom navigation is hidden in this layout,
-  // so deriving the page height from its rect would incorrectly produce a zero/negative box.
-  const bounds={left:rect.left,width:rect.width,top:rect.top,height:rect.height};
-  document.body.style.setProperty('--swipe-left',`${bounds.left}px`);
-  document.body.style.setProperty('--swipe-width',`${bounds.width}px`);
-  document.body.style.setProperty('--swipe-top',`${bounds.top}px`);
-  document.body.style.setProperty('--swipe-height',`${bounds.height}px`);
-  document.body.classList.add('swipe-animating');
-  from.classList.add('swipe-transition-page');to.classList.add('swipe-transition-page');
-  from.style.zIndex='15';to.style.zIndex='16';
-  const width=Math.max(1,bounds.width);
-  const start=direction==='forward'?width:-width;
-  from.style.transform='translate3d(0,0,0)';
-  to.style.transform=`translate3d(${start}px,0,0)`;
-  return {from,to,direction,width,height:bounds.height,start,dx:0};
+// Native horizontal paging (LINE-like): let iOS handle finger tracking, momentum and snap.
+// Move the existing Home and Reports sections into one horizontal scroll viewport.
+(function initHomeReportPager(){
+  const home=$('page-home'),reports=$('page-reports'),header=document.querySelector('.app > .top');
+  if(!home||!reports||!header||$('homeReportPager'))return;
+  const pager=document.createElement('div');
+  pager.id='homeReportPager';
+  pager.className='home-report-pager';
+  pager.setAttribute('aria-label','ปัดเพื่อสลับระหว่างภาพรวมและรายงาน');
+  header.insertAdjacentElement('afterend',pager);
+  pager.append(home,reports);
+  pager.scrollLeft=0;
+})();
+
+const homeReportPager=$('homeReportPager');
+let pagerSettleTimer=null,lastPagerPage='home';
+function setPagerPage(page,shouldRender=true){
+  if(page!=='home'&&page!=='reports')return;
+  const changed=lastPagerPage!==page;
+  lastPagerPage=page;
+  $('page-home')?.classList.toggle('active',page==='home');
+  $('page-reports')?.classList.toggle('active',page==='reports');
+  document.body.classList.add('home-report-mode');
+  document.body.classList.toggle('dashboard-mode',page==='home');
+  document.body.classList.toggle('report-swipe-mode',page==='reports');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
+  if(changed&&shouldRender){if(page==='home')renderHome();else renderReports();}
 }
-function cleanSwipePages(from,to,direction,commit){
-  from.classList.remove('swipe-transition-page');to.classList.remove('swipe-transition-page');
-  from.style.transform='';to.style.transform='';from.style.zIndex='';to.style.zIndex='';
-  from.classList.toggle('active',!commit);to.classList.toggle('active',commit);
-  document.body.classList.remove('swipe-animating');
-  ['--swipe-left','--swipe-width','--swipe-top','--swipe-height'].forEach(name=>document.body.style.removeProperty(name));
-  if(commit){
-    if(direction==='forward')document.body.classList.remove('dashboard-mode');
-    else document.body.classList.remove('report-swipe-mode');
-    requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
-  }else{
-    if(direction==='forward')document.body.classList.remove('report-swipe-mode');
-    else document.body.classList.remove('dashboard-mode');
-  }
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===(commit?(direction==='forward'?'reports':'home'):(direction==='forward'?'home':'reports'))));
-  swipeTransitionBusy=false;
+function settleNativePager(){
+  if(!homeReportPager)return;
+  const width=Math.max(1,homeReportPager.clientWidth);
+  const page=homeReportPager.scrollLeft>=width*.5?'reports':'home';
+  setPagerPage(page,true);
 }
-function settleSwipeGesture(commit){
-  if(!swipeGesture)return;
-  const g=swipeGesture;swipeGesture=null;swipeTransitionBusy=true;
-  const endOut=commit?(g.direction==='forward'?-g.width:g.width):0;
-  const endIn=commit?0:g.start;
-  const duration=commit?Math.max(170,Math.min(300,300*(1-Math.min(1,Math.abs(g.dx)/g.width)))):190;
-  const easing=commit?'cubic-bezier(.22,.8,.25,1)':'cubic-bezier(.32,.72,.25,1)';
-  const out=g.from.animate([{transform:g.from.style.transform},{transform:`translate3d(${endOut}px,0,0)`}],{duration,easing,fill:'forwards'});
-  const incoming=g.to.animate([{transform:g.to.style.transform},{transform:`translate3d(${endIn}px,0,0)`}],{duration,easing,fill:'forwards'});
-  Promise.all([out.finished,incoming.finished]).catch(()=>{}).finally(()=>{out.cancel();incoming.cancel();cleanSwipePages(g.from,g.to,g.direction,commit);});
-}
-function attachReportSwipe(element,fromPage){
-  if(!element)return;
-  let startX=0,startY=0,startTime=0,active=false,direction=null,gesture=null;
-  element.addEventListener('touchstart',event=>{
-    if(swipeTransitionBusy||event.touches.length!==1)return;
-    const target=event.target;
-    if(target.closest('button,input,select,textarea,a,[role="button"],.daily-detail-backdrop'))return;
-    const touch=event.touches[0];startX=touch.clientX;startY=touch.clientY;startTime=performance.now();active=true;direction=null;gesture=null;
+if(homeReportPager){
+  homeReportPager.addEventListener('scroll',()=>{
+    clearTimeout(pagerSettleTimer);
+    pagerSettleTimer=setTimeout(settleNativePager,140);
   },{passive:true});
-  element.addEventListener('touchmove',event=>{
-    if(!active||event.touches.length!==1||swipeTransitionBusy)return;
-    const touch=event.touches[0],dx=touch.clientX-startX,dy=touch.clientY-startY;
-    if(!direction){
-      if(Math.abs(dx)<7&&Math.abs(dy)<7)return;
-      // Keep vertical scrolling native; claim the gesture only after a clear horizontal intent.
-      if(Math.abs(dy)>Math.abs(dx)*1.05){active=false;return;}
-      if(Math.abs(dx)<=Math.abs(dy)*1.05)return;
-      if(fromPage==='home'&&dx<0&&$('page-home').classList.contains('active'))direction='forward';
-      else if(fromPage==='reports'&&dx>0&&document.body.classList.contains('report-swipe-mode'))direction='back';
-      else{active=false;return;}
-      gesture=prepareSwipeDrag(direction);if(!gesture){active=false;return;}
-    }
-    if(gesture){
-      if(event.cancelable)event.preventDefault();
-      const width=gesture.width;
-      const clamped=direction==='forward'?Math.max(-width,Math.min(0,dx)):Math.min(width,Math.max(0,dx));
-      gesture.dx=clamped;
-      // Both pages are translated by the same finger delta: no easing while the finger is down.
-      gesture.from.style.transform=`translate3d(${clamped}px,0,0)`;
-      gesture.to.style.transform=`translate3d(${gesture.start+clamped}px,0,0)`;
-    }
-  },{passive:false});
-  element.addEventListener('touchend',()=>{
-    if(!active)return;active=false;
-    if(!gesture)return;
-    const elapsed=Math.max(1,performance.now()-startTime),distance=Math.abs(gesture.dx||0),velocity=distance/elapsed;
-    const commit=distance>gesture.width*.18||(distance>12&&velocity>.38);
-    swipeTransitionBusy=true;swipeGesture=gesture;settleSwipeGesture(commit);
-    if(direction==='forward'&&commit){const menu=$('appMenu'),trigger=$('menuTrigger');if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');}
-    direction=null;gesture=null;
-  },{passive:true});
-  element.addEventListener('touchcancel',()=>{active=false;if(gesture){swipeGesture=gesture;settleSwipeGesture(false);}direction=null;gesture=null;},{passive:true});
+  homeReportPager.addEventListener('scrollend',settleNativePager,{passive:true});
 }
-attachReportSwipe($('page-home'),'home');
-attachReportSwipe($('page-reports'),'reports');
+
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ'}
 document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>setType(b.dataset.type)));
@@ -1319,7 +1289,7 @@ $('exportJson').addEventListener('click',exportJSON);$('headerBackup').addEventL
 $('restoreAutoBackup').addEventListener('click',()=>{let data;try{data=JSON.parse(localStorage.getItem(AUTO_BACKUP_KEY)||'null')}catch(e){}if(!data){alert('ยังไม่มีข้อมูลสำรองอัตโนมัติในเบราว์เซอร์นี้ค่ะ');return}if(!confirm(`กู้คืนข้อมูลสำรองเมื่อ ${data.snapshotAt||'ไม่ทราบเวลา'} ใช่ไหมคะ? ข้อมูลปัจจุบันจะถูกแทนที่ แต่จะเก็บสำรองชุดปัจจุบันก่อน`))return;try{snapshotBeforeChange();restoreSnapshotData(data);$('backupMessage').textContent='กู้คืนข้อมูลสำรองอัตโนมัติเรียบร้อยแล้ว';alert('กู้คืนข้อมูลสำเร็จค่ะ')}catch(err){alert('กู้คืนไม่สำเร็จ: '+err.message)}});
 $('importFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.transactions)||!Array.isArray(data.accounts)||!data.categories||!Array.isArray(data.categories.Expense)||!Array.isArray(data.categories.Income))throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');const valid=data.transactions.every(t=>t&&['Income','Expense','Transfer'].includes(t.type)&&Number.isFinite(Number(t.amount))&&Number(t.amount)>0&&t.date&&t.title);if(!valid)throw new Error('พบรายการที่ข้อมูลไม่ครบหรือไม่ถูกต้อง');if(!confirm(`นำเข้า ${data.transactions.length} รายการ และแทนที่รายการ/บัญชี/หมวดหมู่ปัจจุบันใช่ไหมคะ? ระบบจะเก็บข้อมูลชุดก่อนหน้าไว้ในสำรองอัตโนมัติก่อน`))return;snapshotBeforeChange();restoreSnapshotData(data);$('backupMessage').textContent='นำเข้าข้อมูลเรียบร้อยแล้ว';alert('นำเข้าข้อมูลสำเร็จค่ะ')}catch(err){alert('นำเข้าไม่สำเร็จ: '+err.message)}finally{e.target.value=''}});
 window.addEventListener('storage',e=>{if([TX_KEY,ACC_KEY,CAT_KEY,BUDGET_KEY,BILL_KEY,DEBT_KEY,GOAL_KEY].includes(e.key)){const reload=confirm('พบข้อมูล MyMoney ถูกเปลี่ยนจากแท็บหรือหน้าต่างอื่น ต้องการโหลดข้อมูลล่าสุดไหมคะ?');if(reload)location.reload()}});
-document.body.classList.add('dashboard-mode');$('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
+document.body.classList.add('home-report-mode','dashboard-mode');if(homeReportPager)homeReportPager.scrollLeft=0;lastPagerPage='home';$('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
 $('langTh').addEventListener('click',()=>setLanguage('th'));
 $('langEn').addEventListener('click',()=>setLanguage('en'));
 if(appLang==='th'){$('langTh').classList.remove('secondary');$('langTh').classList.add('primary');$('langEn').classList.remove('primary');$('langEn').classList.add('secondary');}else{$('langEn').classList.remove('secondary');$('langEn').classList.add('primary');$('langTh').classList.remove('primary');$('langTh').classList.add('secondary');}
