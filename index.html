@@ -535,7 +535,6 @@ footer{padding-top:16px}
   .app{padding:10px 10px calc(82px + env(safe-area-inset-bottom))}
   .top{margin:0 2px 11px}
   .brand-icon{width:38px;height:38px}
-  .brand-menu-trigger{width:40px;height:40px;flex-basis:40px}
   h1{font-size:21px}
   .balance{padding:16px;border-radius:18px}
   .big{font-size:clamp(26px,7.2vw,34px);margin:5px 0 12px}
@@ -563,217 +562,6 @@ footer{padding-top:16px}
   #page-record .card{padding:13px}
 }
 
-
-/* MyMoney single-dashboard navigation refresh */
-.bottom-nav{display:none!important}
-.app{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
-.top{position:relative;z-index:40;margin-bottom:12px}
-.brand-menu-trigger{width:48px;height:48px;flex:0 0 48px;padding:0;border:0;border-radius:14px;background:transparent;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 1px #146b55,0 0 18px #00d99a20;overflow:hidden}
-.brand-menu-trigger .brand-icon{width:100%;height:100%;border:0;border-radius:14px;box-shadow:none}
-.brand-menu-trigger[aria-expanded="true"]{outline:2px solid #42bd91;outline-offset:3px}
-.quick-add{width:44px;height:44px;flex:0 0 44px;border:1px solid #3c9b79;border-radius:14px;background:linear-gradient(145deg,#1d9b70,#116448);color:#fff;font-size:29px;line-height:1;display:grid;place-items:center;box-shadow:0 5px 18px #00b77a30}
-.quick-add:active{transform:scale(.96)}
-.app-menu{position:absolute;z-index:60;left:0;top:calc(100% + 8px);width:min(310px,calc(100vw - 24px));padding:14px;background:#191d21;border:1px solid #3a424a;border-radius:19px;box-shadow:0 18px 50px #000b;backdrop-filter:blur(18px);transform-origin:top right;animation:menuPop .16s ease-out}
-@keyframes menuPop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-.app-menu-heading{display:grid;gap:3px;padding:2px 3px 12px;border-bottom:1px solid #343b42;margin-bottom:10px;font-weight:800}
-.app-menu-heading small{font-size:11px;color:var(--muted);font-weight:500}
-.app-menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-.app-menu-item{min-width:0;display:flex;align-items:center;gap:9px;padding:10px 9px;border:1px solid #30373e;border-radius:12px;background:#22272c;color:#e9edf0;text-align:left;font-size:12px;font-weight:700}
-.app-menu-item:active{background:#343c44;border-color:#69747f}
-.app-menu-item span{width:28px;height:28px;flex:0 0 28px;display:grid;place-items:center;border-radius:9px;background:#303840;color:#dce4e9;font-size:17px}
-
-/* Daily chart detail bottom sheet */
-#dailyChartSelected{display:none!important}
-.daily-detail-backdrop{position:fixed;inset:0;z-index:1200;background:rgba(0,0,0,.62);display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:1;transition:opacity .2s ease}
-.daily-detail-backdrop[hidden]{display:none!important}
-.daily-detail-sheet{width:min(100%,560px);max-height:min(78dvh,680px);display:flex;flex-direction:column;background:#1b1f24;border:1px solid #343a42;border-bottom:0;border-radius:22px 22px 0 0;box-shadow:0 -12px 40px #0008;padding:10px 17px calc(16px + env(safe-area-inset-bottom));transform:translateY(0);animation:dailySheetIn .22s ease-out}
-@keyframes dailySheetIn{from{transform:translateY(35px);opacity:.7}to{transform:translateY(0);opacity:1}}
-.daily-detail-grabber{width:42px;height:4px;border-radius:99px;background:#59616a;margin:1px auto 12px;flex:0 0 auto}
-.daily-detail-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line);flex:0 0 auto}
-.daily-detail-top h3{font-size:16px;margin:0;font-weight:800}
-.daily-detail-close{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:#292e34;color:var(--ink);font-size:21px;line-height:1;display:grid;place-items:center;flex:0 0 auto}
-.daily-detail-content{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;min-height:0;padding-top:12px}
-.daily-detail-content .daily-chart-detail-head{align-items:center;margin-bottom:10px}
-.daily-detail-content .daily-chart-detail-head>strong{font-size:18px}
-.daily-detail-content .daily-chart-detail-list{margin-top:10px}
-body.daily-sheet-open{overflow:hidden}
-@media(min-width:600px){.daily-detail-backdrop{align-items:center;padding:20px}.daily-detail-sheet{border:1px solid #343a42;border-radius:22px;max-height: min(75dvh,680px)}}
-
-
-/* Stable two-sheet pager: one fixed viewport, two equal pages, no reflow while swiping. */
-:root{--mymoney-viewport-height:100svh}
-.dashboard-swipe-hint{font-size:10px;color:#7f8b95;white-space:nowrap}
-.report-swipe-back-hint{display:block;font-size:9px;color:#8e9aa5;margin-top:2px}
-html.home-report-mode{
-  width:100%;height:var(--mymoney-viewport-height);min-height:0;
-  overflow:hidden!important;overscroll-behavior:none;background:#000;
-}
-body.home-report-mode{
-  position:fixed;inset:0 auto auto 0;width:100%;
-  height:var(--mymoney-viewport-height);min-height:0;max-height:var(--mymoney-viewport-height);
-  overflow:hidden!important;overscroll-behavior:none;background:#000;
-}
-body.home-report-mode .app{
-  display:flex;flex-direction:column;
-  width:100%;max-width:680px;height:var(--mymoney-viewport-height);
-  min-height:0;max-height:var(--mymoney-viewport-height);
-  margin:0 auto;padding:10px 15px calc(12px + env(safe-area-inset-bottom));
-  overflow:hidden;
-}
-body.home-report-mode .app>.top{
-  flex:0 0 48px;min-height:48px;height:48px;
-  margin:0 2px 9px;position:relative;z-index:40;
-}
-body.home-report-mode #homeReportPager{
-  position:relative;isolation:isolate;
-  display:flex!important;flex:1 1 0%;
-  width:100%;height:0;min-width:0;min-height:0;
-  margin:0;padding:0;gap:0;align-items:stretch;
-  overflow-x:auto!important;overflow-y:hidden!important;
-  -webkit-overflow-scrolling:touch;
-  scroll-snap-type:x mandatory;scroll-snap-stop:always;
-  scroll-behavior:smooth;
-  overscroll-behavior-x:contain;overscroll-behavior-y:none;
-  touch-action:pan-x;scrollbar-width:none;
-  contain:layout paint;
-}
-body.home-report-mode #homeReportPager::-webkit-scrollbar{display:none}
-body.home-report-mode #homeReportPager>.page{
-  position:relative!important;display:block!important;
-  flex:0 0 100%!important;width:100%!important;
-  min-width:100%!important;max-width:100%!important;
-  height:100%!important;min-height:100%!important;max-height:100%!important;
-  margin:0!important;padding:3px 1px 4px!important;
-  box-sizing:border-box;scroll-snap-align:start;scroll-snap-stop:always;
-  overflow:hidden!important;overscroll-behavior:none;touch-action:pan-x;
-  contain:layout paint style;
-}
-/* Sheet 1: fixed dashboard layout. Only the balance and daily chart are shown. */
-body.home-report-mode #homeReportPager>#page-home{
-  display:flex!important;flex-direction:column;align-items:stretch;
-  gap:9px;height:100%!important;min-height:0!important;
-  overflow:hidden!important;
-}
-body.home-report-mode #page-home>:not(.balance):not(.daily-chart-card){display:none!important}
-body.home-report-mode #page-home .balance{
-  flex:0 0 auto;min-height:0;margin:0;padding:13px 15px;
-}
-body.home-report-mode #page-home .big{font-size:clamp(27px,7vw,36px);margin:4px 0 9px}
-body.home-report-mode #page-home .stats{padding-top:8px;gap:9px}
-body.home-report-mode #page-home .stats div{gap:4px}
-body.home-report-mode #page-home .daily-chart-card{
-  display:flex;flex:1 1 0%;flex-direction:column;
-  width:100%;height:0;min-height:0;min-width:0;
-  margin:0;padding:11px;overflow:hidden;
-}
-body.home-report-mode #page-home .daily-chart-header{flex:0 0 auto;min-width:0}
-body.home-report-mode #page-home .daily-chart-controls{flex:0 0 auto;margin-top:7px}
-body.home-report-mode #page-home .daily-chart-range{flex:0 0 auto;margin-top:5px;gap:6px}
-body.home-report-mode #page-home .daily-chart-range label{min-width:0;font-size:10px;gap:3px}
-body.home-report-mode #page-home .daily-chart-range input{height:34px;min-height:34px;line-height:34px;font-size:11px;padding:0 4px}
-body.home-report-mode #page-home .daily-chart-presets{flex:0 0 auto;flex-wrap:nowrap;gap:4px;margin-top:5px}
-body.home-report-mode #page-home .daily-chart-preset{min-width:0;padding:6px 5px;font-size:9px;white-space:nowrap}
-body.home-report-mode #page-home .daily-chart-total{flex:0 0 auto;margin-top:6px;gap:2px}
-body.home-report-mode #page-home .daily-chart-total span{font-size:10px}
-body.home-report-mode #page-home .daily-chart-total strong{font-size:20px;line-height:1.2}
-body.home-report-mode #page-home .daily-chart-bars{
-  flex:1 1 0%;width:100%;height:0;min-height:32px;max-height:none;
-  margin-top:6px;padding-top:5px;gap:2px;overflow:hidden;
-}
-body.home-report-mode #page-home .daily-chart-axis{flex:0 0 auto;margin-top:5px;font-size:9px;gap:2px}
-body.home-report-mode #page-home .daily-chart-selected{display:none!important}
-body.home-report-mode #page-home .daily-chart-subtitle{margin-top:2px;font-size:10px;line-height:1.35}
-/* Sheet 2: fixed report grid. Every section has its own grid cell; no scrolling. */
-body.home-report-mode #homeReportPager>#page-reports{
-  display:grid!important;grid-template-columns:minmax(0,1fr);
-  grid-template-rows:54px minmax(126px,1fr) 18px minmax(112px,1.1fr) 18px minmax(116px,1fr);
-  align-content:stretch;align-items:stretch;gap:5px;
-  width:100%;height:100%!important;min-width:0;min-height:0;
-  margin:0!important;padding:3px 1px 4px!important;
-  overflow:hidden!important;
-}
-body.home-report-mode #page-reports>*{min-width:0;min-height:0}
-body.home-report-mode #page-reports .report-swipe-heading{
-  display:flex;min-height:0;margin:0 3px!important;align-self:stretch;overflow:hidden;
-}
-body.home-report-mode #page-reports .report-swipe-heading h2{font-size:17px;line-height:1.15}
-body.home-report-mode #page-reports .report-swipe-summary{
-  display:grid;grid-template-rows:auto auto auto auto;align-content:stretch;
-  min-width:0;min-height:0;height:100%;margin:0;padding:7px 10px;gap:3px;overflow:hidden;
-}
-body.home-report-mode #page-reports .report-swipe-summary>div{min-width:0;min-height:0}
-body.home-report-mode #page-reports .report-swipe-summary label{font-size:9px;margin:0 0 2px}
-body.home-report-mode #page-reports .report-swipe-summary input{height:29px;min-height:29px;line-height:29px;padding:0 7px;font-size:11px}
-body.home-report-mode #page-reports .report-swipe-summary .stats{padding-top:4px;gap:7px}
-body.home-report-mode #page-reports .report-swipe-summary .stats div{gap:1px}
-body.home-report-mode #page-reports .report-swipe-summary .stats .small{font-size:9px}
-body.home-report-mode #page-reports .report-swipe-summary .stats strong{font-size:12px;line-height:1.2}
-body.home-report-mode #page-reports .report-swipe-summary .summaryline{padding:2px 0;font-size:10px;line-height:1.2}
-body.home-report-mode #page-reports .report-swipe-trend-heading,
-body.home-report-mode #page-reports .report-swipe-donut-heading{
-  min-height:0;margin:0 3px;align-self:end;overflow:hidden;
-}
-body.home-report-mode #page-reports .report-swipe-trend-heading h2,
-body.home-report-mode #page-reports .report-swipe-donut-heading h2{font-size:12px;line-height:1.2}
-body.home-report-mode #page-reports .report-swipe-trend-heading .report-subtitle,
-body.home-report-mode #page-reports .report-swipe-donut-heading .report-subtitle{display:none}
-body.home-report-mode #page-reports .report-swipe-trend{
-  display:grid;grid-template-rows:auto minmax(0,1fr);gap:3px;
-  width:100%;height:100%;min-width:0;min-height:0;margin:0;padding:6px 8px;overflow:hidden;
-}
-body.home-report-mode #page-reports .report-swipe-trend .trend-legend{font-size:9px;gap:9px;line-height:1}
-body.home-report-mode #page-reports .report-swipe-trend .trend-list{
-  display:grid;grid-template-rows:repeat(6,minmax(0,1fr));gap:1px;
-  width:100%;height:100%;min-width:0;min-height:0;overflow:hidden;
-}
-body.home-report-mode #page-reports .report-swipe-trend .trend-month{grid-template-columns:37px minmax(0,1fr);gap:4px;min-height:0}
-body.home-report-mode #page-reports .report-swipe-trend .trend-month-label{font-size:8px;white-space:nowrap}
-body.home-report-mode #page-reports .report-swipe-trend .trend-bars{gap:1px;min-width:0}
-body.home-report-mode #page-reports .report-swipe-trend .trend-bar-line{gap:3px;min-width:0}
-body.home-report-mode #page-reports .report-swipe-trend .trend-bar-track{height:4px;min-width:0}
-body.home-report-mode #page-reports .report-swipe-trend .trend-value{min-width:49px;font-size:8px;line-height:1}
-body.home-report-mode #page-reports .report-swipe-donut{
-  display:flex;align-items:center;width:100%;height:100%;min-width:0;min-height:0;
-  margin:0;padding:5px 7px;overflow:hidden;
-}
-body.home-report-mode #page-reports .report-donut-layout{
-  display:grid;grid-template-columns:minmax(76px,.75fr) minmax(0,1.25fr);
-  align-items:center;width:100%;height:100%;min-width:0;min-height:0;gap:7px;
-}
-body.home-report-mode #page-reports .report-donut{width:min(100%,clamp(76px,15vh,112px));max-width:100%}
-body.home-report-mode #page-reports .report-donut-center strong{font-size:10px}
-body.home-report-mode #page-reports .report-donut-center span{font-size:8px}
-body.home-report-mode #page-reports .report-legend{
-  display:grid;grid-auto-rows:minmax(0,1fr);gap:2px;
-  min-width:0;min-height:0;max-height:100%;overflow:hidden;
-}
-body.home-report-mode #page-reports .report-legend-row{grid-template-columns:6px minmax(0,1fr) auto;gap:4px;min-width:0;font-size:8px;line-height:1}
-body.home-report-mode #page-reports .report-legend-swatch{width:6px;height:6px}
-body.home-report-mode #page-reports .report-legend-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-body.home-report-mode #page-reports .report-legend-value{font-size:8px;white-space:nowrap}
-body.home-report-mode #page-reports .report-swipe-omit{display:none!important}
-body.home-report-mode footer,body.home-report-mode .bottom-nav{display:none!important}
-@media(max-height:720px){
-  body.home-report-mode .app{padding-top:7px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
-  body.home-report-mode .app>.top{margin-bottom:6px}
-  body.home-report-mode #page-home .balance{padding:10px 12px}
-  body.home-report-mode #page-home .daily-chart-card{padding:8px;gap:6px}
-  body.home-report-mode #page-home .daily-chart-range input{height:30px;min-height:30px;line-height:30px}
-  body.home-report-mode #homeReportPager>#page-reports{grid-template-rows:54px minmax(116px,1fr) 17px minmax(100px,1.05fr) 17px minmax(104px,1fr);gap:3px}
-  body.home-report-mode #page-reports .report-swipe-summary{padding:5px 8px;gap:2px}
-  body.home-report-mode #page-reports .report-swipe-summary input{height:25px;min-height:25px;line-height:25px}
-  body.home-report-mode #page-reports .report-swipe-trend{padding:5px 7px}
-  body.home-report-mode #page-reports .report-swipe-donut{padding:4px 6px}
-}
-@media(max-width:380px){
-  body.home-report-mode .app{padding-left:10px;padding-right:10px}
-  body.home-report-mode #page-home .daily-chart-preset{padding-left:4px;padding-right:4px;font-size:8px}
-  body.home-report-mode #page-reports .report-donut-layout{grid-template-columns:minmax(70px,.7fr) minmax(0,1.3fr);gap:5px}
-  body.home-report-mode #page-reports .report-swipe-trend .trend-month{grid-template-columns:33px minmax(0,1fr);gap:3px}
-  body.home-report-mode #page-reports .report-swipe-trend .trend-value{min-width:43px;font-size:7px}
-}
-@media(prefers-reduced-motion:reduce){body.home-report-mode #homeReportPager{scroll-behavior:auto}}
-
 </style>
 </head>
 <body style="background:#000000">
@@ -793,25 +581,8 @@ body.home-report-mode footer,body.home-report-mode .bottom-nav{display:none!impo
 
 <div class="app">
   <header class="top">
-    <div class="brand">
-      <button class="brand-menu-trigger" id="menuTrigger" type="button" aria-label="เปิดเมนู MyMoney" aria-expanded="false" aria-controls="appMenu"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney"></button>
-      <div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div>
-    </div>
-    <button class="quick-add" id="quickAdd" type="button" aria-label="เพิ่มรายการ" title="บันทึกรายการ">＋</button>
-    <div class="app-menu" id="appMenu" hidden>
-      <div class="app-menu-heading"><span>เมนู MyMoney</span><small>เลือกฟังก์ชันที่ต้องการ</small></div>
-      <div class="app-menu-grid">
-        <button type="button" class="app-menu-item" data-go="home"><span>⌂</span>ภาพรวม</button>
-        <button type="button" class="app-menu-item" data-go="history"><span>☷</span>ประวัติ</button>
-        <button type="button" class="app-menu-item" data-go="reports"><span>▥</span>รายงาน</button>
-        <button type="button" class="app-menu-item" data-go="budget"><span>▤</span>งบประมาณ</button>
-        <button type="button" class="app-menu-item" data-go="bills"><span>◷</span>บิลประจำ</button>
-        <button type="button" class="app-menu-item" data-go="debts"><span>↘</span>ติดตามหนี้</button>
-        <button type="button" class="app-menu-item" data-go="goals"><span>◎</span>เป้าหมายออม</button>
-        <button type="button" class="app-menu-item" data-go="settings"><span>⚙</span>ตั้งค่า</button>
-        <button type="button" class="app-menu-item" id="headerBackup"><span>⇧</span>สำรองข้อมูล</button>
-      </div>
-    </div>
+    <div class="brand"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney logo"><div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div></div>
+    <button class="btn secondary" id="headerBackup" title="สำรองข้อมูล">⇧ สำรอง</button>
   </header>
 
   <section class="page active" id="page-home">
@@ -831,7 +602,7 @@ body.home-report-mode footer,body.home-report-mode .bottom-nav{display:none!impo
       <p class="small" id="forecastNote">ประมาณการจากอัตรารายรับและรายจ่ายของเดือนปัจจุบัน ไม่ใช่ยอดรับประกัน</p>
     </section>
     <section class="card daily-chart-card">
-      <div class="daily-chart-header"><div><div class="daily-chart-eyebrow">DAILY OVERVIEW</div><h2 style="margin-top:5px">กระแสเงินรายวัน</h2><p class="daily-chart-subtitle">ดูรายรับหรือรายจ่ายแยกตามวันที่ <span class="dashboard-swipe-hint">· ปัดซ้ายเพื่อดูรายงาน</span></p></div><span class="daily-chart-icon" aria-hidden="true">▥</span></div>
+      <div class="daily-chart-header"><div><div class="daily-chart-eyebrow">DAILY OVERVIEW</div><h2 style="margin-top:5px">กระแสเงินรายวัน</h2><p class="daily-chart-subtitle">ดูรายรับหรือรายจ่ายแยกตามวันที่</p></div><span class="daily-chart-icon" aria-hidden="true">▥</span></div>
       <div class="daily-chart-controls">
         <div class="daily-chart-tabs" role="group" aria-label="ประเภทกราฟ">
           <button type="button" class="daily-chart-tab active" data-chart-type="Expense">รายจ่าย</button>
@@ -942,18 +713,20 @@ body.home-report-mode footer,body.home-report-mode .bottom-nav{display:none!impo
   </section>
 
   <section class="page" id="page-reports">
-    <div class="section report-swipe-heading" style="margin-top:5px"><div><p class="eyebrow">REPORTS</p><h2>รายงานการเงิน</h2><small class="report-swipe-back-hint">ปัดขวาเพื่อกลับภาพรวม</small></div><span class="daily-chart-icon" aria-hidden="true">▥</span></div>
-    <div class="card stack report-swipe-summary"><div><label for="reportMonth">เลือกเดือนที่ต้องการดู</label><input id="reportMonth" type="month"></div>
+    <div class="section" style="margin-top:5px"><div><p class="eyebrow">REPORTS</p><h2>รายงานการเงิน</h2></div></div>
+    <div class="card stack"><div><label for="reportMonth">เลือกเดือนที่ต้องการดู</label><input id="reportMonth" type="month"></div>
       <div class="stats" style="border-top:0;padding-top:5px"><div><span class="small">รายรับ</span><strong class="inc" id="reportIncome">฿0.00</strong></div><div><span class="small">รายจ่าย</span><strong class="exp" id="reportExpense">฿0.00</strong></div></div>
       <div class="summaryline"><span>เงินสุทธิของเดือน</span><strong id="reportNet">฿0.00</strong></div><div class="summaryline"><span>จำนวนรายการ</span><strong id="reportCount">0</strong></div>
     </div>
-    <div class="report-section-title report-swipe-trend-heading"><h2>แนวโน้มย้อนหลัง 6 เดือน</h2><p class="report-subtitle">เปรียบเทียบรายรับและรายจ่ายในแต่ละเดือน</p></div>
-    <div class="card report-trend report-swipe-trend"><div class="trend-legend"><span><i class="legend-dot" style="background:var(--green)"></i>รายรับ</span><span><i class="legend-dot" style="background:var(--red)"></i>รายจ่าย</span></div><div class="trend-list" id="reportTrend"></div></div>
-    <div class="report-section-title report-swipe-donut-heading"><h2>สัดส่วนรายจ่าย</h2><p class="report-subtitle">หมวดหมู่ที่ใช้จ่ายมากที่สุดในเดือนที่เลือก</p></div>
-    <div class="card report-swipe-donut"><div class="report-donut-layout"><div class="report-donut" id="expenseDonut" role="img" aria-label="กราฟวงกลมสัดส่วนรายจ่าย"><div class="report-donut-center"><strong id="expenseDonutTotal">฿0.00</strong><span>รายจ่ายรวม</span></div></div><div class="report-legend" id="expenseDonutLegend"></div></div></div>
-    <div class="report-section-title report-swipe-omit"><h2>รายจ่ายแยกตามหมวดหมู่</h2></div><div class="card report-swipe-omit" id="categoryReport"></div>
-    <div class="report-section-title report-swipe-omit"><h2>รายรับแยกตามหมวดหมู่</h2></div><div class="card report-swipe-omit" id="incomeReport"></div>
-    <div class="notice report-swipe-omit" style="margin-top:14px">รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย</div>
+    <div class="report-section-title"><h2>เทียบกับเดือนก่อน</h2><p class="report-subtitle">ดูการเปลี่ยนแปลงของรายรับและรายจ่ายจากเดือนก่อนหน้า</p></div>
+    <div class="card stack"><div class="report-compare-grid"><div class="report-compare-item"><span>รายรับเทียบเดือนก่อน</span><strong class="inc" id="reportIncomeChange">—</strong><div class="report-change" id="reportIncomeChangeNote">ยังไม่มีข้อมูล</div></div><div class="report-compare-item"><span>รายจ่ายเทียบเดือนก่อน</span><strong class="exp" id="reportExpenseChange">—</strong><div class="report-change" id="reportExpenseChangeNote">ยังไม่มีข้อมูล</div></div></div></div>
+    <div class="report-section-title"><h2>แนวโน้มย้อนหลัง 6 เดือน</h2><p class="report-subtitle">เปรียบเทียบรายรับและรายจ่ายในแต่ละเดือน</p></div>
+    <div class="card report-trend"><div class="trend-legend"><span><i class="legend-dot" style="background:var(--green)"></i>รายรับ</span><span><i class="legend-dot" style="background:var(--red)"></i>รายจ่าย</span></div><div class="trend-list" id="reportTrend"></div></div>
+    <div class="report-section-title"><h2>สัดส่วนรายจ่าย</h2><p class="report-subtitle">หมวดหมู่ที่ใช้จ่ายมากที่สุดในเดือนที่เลือก</p></div>
+    <div class="card"><div class="report-donut-layout"><div class="report-donut" id="expenseDonut" role="img" aria-label="กราฟวงกลมสัดส่วนรายจ่าย"><div class="report-donut-center"><strong id="expenseDonutTotal">฿0.00</strong><span>รายจ่ายรวม</span></div></div><div class="report-legend" id="expenseDonutLegend"></div></div></div>
+    <div class="report-section-title"><h2>รายจ่ายแยกตามหมวดหมู่</h2></div><div class="card" id="categoryReport"></div>
+    <div class="report-section-title"><h2>รายรับแยกตามหมวดหมู่</h2></div><div class="card" id="incomeReport"></div>
+    <div class="notice" style="margin-top:14px">รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย กราฟเปรียบเทียบใช้ข้อมูลที่มีอยู่ในเครื่องเท่านั้น</div>
   </section>
 
   <section class="page" id="page-budget">
@@ -1020,29 +793,10 @@ body.home-report-mode footer,body.home-report-mode .bottom-nav{display:none!impo
   <button class="nav-btn active" data-go="home"><span class="symbol">⌂</span>ภาพรวม</button><button class="nav-btn" data-go="history"><span class="symbol">☷</span>ประวัติ</button><button class="nav-btn" data-go="record"><span class="symbol">＋</span>บันทึก</button><button class="nav-btn" data-go="reports"><span class="symbol">▥</span>รายงาน</button><button class="nav-btn" data-go="settings"><span class="symbol">⚙</span>ตั้งค่า</button>
 </nav>
 
-
-<div id="dailyChartSheet" class="daily-detail-backdrop" hidden aria-hidden="true">
-  <section class="daily-detail-sheet" role="dialog" aria-modal="true" aria-labelledby="dailyChartSheetTitle">
-    <div class="daily-detail-grabber" aria-hidden="true"></div>
-    <div class="daily-detail-top"><h3 id="dailyChartSheetTitle">รายละเอียดรายการประจำวัน</h3><button type="button" class="daily-detail-close" id="dailyChartSheetClose" aria-label="ปิด">×</button></div>
-    <div id="dailyChartSheetContent" class="daily-detail-content"></div>
-  </section>
-</div>
 <script>
 setTimeout(() => {
 'use strict';
 const splashShownAt=Date.now();
-// Freeze the app's usable viewport height for the lifetime of a page view.
-// iOS Safari can emit resize events while its browser chrome moves; those must
-// not resize/reflow the two sheets in the middle of a swipe.
-const isAppleTouch=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-function setMyMoneyViewportHeight(){
-  const h=Math.max(1,Math.round(window.innerHeight||document.documentElement.clientHeight||0));
-  document.documentElement.style.setProperty('--mymoney-viewport-height',`${h}px`);
-}
-setMyMoneyViewportHeight();
-if(isAppleTouch){window.addEventListener('orientationchange',()=>setTimeout(setMyMoneyViewportHeight,300),{passive:true});}
-else{window.addEventListener('resize',()=>{clearTimeout(window.__mymoneyViewportTimer);window.__mymoneyViewportTimer=setTimeout(setMyMoneyViewportHeight,120);},{passive:true});}
 // Keep the app viewport stable on iOS Safari. Input controls are also 16px on mobile
 // to avoid Safari automatically zooming in when a field receives focus.
 ['gesturestart','gesturechange','gestureend'].forEach(type => {
@@ -1052,7 +806,7 @@ const $ = id => document.getElementById(id);
 const TX_KEY='mymoney_transactions_v1', ACC_KEY='mymoney_accounts_v1', CAT_KEY='mymoney_categories_v1';
 const BUDGET_KEY='mymoney_budgets_v1', BILL_KEY='mymoney_recurring_bills_v1', DEBT_KEY='mymoney_debts_v1', GOAL_KEY='mymoney_saving_goals_v1';
 const AUTO_BACKUP_KEY='mymoney_autobackup_v1';
-const I18N={"ก.ค.":"Jul.","ก.พ.":"Feb.","ก.ย.":"Sep.","กรกฎาคม":"July","กรอกยอดที่ชำระครั้งนี้ (บาท)":"Enter payment amount this time (THB)","กระแสเงินรายวัน":"Daily cash flow","กราฟยอดเงินรายวัน":"Daily amount chart","กราฟวงกลมสัดส่วนรายจ่าย":"Expense proportion pie chart","กรุณากรอกยอดชำระที่ถูกต้องค่ะ":"Please enter a valid payment amount.","กรุณาตั้งค่าบัญชีและจำนวนเงินของบิลให้ถูกต้องก่อนค่ะ":"Please set the account and bill amount correctly first.","กรุณาตั้งค่าบัญชีให้ครบก่อน":"Please set up accounts first.","กรุณาเลือกรูปภาพสลิปค่ะ":"Please choose a slip image.","กลับไปหน้าก่อนหน้า":"Back to previous page","กันยายน":"September","การคำนวณเป็นภาพรวมเบื้องต้น ไม่ใช่ยอดปิดบัญชีจากเจ้าหนี้จริง ดอกเบี้ยและค่าธรรมเนียมจริงอาจต่างกัน":"Calculations are a preliminary overview, not actual creditor closing balances. Actual interest and fees may differ.","การนำเข้า ":"Import ","กำลังอ่านสลิป":"Reading slip","กำลังเตรียมระบบอ่านสลิป":"Preparing slip reader","กำลังเปิด ":"Opening ","กำลังเริ่มระบบอ่านสลิป":"Starting slip reader","กำหนดงบตามหมวดหมู่ รายการรายจ่ายที่บันทึกแล้วจะถูกนำมาคำนวณอัตโนมัติ":"Set budgets by category. Recorded expenses are calculated automatically.","กุมภาพันธ์":"February","กู้คืนข้อมูลสำรองอัตโนมัติ":"Restore automatic backup","กู้คืนข้อมูลสำรองอัตโนมัติเรียบร้อยแล้ว":"Automatic backup restored successfully.","กู้คืนข้อมูลสำรองเมื่อ ":"Restore backup from ","กู้คืนข้อมูลสำเร็จค่ะ":"Restore successful.","กู้คืนไม่สำเร็จ":"Restore failed","ขั้นต่ำ ":"Minimum ","ข้อความที่ระบบอ่านได้ (ตรวจสอบได้)":"Text read by system (verifiable)","ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ":"Data is stored in this device's browser and not synced across devices automatically.","ข้อมูลรายการบางส่วนไม่ถูกต้อง":"Some transaction data is invalid.","ข้อมูลสำรองไม่ครบหรือรูปแบบไม่ถูกต้อง":"Backup data is incomplete or invalid format.","คงเหลือ ":"Remaining ","ครบกำหนดวันที่ ":"Due on ","คาดการณ์เงินปลายเดือน":"End-of-month forecast","ค้นหาชื่อรายการ / หมายเหตุ":"Search title / note","งบประมาณ":"Budget","งบประมาณ (บาท)":"Budget (THB)","งบประมาณรายเดือน":"Monthly budget","งบประมาณเดือนนี้":"This month's budget","จะแทนที่รายการและการตั้งค่าปัจจุบัน ควรส่งออกข้อมูลเดิมเก็บไว้ก่อน":"This will replace current transactions and settings. Export existing data first.","จัดการ":"Manage","จัดการเงินของคุณให้ง่ายขึ้น":"Manage your money more easily","จาก ":"From ","จากบัญชี":"From account","จากเป้าหมาย ":"From goal ","จำนวน ":"Amount ","จำนวนรายการ":"Number of transactions","จำนวนเงิน":"Amount","จำนวนเงิน (บาท) ":"Amount (THB) ","จ่ายแล้ว":"Paid","ชำระหนี้":"Pay debt","ชื่อบัญชีใหม่":"New account name","ชื่อบัญชีใหม่ เช่น บัญชีออมทรัพย์":"New account name, e.g. Savings account","ชื่อบิล ":"Bill name ","ชื่อผู้รับ":"Recipient name","ชื่อรายการ":"Transaction title","ชื่อรายการ ":"Transaction title ","ชื่อหนี้ ":"Debt name ","ชื่อหมวดหมู่ใหม่":"New category name","ชื่อเป้าหมาย":"Goal name","ชื่อเป้าหมาย ":"Goal name ","ช่วงเวลาลัด":"Quick ranges","ช้อปปิ้ง":"Shopping","ดอกเบี้ย":"Interest","ดอกเบี้ย ":"Interest ","ดอกเบี้ยต่อปี (":"Interest per year (","ดาวน์โหลดข้อมูลสำรอง ":"Download backup ","ดูการเปลี่ยนแปลงของรายรับและรายจ่ายจากเดือนก่อนหน้า":"See income and expense changes from previous month","ดูทั้งหมด":"See all","ดูยอดหนี้คงเหลือ":"See remaining debt","ดูรายรับหรือรายจ่ายแยกตามวันที่":"See income/expense by date","ต.ค.":"Oct.","ตรวจสอบทุกช่องก่อนบันทึก":"Check all fields before saving","ตัวอย่างสลิปที่เลือก":"Selected slip preview","ตั้งค่า":"Settings","ตั้งงบรายเดือน":"Set monthly budget","ตั้งเป้าหมายแรก":"Set first goal","ตั้งแต่วันที่":"From date","ติดตามวันครบกำหนด":"Track due dates","ติดตามหนี้":"Track debt","ตุลาคม":"October","ต่อปี ":"Per year ","ต้องการลบรายการนี้ใช่ไหมคะ?":"Delete this transaction?","ต้องการสร้างรายการรายจ่าย ":"Create expense transaction ","ถึง":"to","ถึง ":"To date","ถึงวันที่":"Goal reached","ถึงเป้าหมายแล้ว":"Data changed in another tab/window. Load latest?","ถูกเปลี่ยนจากแท็บหรือหน้าต่างอื่น ต้องการโหลดข้อมูลล่าสุดไหมคะ?":"Data changed in another tab/window. Load latest?","ถ้าค้าง ให้ลบออกใน 4 วินาที":"If stuck, remove in 4 seconds","ทั้งหมด":"All","ทำเครื่องหมายบิลเดือนนี้ครบแล้ว":"All bills this month marked paid","ทำเครื่องหมายว่าจ่าย ":"Mark as paid ","ทำเครื่องหมายว่าจ่ายแล้ว":"Marked as paid","ที่พัก":"Housing","ธ.ค.":"Dec.","ธันวาคม":"December","นำเข้า ":"Import ","นำเข้าข้อมูลสำรอง ":"Import backup ","นำเข้าข้อมูลสำเร็จค่ะ":"Import successful.","นำเข้าข้อมูลเรียบร้อยแล้ว":"Import completed.","นำเข้าไม่สำเร็จ":"Import failed","บัญชี":"Account","บัญชีต้นทางและปลายทางต้องต่างกัน":"Source and destination accounts must differ","บัญชีที่จ่าย":"Paying account","บัญชีธนาคาร":"Bank account","บัญชีนี้มีรายการผูกอยู่ จึงลบไม่ได้ เพื่อป้องกันข้อมูลเดิมเสียหายค่ะ":"This account has linked transactions, cannot delete to protect data.","บัญชีปลายทาง":"Destination account","บัญชีและยอดตั้งต้น":"Accounts and opening balances","บันทึก":"Save","บันทึกการแก้ไข":"Save changes","บันทึกการโอน":"Save transfer","บันทึกค่าเช่า ค่างวด หรือบิลรายเดือน แล้วทำเครื่องหมายว่าจ่ายแล้วในแต่ละเดือน":"Record rent, installments, or monthly bills, then mark as paid each month","บันทึกงบประมาณ":"Save budget","บันทึกงบประมาณแล้ว":"Budget saved","บันทึกชำระหนี้":"Save debt payment","บันทึกบัญชีเรียบร้อยแล้ว":"Account saved.","บันทึกบัญชีและยอดตั้งต้น":"Save account and opening balance","บันทึกยอดหนี้คงเหลือ ดอกเบี้ยต่อปี และยอดชำระขั้นต่ำ เพื่อดูภาพรวมภาระหนี้":"Record remaining debt, annual interest, and minimum payment to see debt overview.","บันทึกรายการ":"Save transaction","บันทึกรายจ่าย":"Save expense","บันทึกรายรับ":"Save income","บันทึกหมวดหมู่":"Save category","บันทึกหมวดหมู่เรียบร้อยแล้ว":"Category saved.","บันทึกเรียบร้อยแล้ว":"Saved successfully.","บันเทิง":"Entertainment","บาท":"THB","บิล":"Bill","บิล/ค่าน้ำไฟ":"Bill/Utilities","บิลที่ต้องจ่าย":"Bills to pay","บิลนี้มีรายการรายจ่ายที่สร้างจากแอปค่ะ ต้องการยกเลิกสถานะจ่ายและลบรายการรายจ่ายที่เชื่อมกันด้วยไหมคะ? กด ":"This bill has an expense created by the app. Cancel paid status and delete linked expense? Press ","บิลประจำ":"Recurring bill","บิลยังไม่ทำเครื่องหมายว่าจ่ายแล้ว":"Bill not marked paid yet","บิลและรายการประจำ":"Bills and recurring items","ประมวลผลรูปในเบราว์เซอร์ รูปสลิปไม่ถูกส่งไปยังเซิร์ฟเวอร์ ":"Process image in browser; slip image is not sent to server. ","ประมาณการจากอัตรารายรับและรายจ่ายของเดือนปัจจุบัน ไม่ใช่ยอดรับประกัน":"Estimate based on current month's income/expense rates, not guaranteed.","ประมาณจากข้อมูล ":"Estimated from data ","ประวัติ":"History","ประวัติรายการ":"Transaction history","ประเภท":"Type","ประเภทกราฟ":"Chart type","ประเภทหมวดหมู่":"Category type","ผู้รับเงิน":"Payee","ผู้โอน":"Payer","พ.ค.":"May.","พ.ย.":"Nov.","พบ ":"Found ","พบข้อมูล ":"Found data ","พบรายการที่ข้อมูลไม่ครบหรือไม่ถูกต้อง":"Found transactions with incomplete/invalid data","พฤศจิกายน":"November","พฤษภาคม":"May","พิมพ์คำค้นหา":"Type search keyword","ภาพรวม":"Overview","ม.ค.":"Jan.","มกราคม":"January","มิ.ย.":"Jun.","มิถุนายน":"June","มี.ค.":"Mar.","มีนาคม":"March","มีบัญชีชื่อนี้แล้วค่ะ":"Account name already exists.","มีหมวดหมู่นี้แล้วค่ะ":"Category already exists.","มูลค่าสุทธิเงินสดหักหนี้":"Net cash value minus debt","ยกเลิกการแก้ไข":"Cancel edit","ยกเลิกการแนบไฟล์":"Cancel file attachment","ยกเลิกการแนบไฟล์แล้ว":"File attachment cancelled","ยกเลิกสถานะจ่าย":"Cancel paid status","ยอดคงเหลือรวมทุกบัญชี":"Total balance across all accounts","ยอดชำระขั้นต่ำ/เดือน":"Minimum payment/month","ยอดชำระขั้นต่ำต่อเดือน":"Minimum payment per month","ยอดชำระสูงกว่ายอดหนี้คงเหลือ ต้องการปิดหนี้โดยปรับยอดเป็น 0 ใช่ไหมคะ?":"Payment exceeds remaining debt. Close debt by setting balance to 0?","ยอดตั้งต้น ":"Opening balance ","ยอดตั้งต้น (บาท)":"Opening balance (THB)","ยอดตั้งต้นคือเงินที่มีอยู่ก่อนเริ่มบันทึกรายการ ยอดคงเหลือจะแสดงจากยอดตั้งต้นรวมกับรายการภายหลัง":"Opening balance is money before recording transactions. Balance shows opening balance plus later transactions.","ยอดหนี้คงเหลือ ":"Remaining debt ","ยอดเงิน":"Money amount","ยอดเงินในเป้าหมายเป็นตัวติดตามแยกต่างหาก ไม่ได้หักเงินจากบัญชีใน ":"Goal amount is tracked separately, not deducted from accounts in ","ยอดเป้าหมาย (บาท)":"Goal amount (THB)","ยอดเป้าหมาย (บาท) ":"Goal amount (THB) ","ยังไม่จ่าย":"Unpaid","ยังไม่มีข้อความ":"No messages yet","ยังไม่มีข้อมูล":"No data yet","ยังไม่มีข้อมูลสำรองอัตโนมัติในเบราว์เซอร์นี้ค่ะ":"No automatic backup in this browser.","ยังไม่มีข้อมูลในเดือนนี้":"No data this month","ยังไม่มีงบประมาณในเดือนนี้":"No budget this month","ยังไม่มีบัญชี":"No accounts yet","ยังไม่มีบัญชีสำหรับบันทึกรายจ่าย กรุณาเพิ่มบัญชีก่อนค่ะ":"No account for recording expenses. Please add an account first.","ยังไม่มีบิลประจำ":"No recurring bills","ยังไม่มีรายการ":"No transactions yet","ยังไม่มีรายการ เริ่มบันทึกรายการแรกได้เลยค่ะ":"No transactions yet. Start recording your first transaction.","ยังไม่มีรายการหนี้ค่ะ":"No debts yet.","ยังไม่มีรายจ่ายในเดือนนี้":"No expenses this month","ยังไม่มีหมวดหมู่":"No categories yet","ยังไม่มีเป้าหมายการออมค่ะ":"No savings goals yet.","ยังไม่ได้กำหนดวันที่":"Date not set","ยังไม่ได้ตั้งงบเดือนนี้ค่ะ":"Budget for this month not set.","ยังไม่ได้อ่านสลิป":"Slip not read yet","ย้อนกลับ":"Back","รวม ":"Total ","ระบบจะอ่านข้อความบนรูปและช่วยกรอกข้อมูลให้":"System reads text in image and helps fill data.","ระบบเก็บข้อมูลชุดก่อนหน้าล่าสุดไว้ในเบราว์เซอร์นี้เพื่อช่วยกู้คืนเมื่อเกิดข้อผิดพลาด":"System keeps latest previous data in browser to help recover on errors.","รายการ ":"Transaction ","รายการ และแทนที่รายการ/บัญชี/หมวดหมู่ปัจจุบันใช่ไหมคะ? ระบบจะเก็บข้อมูลชุดก่อนหน้าไว้ในสำรองอัตโนมัติก่อน":"transactions and replace current transactions/accounts/categories? System will store current data in automatic backup first.","รายการทั้งหมด":"All transactions","รายการล่าสุด":"Latest transactions","รายงาน":"Report","รายงานการเงิน":"Financial report","รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย":"Report calculated from recorded transaction dates. Transfers between accounts are not income or expenses.","รายจ่าย":"Expense","รายจ่ายรวม":"Total expense","รายจ่ายรวม ":"Total expense ","รายจ่ายรวมเดือนนี้":"Total expense this month","รายจ่ายเดือนนี้":"Expenses this month","รายจ่ายเทียบเดือนก่อน":"Expense vs previous month","รายจ่ายแยกตามหมวดหมู่":"Expenses by category","รายรับ":"Income","รายรับอื่น ๆ":"Other income","รายรับเดือนนี้":"Income this month","รายรับเทียบเดือนก่อน":"Income vs previous month","รายรับแยกตามหมวดหมู่":"Income by category","รายได้เสริม":"Side income","รูปแบบไฟล์ไม่ถูกต้อง":"Invalid file format","ร้านค้า":"Merchant","ลบ":"Delete","ลบงบประมาณนี้ใช่ไหมคะ?":"Delete this budget?","ลบบัญชี":"Delete account","ลบบัญชี ":"Delete account ","ลบบิล":"Delete bill","ลบบิลประจำนี้ใช่ไหมคะ? รายการรายจ่ายที่บันทึกไปแล้วจะไม่ถูกลบ":"Delete this recurring bill? Recorded expenses will not be deleted.","ลบรายการหนี้นี้ใช่ไหมคะ?":"Delete this debt?","ลบเป้าหมายนี้ใช่ไหมคะ?":"Delete this goal?","ล้างตัวกรอง":"Clear filters","วัน โดยสมมติว่าอัตรารายรับ/รายจ่ายใกล้เคียงเดิม ไม่รวมบิลอนาคตที่ยังไม่บันทึกเป็นรายการ":"Days assuming similar income/expense rates, excluding future bills not yet recorded.","วันครบกำหนด (1":"Due date (1","วันที่":"Date","วันที่ ":"Date ","วันที่ต้องการให้ถึงเป้าหมาย (ไม่บังคับ)":"Target date to reach goal (optional)","วันที่สิ้นสุดกระแสเงิน":"Cash flow end date","วันที่เริ่มต้นกระแสเงิน":"Cash flow start date","วันนี้":"Today","วันล่าสุด":"Latest date","วันแรก และคาดการณ์อีก ":"First day and forecast another ","วางแผนการเงิน":"Financial planning","ส.ค.":"Aug.","สร้างจากการติดตามหนี้ ":"Created from debt tracking ","สร้างจากบิลประจำ ":"Created from recurring bill ","สร้างไฟล์สำรอง ":"Create backup ","สลิป":"Slip","สัดส่วนรายจ่าย":"Expense proportion","สำรอง":"Backup","สำรองข้อมูล":"Backup data","สำรองและกู้คืนข้อมูล":"Backup and restore data","สิงหาคม":"August","สุขภาพ":"Health","สุขภาพการเงินเดือนนี้":"Financial health this month","ส่งออกรายการ ":"Export transactions ","หนี้คงเหลือรวม":"Total remaining debt","หนี้สิน":"Debt","หมวดหมู่":"Category","หมวดหมู่ที่ใช้จ่ายมากที่สุดในเดือนที่เลือก":"Highest spending category in selected month","หมวดหมู่นี้มีรายการเก่าใช้งานอยู่ จึงลบไม่ได้ค่ะ":"This category has old transactions in use, cannot delete.","หมวดหมู่รวมอยู่ในกราฟ":"Category included in chart","หมวดหมู่รายการ":"Transaction category","หมวดหมู่รายจ่าย":"Expense category","หมายเหตุ":"Note","หรือ ":"or ","หากคุณบันทึกรายจ่ายนี้ไว้แล้ว เพื่อป้องกันยอดซ้ำ":"If you already recorded this expense, to avoid duplicate amounts","ออมแล้ว":"Saved","ออมแล้ว ":"Saved ","อัตโนมัติ เพื่อป้องกันยอดเงินซ้ำกันค่ะ":"automatically, to prevent duplicate amounts.","อาหาร":"Food","อีก ":"another ","อื่น ๆ":"Other","อ่านข้อความได้ แต่ไม่พบยอดเงินหรือวันที่ที่เชื่อถือได้ กรุณากรอกเอง":"Text readable, but no reliable amount/date found. Please enter manually.","อ่านข้อความไม่สำเร็จ ลองใช้รูปที่คมชัดและไม่เอียงค่ะ":"Failed to read text. Try a clear, non-tilted image.","อ่านข้อมูลจากสลิป":"Read data from slip","อ่านสลิปและเติมข้อมูล":"Read slip and fill data","อ่านสลิปไม่สำเร็จ กรุณาลองใหม่":"Slip read failed. Please try again.","อ่านเสร็จแล้ว เติมข้อมูล":"Read complete. Fill data.","฿":"฿","฿)/":"฿)/","฿0.00":"฿0.00","เกินงบ ":"Over budget ","เข้าสู่แอพ":"Enter app","เข้าสู่แอพอัตโนมัติหลัง 1.5 วินาที":"Auto-enter app after 1.5 seconds","เงินที่มีแล้ว (บาท)":"Money already have (THB)","เงินที่ออมแล้ว (บาท)":"Money saved (THB)","เงินสด":"Cash","เงินสุทธิของเดือน":"Net money of month","เงินเดือน":"Salary","เงินแยกตามบัญชี":"Money by account","เช่น 3000":"e.g. 3000","เช่น ข้าวกลางวัน":"e.g. lunch","เช่น ค่าเช่าห้อง":"e.g. room rent","เช่น สินเชื่อส่วนบุคคล":"e.g. personal loan","เช่น เงินฉุกเฉิน":"e.g. emergency fund","เดินทาง":"Travel","เดือน":"Month","เดือนก่อน":"Previous month","เดือนก่อน ":"Previous month ","เดือนที่ต้องการวางแผน":"Month to plan","เดือนนี้":"This month","เดือนนี้ ":"This month ","เทียบกับเดือนก่อน":"Compared with previous month","เปรียบเทียบรายรับและรายจ่ายในแต่ละเดือน":"Compare income and expense each month","เป้าหมายการออม":"Savings goal","เป้าหมายของฉัน":"My goals","เป้าหมายทั้งหมด":"All goals","เป้าหมายวันที่ ":"Goal date ","เป้าหมายสำเร็จ":"Goal achieved","เพิ่ม":"Add","เพิ่มบัญชี":"Add account","เพิ่มบิลที่จ่ายประจำ":"Add recurring bill","เพิ่มบิลประจำ":"Add recurring bill","เพิ่มบิลประจำแล้ว":"Recurring bill added","เพิ่มรายการหนี้":"Add debt","เพิ่มรายการหนี้แล้ว":"Debt added","เพิ่มหนี้":"Add debt","เพิ่มหมวดหมู่":"Add category","เพิ่มเงินออม":"Add savings","เพิ่มเงินออม (บาท)":"Add savings (THB)","เพิ่มเป้าหมาย":"Add goal","เพิ่มเป้าหมายการออมเพื่อเริ่มติดตามค่ะ":"Add a savings goal to start tracking.","เพิ่มเป้าหมายแล้ว":"Goal added","เพื่อคงรายการรายจ่ายไว้":"To keep expense record","เม.ย.":"Apr.","เมนูหลัก":"Main menu","เมษายน":"April","เลือกรูปสลิป":"Choose slip image","เลือกรูปสลิปจาก ":"Choose slip image from ","เลือกรูปแล้ว":"Image selected","เลือกเดือนที่ต้องการดู":"Select month to view","เหลืองบ ":"Budget remaining ","เหลืออีก ":"Remaining ","แก้ไข":"Edit","แก้ไขงบ":"Edit budget","แก้ไขจำนวนเงินแล้วกดบันทึกงบประมาณ":"Edit amount then save budget","แก้ไขบัญชี":"Edit account","แก้ไขบัญชีเรียบร้อยแล้ว":"Account edited successfully.","แก้ไขยอด":"Edit amount","แก้ไขยอดหนี้คงเหลือ (บาท)":"Edit remaining debt (THB)","แก้ไขรายการ":"Edit transaction","แก้ไขหมวดหมู่":"Edit category","แก้ไขหมวดหมู่เรียบร้อยแล้ว":"Category edited successfully.","แตะแท่งกราฟเพื่อดูยอดของวันนั้น":"Tap a bar to see that day's amount","แนวโน้มย้อนหลัง 6 เดือน":"6-month trend","แนะนำให้สำรองข้อมูลก่อนแก้ไขแอปหรือเปลี่ยนอุปกรณ์":"Recommend backing up data before editing app or changing device.","แล้ว":"then","แล้ว และสร้างรายการรายจ่ายให้อัตโนมัติใช่ไหมคะ?":"and create expense automatically?","โดยโค้ดนี้ แต่ระบบต้องดาวน์โหลดตัวอ่านและชุดภาษาเมื่อใช้ครั้งแรก ยอดเงินและวันที่อาจอ่านผิด กรุณาตรวจสอบก่อนบันทึก":"Using this code, but system must download reader and language pack on first use. Amount and date may be read incorrectly; please verify before saving.","โหลดระบบ ":"Load system ","โอนจากบัญชี":"Transfer from account","โอนเงิน":"Transfer","โอนเงิน ":"Transfer ","โอนเงินจากสลิป":"Transfer from slip","โอนไปบัญชี":"Transfer to account","ใช่ไหมคะ?":"Is that correct?","ใช่ไหมคะ? ข้อมูลปัจจุบันจะถูกแทนที่ แต่จะเก็บสำรองชุดปัจจุบันก่อน":"Is that correct? Current data will be replaced, but current backup will be kept first.","ใช้จากงบ ":"Use from budget ","ใช้ไป ":"Used ","ใหม่":"new","ให้อัตโนมัติด้วยไหมคะ? กด ":"Auto too? Press ","ไปยัง":"Go to","ไม่ทราบเวลา":"Unknown time","ไม่บังคับ":"Optional","ไม่พบข้อความในรูปนี้":"No text found in this image","ไม่พบรายการที่ตรงกับเงื่อนไข":"No transactions match the criteria","ไม่มีการเปลี่ยนแปลง":"No changes","ไม่ระบุบัญชี":"Unspecified account","ไม่ระบุหมวดหมู่":"Unspecified category","ไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่":"Failed. Please check internet and try again.","๐-๙":"0-9","๐๑๒๓๔๕๖๗๘๙":"0123456789"};
+const I18N={"ก.ค.":"Jul.","ก.พ.":"Feb.","ก.ย.":"Sep.","กรกฎาคม":"July","กรอกยอดที่ชำระครั้งนี้ (บาท)":"Enter payment amount this time (THB)","กระแสเงินรายวัน":"Daily cash flow","กราฟยอดเงินรายวัน":"Daily amount chart","กราฟวงกลมสัดส่วนรายจ่าย":"Expense proportion pie chart","กรุณากรอกยอดชำระที่ถูกต้องค่ะ":"Please enter a valid payment amount.","กรุณาตั้งค่าบัญชีและจำนวนเงินของบิลให้ถูกต้องก่อนค่ะ":"Please set the account and bill amount correctly first.","กรุณาตั้งค่าบัญชีให้ครบก่อน":"Please set up accounts first.","กรุณาเลือกรูปภาพสลิปค่ะ":"Please choose a slip image.","กลับไปหน้าก่อนหน้า":"Back to previous page","กันยายน":"September","การคำนวณเป็นภาพรวมเบื้องต้น ไม่ใช่ยอดปิดบัญชีจากเจ้าหนี้จริง ดอกเบี้ยและค่าธรรมเนียมจริงอาจต่างกัน":"Calculations are a preliminary overview, not actual creditor closing balances. Actual interest and fees may differ.","การนำเข้า ":"Import ","กำลังอ่านสลิป":"Reading slip","กำลังเตรียมระบบอ่านสลิป":"Preparing slip reader","กำลังเปิด ":"Opening ","กำลังเริ่มระบบอ่านสลิป":"Starting slip reader","กำหนดงบตามหมวดหมู่ รายการรายจ่ายที่บันทึกแล้วจะถูกนำมาคำนวณอัตโนมัติ":"Set budgets by category. Recorded expenses are calculated automatically.","กุมภาพันธ์":"February","กู้คืนข้อมูลสำรองอัตโนมัติ":"Restore automatic backup","กู้คืนข้อมูลสำรองอัตโนมัติเรียบร้อยแล้ว":"Automatic backup restored successfully.","กู้คืนข้อมูลสำรองเมื่อ ":"Restore backup from ","กู้คืนข้อมูลสำเร็จค่ะ":"Restore successful.","กู้คืนไม่สำเร็จ":"Restore failed","ขั้นต่ำ ":"Minimum ","ข้อความที่ระบบอ่านได้ (ตรวจสอบได้)":"Text read by system (verifiable)","ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ":"Data is stored in this device's browser and not synced across devices automatically.","ข้อมูลรายการบางส่วนไม่ถูกต้อง":"Some transaction data is invalid.","ข้อมูลสำรองไม่ครบหรือรูปแบบไม่ถูกต้อง":"Backup data is incomplete or invalid format.","คงเหลือ ":"Remaining ","ครบกำหนดวันที่ ":"Due on ","คาดการณ์เงินปลายเดือน":"End-of-month forecast","ค้นหาชื่อรายการ / หมายเหตุ":"Search title / note","งบประมาณ":"Budget","งบประมาณ (บาท)":"Budget (THB)","งบประมาณรายเดือน":"Monthly budget","งบประมาณเดือนนี้":"This month's budget","จะแทนที่รายการและการตั้งค่าปัจจุบัน ควรส่งออกข้อมูลเดิมเก็บไว้ก่อน":"This will replace current transactions and settings. Export existing data first.","จัดการ":"Manage","จัดการเงินของคุณให้ง่ายขึ้น":"Manage your money more easily","จาก ":"From ","จากบัญชี":"From account","จากเป้าหมาย ":"From goal ","จำนวน ":"Amount ","จำนวนรายการ":"Number of transactions","จำนวนเงิน":"Amount","จำนวนเงิน (บาท) ":"Amount (THB) ","จ่ายแล้ว":"Paid","ชำระหนี้":"Pay debt","ชื่อบัญชีใหม่":"New account name","ชื่อบัญชีใหม่ เช่น บัญชีออมทรัพย์":"New account name, e.g. Savings account","ชื่อบิล ":"Bill name ","ชื่อผู้รับ":"Recipient name","ชื่อรายการ":"Transaction title","ชื่อรายการ ":"Transaction title ","ชื่อหนี้ ":"Debt name ","ชื่อหมวดหมู่ใหม่":"New category name","ชื่อเป้าหมาย":"Goal name","ชื่อเป้าหมาย ":"Goal name ","ช่วงเวลาลัด":"Quick ranges","ช้อปปิ้ง":"Shopping","ดอกเบี้ย":"Interest","ดอกเบี้ย ":"Interest ","ดอกเบี้ยต่อปี (":"Interest per year (","ดาวน์โหลดข้อมูลสำรอง ":"Download backup ","ดูการเปลี่ยนแปลงของรายรับและรายจ่ายจากเดือนก่อนหน้า":"See income and expense changes from previous month","ดูทั้งหมด":"See all","ดูยอดหนี้คงเหลือ":"See remaining debt","ดูรายรับหรือรายจ่ายแยกตามวันที่":"See income/expense by date","ต.ค.":"Oct.","ตรวจสอบทุกช่องก่อนบันทึก":"Check all fields before saving","ตัวอย่างสลิปที่เลือก":"Selected slip preview","ตั้งค่า":"Settings","ตั้งงบรายเดือน":"Set monthly budget","ตั้งเป้าหมายแรก":"Set first goal","ตั้งแต่วันที่":"From date","ติดตามวันครบกำหนด":"Track due dates","ติดตามหนี้":"Track debt","ตุลาคม":"October","ต่อปี ":"Per year ","ต้องการลบรายการนี้ใช่ไหมคะ?":"Delete this transaction?","ต้องการสร้างรายการรายจ่าย ":"Create expense transaction ","ถึง":"to","ถึง ":"To date","ถึงวันที่":"Goal reached","ถึงเป้าหมายแล้ว":"Data changed in another tab/window. Load latest?","ถูกเปลี่ยนจากแท็บหรือหน้าต่างอื่น ต้องการโหลดข้อมูลล่าสุดไหมคะ?":"Data changed in another tab/window. Load latest?","ถ้าค้าง ให้ลบออกใน 4 วินาที":"If stuck, remove in 4 seconds","ทั้งหมด":"All","ทำเครื่องหมายบิลเดือนนี้ครบแล้ว":"All bills this month marked paid","ทำเครื่องหมายว่าจ่าย ":"Mark as paid ","ทำเครื่องหมายว่าจ่ายแล้ว":"Marked as paid","ที่พัก":"Housing","ธ.ค.":"Dec.","ธันวาคม":"December","นำเข้า ":"Import ","นำเข้าข้อมูลสำรอง ":"Import backup ","นำเข้าข้อมูลสำเร็จค่ะ":"Import successful.","นำเข้าข้อมูลเรียบร้อยแล้ว":"Import completed.","นำเข้าไม่สำเร็จ":"Import failed","บัญชี":"Account","บัญชีต้นทางและปลายทางต้องต่างกัน":"Source and destination accounts must differ","บัญชีที่จ่าย":"Paying account","บัญชีธนาคาร":"Bank account","บัญชีนี้มีรายการผูกอยู่ จึงลบไม่ได้ เพื่อป้องกันข้อมูลเดิมเสียหายค่ะ":"This account has linked transactions, cannot delete to protect data.","บัญชีปลายทาง":"Destination account","บัญชีและยอดตั้งต้น":"Accounts and opening balances","บันทึก":"Save","บันทึกการแก้ไข":"Save changes","บันทึกการโอน":"Save transfer","บันทึกค่าเช่า ค่างวด หรือบิลรายเดือน แล้วทำเครื่องหมายว่าจ่ายแล้วในแต่ละเดือน":"Record rent, installments, or monthly bills, then mark as paid each month","บันทึกงบประมาณ":"Save budget","บันทึกงบประมาณแล้ว":"Budget saved","บันทึกชำระหนี้":"Save debt payment","บันทึกบัญชีเรียบร้อยแล้ว":"Account saved.","บันทึกบัญชีและยอดตั้งต้น":"Save account and opening balance","บันทึกยอดหนี้คงเหลือ ดอกเบี้ยต่อปี และยอดชำระขั้นต่ำ เพื่อดูภาพรวมภาระหนี้":"Record remaining debt, annual interest, and minimum payment to see debt overview.","บันทึกรายการ":"Save transaction","บันทึกรายจ่าย":"Save expense","บันทึกรายรับ":"Save income","บันทึกหมวดหมู่":"Save category","บันทึกหมวดหมู่เรียบร้อยแล้ว":"Category saved.","บันทึกเรียบร้อยแล้ว":"Saved successfully.","บันเทิง":"Entertainment","บาท":"THB","บิล":"Bill","บิล/ค่าน้ำไฟ":"Bill/Utilities","บิลที่ต้องจ่าย":"Bills to pay","บิลนี้มีรายการรายจ่ายที่สร้างจากแอปค่ะ ต้องการยกเลิกสถานะจ่ายและลบรายการรายจ่ายที่เชื่อมกันด้วยไหมคะ? กด ":"This bill has an expense created by the app. Cancel paid status and delete linked expense? Press ","บิลประจำ":"Recurring bill","บิลยังไม่ทำเครื่องหมายว่าจ่ายแล้ว":"Bill not marked paid yet","บิลและรายการประจำ":"Bills and recurring items","ประมวลผลรูปในเบราว์เซอร์ รูปสลิปไม่ถูกส่งไปยังเซิร์ฟเวอร์ ":"Process image in browser; slip image is not sent to server. ","ประมาณการจากอัตรารายรับและรายจ่ายของเดือนปัจจุบัน ไม่ใช่ยอดรับประกัน":"Estimate based on current month's income/expense rates, not guaranteed.","ประมาณจากข้อมูล ":"Estimated from data ","ประวัติ":"History","ประวัติรายการ":"Transaction history","ประเภท":"Type","ประเภทกราฟ":"Chart type","ประเภทหมวดหมู่":"Category type","ผู้รับเงิน":"Payee","ผู้โอน":"Payer","พ.ค.":"May.","พ.ย.":"Nov.","พบ ":"Found ","พบข้อมูล ":"Found data ","พบรายการที่ข้อมูลไม่ครบหรือไม่ถูกต้อง":"Found transactions with incomplete/invalid data","พฤศจิกายน":"November","พฤษภาคม":"May","พิมพ์คำค้นหา":"Type search keyword","ภาพรวม":"Overview","ม.ค.":"Jan.","มกราคม":"January","มิ.ย.":"Jun.","มิถุนายน":"June","มี.ค.":"Mar.","มีนาคม":"March","มีบัญชีชื่อนี้แล้วค่ะ":"Account name already exists.","มีหมวดหมู่นี้แล้วค่ะ":"Category already exists.","มูลค่าสุทธิเงินสดหักหนี้":"Net cash value minus debt","ยกเลิกการแก้ไข":"Cancel edit","ยกเลิกการแนบไฟล์":"Cancel file attachment","ยกเลิกการแนบไฟล์แล้ว":"File attachment cancelled","ยกเลิกสถานะจ่าย":"Cancel paid status","ยอดคงเหลือรวมทุกบัญชี":"Total balance across all accounts","ยอดชำระขั้นต่ำ/เดือน":"Minimum payment/month","ยอดชำระขั้นต่ำต่อเดือน":"Minimum payment per month","ยอดชำระสูงกว่ายอดหนี้คงเหลือ ต้องการปิดหนี้โดยปรับยอดเป็น 0 ใช่ไหมคะ?":"Payment exceeds remaining debt. Close debt by setting balance to 0?","ยอดตั้งต้น ":"Opening balance ","ยอดตั้งต้น (บาท)":"Opening balance (THB)","ยอดตั้งต้นคือเงินที่มีอยู่ก่อนเริ่มบันทึกรายการ ยอดคงเหลือจะแสดงจากยอดตั้งต้นรวมกับรายการภายหลัง":"Opening balance is money before recording transactions. Balance shows opening balance plus later transactions.","ยอดหนี้คงเหลือ ":"Remaining debt ","ยอดเงิน":"Money amount","ยอดเงินในเป้าหมายเป็นตัวติดตามแยกต่างหาก ไม่ได้หักเงินจากบัญชีใน ":"Goal amount is tracked separately, not deducted from accounts in ","ยอดเป้าหมาย (บาท)":"Goal amount (THB)","ยอดเป้าหมาย (บาท) ":"Goal amount (THB) ","ยังไม่จ่าย":"Unpaid","ยังไม่มีข้อความ":"No messages yet","ยังไม่มีข้อมูล":"No data yet","ยังไม่มีข้อมูลสำรองอัตโนมัติในเบราว์เซอร์นี้ค่ะ":"No automatic backup in this browser.","ยังไม่มีข้อมูลในเดือนนี้":"No data this month","ยังไม่มีงบประมาณในเดือนนี้":"No budget this month","ยังไม่มีบัญชี":"No accounts yet","ยังไม่มีบัญชีสำหรับบันทึกรายจ่าย กรุณาเพิ่มบัญชีก่อนค่ะ":"No account for recording expenses. Please add an account first.","ยังไม่มีบิลประจำ":"No recurring bills","ยังไม่มีรายการ":"No transactions yet","ยังไม่มีรายการ เริ่มบันทึกรายการแรกได้เลยค่ะ":"No transactions yet. Start recording your first transaction.","ยังไม่มีรายการหนี้ค่ะ":"No debts yet.","ยังไม่มีรายจ่ายในเดือนนี้":"No expenses this month","ยังไม่มีหมวดหมู่":"No categories yet","ยังไม่มีเป้าหมายการออมค่ะ":"No savings goals yet.","ยังไม่ได้กำหนดวันที่":"Date not set","ยังไม่ได้ตั้งงบเดือนนี้ค่ะ":"Budget for this month not set.","ยังไม่ได้อ่านสลิป":"Slip not read yet","ย้อนกลับ":"Back","รวม ":"Total ","ระบบจะอ่านข้อความบนรูปและช่วยกรอกข้อมูลให้":"System reads text in image and helps fill data.","ระบบเก็บข้อมูลชุดก่อนหน้าล่าสุดไว้ในเบราว์เซอร์นี้เพื่อช่วยกู้คืนเมื่อเกิดข้อผิดพลาด":"System keeps latest previous data in browser to help recover on errors.","รายการ ":"Transaction ","รายการ และแทนที่รายการ/บัญชี/หมวดหมู่ปัจจุบันใช่ไหมคะ? ระบบจะเก็บข้อมูลชุดก่อนหน้าไว้ในสำรองอัตโนมัติก่อน":"transactions and replace current transactions/accounts/categories? System will store current data in automatic backup first.","รายการทั้งหมด":"All transactions","รายการล่าสุด":"Latest transactions","รายงาน":"Report","รายงานการเงิน":"Financial report","รายงานคำนวณจากวันที่ของรายการที่บันทึกไว้ การโอนระหว่างบัญชีไม่นับเป็นรายรับหรือรายจ่าย กราฟเปรียบเทียบใช้ข้อมูลที่มีอยู่ในเครื่องเท่านั้น":"Report calculated from recorded transaction dates. Transfers between accounts are not income/expense. Comparison charts use data available on this device only.","รายจ่าย":"Expense","รายจ่ายรวม":"Total expense","รายจ่ายรวม ":"Total expense ","รายจ่ายรวมเดือนนี้":"Total expense this month","รายจ่ายเดือนนี้":"Expenses this month","รายจ่ายเทียบเดือนก่อน":"Expense vs previous month","รายจ่ายแยกตามหมวดหมู่":"Expenses by category","รายรับ":"Income","รายรับอื่น ๆ":"Other income","รายรับเดือนนี้":"Income this month","รายรับเทียบเดือนก่อน":"Income vs previous month","รายรับแยกตามหมวดหมู่":"Income by category","รายได้เสริม":"Side income","รูปแบบไฟล์ไม่ถูกต้อง":"Invalid file format","ร้านค้า":"Merchant","ลบ":"Delete","ลบงบประมาณนี้ใช่ไหมคะ?":"Delete this budget?","ลบบัญชี":"Delete account","ลบบัญชี ":"Delete account ","ลบบิล":"Delete bill","ลบบิลประจำนี้ใช่ไหมคะ? รายการรายจ่ายที่บันทึกไปแล้วจะไม่ถูกลบ":"Delete this recurring bill? Recorded expenses will not be deleted.","ลบรายการหนี้นี้ใช่ไหมคะ?":"Delete this debt?","ลบเป้าหมายนี้ใช่ไหมคะ?":"Delete this goal?","ล้างตัวกรอง":"Clear filters","วัน โดยสมมติว่าอัตรารายรับ/รายจ่ายใกล้เคียงเดิม ไม่รวมบิลอนาคตที่ยังไม่บันทึกเป็นรายการ":"Days assuming similar income/expense rates, excluding future bills not yet recorded.","วันครบกำหนด (1":"Due date (1","วันที่":"Date","วันที่ ":"Date ","วันที่ต้องการให้ถึงเป้าหมาย (ไม่บังคับ)":"Target date to reach goal (optional)","วันที่สิ้นสุดกระแสเงิน":"Cash flow end date","วันที่เริ่มต้นกระแสเงิน":"Cash flow start date","วันนี้":"Today","วันล่าสุด":"Latest date","วันแรก และคาดการณ์อีก ":"First day and forecast another ","วางแผนการเงิน":"Financial planning","ส.ค.":"Aug.","สร้างจากการติดตามหนี้ ":"Created from debt tracking ","สร้างจากบิลประจำ ":"Created from recurring bill ","สร้างไฟล์สำรอง ":"Create backup ","สลิป":"Slip","สัดส่วนรายจ่าย":"Expense proportion","สำรอง":"Backup","สำรองข้อมูล":"Backup data","สำรองและกู้คืนข้อมูล":"Backup and restore data","สิงหาคม":"August","สุขภาพ":"Health","สุขภาพการเงินเดือนนี้":"Financial health this month","ส่งออกรายการ ":"Export transactions ","หนี้คงเหลือรวม":"Total remaining debt","หนี้สิน":"Debt","หมวดหมู่":"Category","หมวดหมู่ที่ใช้จ่ายมากที่สุดในเดือนที่เลือก":"Highest spending category in selected month","หมวดหมู่นี้มีรายการเก่าใช้งานอยู่ จึงลบไม่ได้ค่ะ":"This category has old transactions in use, cannot delete.","หมวดหมู่รวมอยู่ในกราฟ":"Category included in chart","หมวดหมู่รายการ":"Transaction category","หมวดหมู่รายจ่าย":"Expense category","หมายเหตุ":"Note","หรือ ":"or ","หากคุณบันทึกรายจ่ายนี้ไว้แล้ว เพื่อป้องกันยอดซ้ำ":"If you already recorded this expense, to avoid duplicate amounts","ออมแล้ว":"Saved","ออมแล้ว ":"Saved ","อัตโนมัติ เพื่อป้องกันยอดเงินซ้ำกันค่ะ":"automatically, to prevent duplicate amounts.","อาหาร":"Food","อีก ":"another ","อื่น ๆ":"Other","อ่านข้อความได้ แต่ไม่พบยอดเงินหรือวันที่ที่เชื่อถือได้ กรุณากรอกเอง":"Text readable, but no reliable amount/date found. Please enter manually.","อ่านข้อความไม่สำเร็จ ลองใช้รูปที่คมชัดและไม่เอียงค่ะ":"Failed to read text. Try a clear, non-tilted image.","อ่านข้อมูลจากสลิป":"Read data from slip","อ่านสลิปและเติมข้อมูล":"Read slip and fill data","อ่านสลิปไม่สำเร็จ กรุณาลองใหม่":"Slip read failed. Please try again.","อ่านเสร็จแล้ว เติมข้อมูล":"Read complete. Fill data.","฿":"฿","฿)/":"฿)/","฿0.00":"฿0.00","เกินงบ ":"Over budget ","เข้าสู่แอพ":"Enter app","เข้าสู่แอพอัตโนมัติหลัง 1.5 วินาที":"Auto-enter app after 1.5 seconds","เงินที่มีแล้ว (บาท)":"Money already have (THB)","เงินที่ออมแล้ว (บาท)":"Money saved (THB)","เงินสด":"Cash","เงินสุทธิของเดือน":"Net money of month","เงินเดือน":"Salary","เงินแยกตามบัญชี":"Money by account","เช่น 3000":"e.g. 3000","เช่น ข้าวกลางวัน":"e.g. lunch","เช่น ค่าเช่าห้อง":"e.g. room rent","เช่น สินเชื่อส่วนบุคคล":"e.g. personal loan","เช่น เงินฉุกเฉิน":"e.g. emergency fund","เดินทาง":"Travel","เดือน":"Month","เดือนก่อน":"Previous month","เดือนก่อน ":"Previous month ","เดือนที่ต้องการวางแผน":"Month to plan","เดือนนี้":"This month","เดือนนี้ ":"This month ","เทียบกับเดือนก่อน":"Compared with previous month","เปรียบเทียบรายรับและรายจ่ายในแต่ละเดือน":"Compare income and expense each month","เป้าหมายการออม":"Savings goal","เป้าหมายของฉัน":"My goals","เป้าหมายทั้งหมด":"All goals","เป้าหมายวันที่ ":"Goal date ","เป้าหมายสำเร็จ":"Goal achieved","เพิ่ม":"Add","เพิ่มบัญชี":"Add account","เพิ่มบิลที่จ่ายประจำ":"Add recurring bill","เพิ่มบิลประจำ":"Add recurring bill","เพิ่มบิลประจำแล้ว":"Recurring bill added","เพิ่มรายการหนี้":"Add debt","เพิ่มรายการหนี้แล้ว":"Debt added","เพิ่มหนี้":"Add debt","เพิ่มหมวดหมู่":"Add category","เพิ่มเงินออม":"Add savings","เพิ่มเงินออม (บาท)":"Add savings (THB)","เพิ่มเป้าหมาย":"Add goal","เพิ่มเป้าหมายการออมเพื่อเริ่มติดตามค่ะ":"Add a savings goal to start tracking.","เพิ่มเป้าหมายแล้ว":"Goal added","เพื่อคงรายการรายจ่ายไว้":"To keep expense record","เม.ย.":"Apr.","เมนูหลัก":"Main menu","เมษายน":"April","เลือกรูปสลิป":"Choose slip image","เลือกรูปสลิปจาก ":"Choose slip image from ","เลือกรูปแล้ว":"Image selected","เลือกเดือนที่ต้องการดู":"Select month to view","เหลืองบ ":"Budget remaining ","เหลืออีก ":"Remaining ","แก้ไข":"Edit","แก้ไขงบ":"Edit budget","แก้ไขจำนวนเงินแล้วกดบันทึกงบประมาณ":"Edit amount then save budget","แก้ไขบัญชี":"Edit account","แก้ไขบัญชีเรียบร้อยแล้ว":"Account edited successfully.","แก้ไขยอด":"Edit amount","แก้ไขยอดหนี้คงเหลือ (บาท)":"Edit remaining debt (THB)","แก้ไขรายการ":"Edit transaction","แก้ไขหมวดหมู่":"Edit category","แก้ไขหมวดหมู่เรียบร้อยแล้ว":"Category edited successfully.","แตะแท่งกราฟเพื่อดูยอดของวันนั้น":"Tap a bar to see that day's amount","แนวโน้มย้อนหลัง 6 เดือน":"6-month trend","แนะนำให้สำรองข้อมูลก่อนแก้ไขแอปหรือเปลี่ยนอุปกรณ์":"Recommend backing up data before editing app or changing device.","แล้ว":"then","แล้ว และสร้างรายการรายจ่ายให้อัตโนมัติใช่ไหมคะ?":"and create expense automatically?","โดยโค้ดนี้ แต่ระบบต้องดาวน์โหลดตัวอ่านและชุดภาษาเมื่อใช้ครั้งแรก ยอดเงินและวันที่อาจอ่านผิด กรุณาตรวจสอบก่อนบันทึก":"Using this code, but system must download reader and language pack on first use. Amount and date may be read incorrectly; please verify before saving.","โหลดระบบ ":"Load system ","โอนจากบัญชี":"Transfer from account","โอนเงิน":"Transfer","โอนเงิน ":"Transfer ","โอนเงินจากสลิป":"Transfer from slip","โอนไปบัญชี":"Transfer to account","ใช่ไหมคะ?":"Is that correct?","ใช่ไหมคะ? ข้อมูลปัจจุบันจะถูกแทนที่ แต่จะเก็บสำรองชุดปัจจุบันก่อน":"Is that correct? Current data will be replaced, but current backup will be kept first.","ใช้จากงบ ":"Use from budget ","ใช้ไป ":"Used ","ใหม่":"new","ให้อัตโนมัติด้วยไหมคะ? กด ":"Auto too? Press ","ไปยัง":"Go to","ไม่ทราบเวลา":"Unknown time","ไม่บังคับ":"Optional","ไม่พบข้อความในรูปนี้":"No text found in this image","ไม่พบรายการที่ตรงกับเงื่อนไข":"No transactions match the criteria","ไม่มีการเปลี่ยนแปลง":"No changes","ไม่ระบุบัญชี":"Unspecified account","ไม่ระบุหมวดหมู่":"Unspecified category","ไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่":"Failed. Please check internet and try again.","๐-๙":"0-9","๐๑๒๓๔๕๖๗๘๙":"0123456789"};
 let skipAutoSnapshot=false,lastSnapshotAt=0;
 let appLang=localStorage.getItem('mymoney_lang')||'th';
 let I18N_KEYS=Object.keys(I18N).sort((a,b)=>b.length-a.length);
@@ -1089,11 +843,6 @@ function currentMonth(){return localDate().slice(0,7)}
 function download(name,content,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 const pageScrollPositions={};
 function navigate(page){
-  const isHomeReport=page==='home'||page==='reports';
-  const menu=$('appMenu'),trigger=$('menuTrigger');
-  if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');
-  document.body.classList.toggle('home-report-mode',isHomeReport);
-  document.documentElement.classList.toggle('home-report-mode',isHomeReport);
   const current=document.querySelector('.page.active');
   const currentPage=current?.id?.replace('page-','')||'home';
   if(currentPage)pageScrollPositions[currentPage]=window.scrollY||window.pageYOffset||0;
@@ -1109,64 +858,12 @@ function navigate(page){
   if(page==='history')renderHistory();
   if(['planning','budget','bills','debts'].includes(page))renderPlanning();
   if(page==='goals')renderGoals();
-  if(isHomeReport&&homeReportPager){
-    lastPagerPage=page;
-    homeReportPager.scrollTo({left:page==='reports'?homeReportPager.clientWidth:0,behavior:'smooth'});
-  }else{
-    const isPlanningSubpage=['budget','bills','debts','goals'].includes(currentPage);
-    const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
-    requestAnimationFrame(()=>window.scrollTo({top:targetY,behavior:'auto'}));
-  }
+  // Returning from a financial-planning subpage restores the exact Overview scroll position.
+  const isPlanningSubpage=['budget','bills','debts','goals'].includes(currentPage);
+  const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
+  requestAnimationFrame(()=>window.scrollTo({top:targetY,behavior:'auto'}));
 }
-const menuTrigger=$('menuTrigger'),appMenu=$('appMenu');
-menuTrigger?.addEventListener('click',()=>{const opening=appMenu.hidden;appMenu.hidden=!opening;menuTrigger.setAttribute('aria-expanded',String(opening));});
-$('quickAdd')?.addEventListener('click',()=>navigate('record'));
-document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('dailyChartSheet')&&!$('dailyChartSheet').hidden){closeDailyChartSheet();return}if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
-// Native horizontal paging (LINE-like): let iOS handle finger tracking, momentum and snap.
-// Move the existing Home and Reports sections into one horizontal scroll viewport.
-(function initHomeReportPager(){
-  const home=$('page-home'),reports=$('page-reports'),header=document.querySelector('.app > .top');
-  if(!home||!reports||!header||$('homeReportPager'))return;
-  const pager=document.createElement('div');
-  pager.id='homeReportPager';
-  pager.className='home-report-pager';
-  pager.setAttribute('aria-label','ปัดเพื่อสลับระหว่างภาพรวมและรายงาน');
-  header.insertAdjacentElement('afterend',pager);
-  pager.append(home,reports);
-  pager.scrollLeft=0;
-})();
-
-const homeReportPager=$('homeReportPager');
-let pagerSettleTimer=null,lastPagerPage='home';
-function setPagerPage(page){
-  if(page!=='home'&&page!=='reports')return;
-  if(page===lastPagerPage)return;
-  lastPagerPage=page;
-  $('page-home')?.classList.toggle('active',page==='home');
-  $('page-reports')?.classList.toggle('active',page==='reports');
-  document.documentElement.classList.add('home-report-mode');
-  document.body.classList.add('home-report-mode');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
-}
-function settleNativePager(){
-  if(!homeReportPager)return;
-  clearTimeout(pagerSettleTimer);
-  const width=Math.max(1,homeReportPager.clientWidth);
-  const page=homeReportPager.scrollLeft>=width*.5?'reports':'home';
-  setPagerPage(page);
-}
-if(homeReportPager){
-  homeReportPager.addEventListener('scroll',()=>{
-    clearTimeout(pagerSettleTimer);
-    pagerSettleTimer=setTimeout(settleNativePager,240);
-  },{passive:true});
-  if('onscrollend' in homeReportPager){
-    homeReportPager.addEventListener('scrollend',settleNativePager,{passive:true});
-  }
-}
-
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ'}
 document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>setType(b.dataset.type)));
@@ -1175,21 +872,6 @@ function monthlyTotals(month){let income=0,expense=0,count=0;tx.forEach(t=>{if(S
 function sortedTx(arr=tx){return[...arr].sort((a,b)=>String(b.date).localeCompare(String(a.date))||(Number(b.id)||0)-(Number(a.id)||0))}
 function transactionHTML(t){const income=t.type==='Income',expense=t.type==='Expense',sign=income?'+':expense?'−':'',color=income?'var(--green)':expense?'var(--red)':'#9cb8ef',icon=income?'＋':expense?'−':'⇄',label=income?'รายรับ':expense?'รายจ่าย':'โอนเงิน',meta=t.type==='Transfer'?`${esc(t.account||'')} → ${esc(t.to||'')}`:`${esc(t.category||'ไม่ระบุหมวดหมู่')} · ${esc(t.account||'')}`;return `<article class="item"><div class="ico">${icon}</div><div class="details"><div class="title">${esc(t.title||label)}</div><div class="meta">${label} · ${meta}<br>${esc(t.date||'')}${t.note?' · '+esc(t.note):''}</div></div><div class="right" style="color:${color}">${sign}${money(t.amount)}<div class="rowbuttons"><button data-edit="${esc(t.id)}">แก้ไข</button><button data-del="${esc(t.id)}">ลบ</button></div></div></article>`}
 function emptyHTML(msg='ยังไม่มีรายการ'){return `<div class="empty">${msg}</div>`}
-
-
-function openDailyChartSheet(){
- const overlay=$('dailyChartSheet'),content=$('dailyChartSheetContent'),selected=$('dailyChartSelected');
- if(!overlay||!content||!selected)return;
- content.innerHTML=selected.innerHTML;
- overlay.hidden=false;overlay.setAttribute('aria-hidden','false');document.body.classList.add('daily-sheet-open');
- $('dailyChartSheetClose')?.focus({preventScroll:true});
-}
-function closeDailyChartSheet(){
- const overlay=$('dailyChartSheet');if(!overlay||overlay.hidden)return;
- overlay.hidden=true;overlay.setAttribute('aria-hidden','true');document.body.classList.remove('daily-sheet-open');
-}
-$('dailyChartSheetClose')?.addEventListener('click',closeDailyChartSheet);
-$('dailyChartSheet')?.addEventListener('click',e=>{if(e.target===$('dailyChartSheet'))closeDailyChartSheet()});
 
 /* Daily cash flow chart with selectable date range */
 function setDailyChartRange(preset){
@@ -1217,7 +899,7 @@ function renderDailyChart(){
  if(fullMonth){const wantedDays=[1,7,14,21,28,lastDay],uniqueDays=[...new Set(wantedDays)].filter(day=>day<=lastDay);labelIndices=new Set(uniqueDays.map(day=>dates.findIndex(date=>Number(date.slice(8,10))===day)).filter(i=>i>=0));}
  else {labelIndices=new Set([0,Math.floor((dates.length-1)/4),Math.floor((dates.length-1)/2),Math.floor(3*(dates.length-1)/4),dates.length-1]);}
  axis.innerHTML=[...labelIndices].sort((a,b)=>a-b).map(i=>`<span style="grid-column:${i+1}">${fullMonth?Number(dates[i].slice(8,10)):Number(dates[i].slice(8,10))+'/'+Number(dates[i].slice(5,7))}</span>`).join('');bars.innerHTML='';
- dailyTotals.forEach((amount,index)=>{const date=dates[index],wrap=document.createElement('div');wrap.className='daily-chart-bar-wrap';const bar=document.createElement('button');bar.type='button';bar.className='daily-chart-bar '+(dailyChartType==='Expense'?'expense':'income');bar.style.height=`${maxAmount>0?Math.max(3,(amount/maxAmount)*100):3}%`;bar.setAttribute('aria-label',`${date}: ${money(amount)}`);bar.title=`${date}: ${money(amount)}`;if(dailyChartSelectedDate===date)bar.classList.add('selected');bar.addEventListener('click',()=>{dailyChartSelectedDate=date;renderDailyChart();openDailyChartSheet()});wrap.appendChild(bar);bars.appendChild(wrap)});
+ dailyTotals.forEach((amount,index)=>{const date=dates[index],wrap=document.createElement('div');wrap.className='daily-chart-bar-wrap';const bar=document.createElement('button');bar.type='button';bar.className='daily-chart-bar '+(dailyChartType==='Expense'?'expense':'income');bar.style.height=`${maxAmount>0?Math.max(3,(amount/maxAmount)*100):3}%`;bar.setAttribute('aria-label',`${date}: ${money(amount)}`);bar.title=`${date}: ${money(amount)}`;if(dailyChartSelectedDate===date)bar.classList.add('selected');bar.addEventListener('click',()=>{dailyChartSelectedDate=date;renderDailyChart()});wrap.appendChild(bar);bars.appendChild(wrap)});
  const selected=$('dailyChartSelected');
  if(dates.includes(dailyChartSelectedDate)){
   const i=dates.indexOf(dailyChartSelectedDate),dayTransactions=sortedTx(tx.filter(item=>item.type===dailyChartType&&String(item.date||'')===dailyChartSelectedDate));
@@ -1226,10 +908,10 @@ function renderDailyChart(){
   selected.innerHTML=`<div class="daily-chart-detail-head"><div><strong>${esc(dailyChartSelectedDate)}</strong><div class="daily-chart-detail-meta">${dailyChartType==='Expense'?'รายการรายจ่าย':'รายการรายรับ'} · ${dayTransactions.length} รายการ</div></div><strong>${esc(money(dayTotal||dailyTotals[i]||0))}</strong></div><div class="daily-chart-detail-list">${rows}</div>`;
  }else selected.textContent='แตะแท่งกราฟเพื่อดูรายการและยอดเงินของวันนั้น';
 }
-document.querySelectorAll('.daily-chart-tab').forEach(button=>button.addEventListener('click',()=>{closeDailyChartSheet();dailyChartType=button.dataset.chartType;document.querySelectorAll('.daily-chart-tab').forEach(tab=>tab.classList.toggle('active',tab===button));renderDailyChart()}));
-$('dailyChartFrom').addEventListener('change',()=>{closeDailyChartSheet();document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
-$('dailyChartTo').addEventListener('change',()=>{closeDailyChartSheet();document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
-document.querySelectorAll('.daily-chart-preset').forEach(button=>button.addEventListener('click',()=>{closeDailyChartSheet();setDailyChartRange(button.dataset.range)}));
+document.querySelectorAll('.daily-chart-tab').forEach(button=>button.addEventListener('click',()=>{dailyChartType=button.dataset.chartType;document.querySelectorAll('.daily-chart-tab').forEach(tab=>tab.classList.toggle('active',tab===button));renderDailyChart()}));
+$('dailyChartFrom').addEventListener('change',()=>{document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
+$('dailyChartTo').addEventListener('change',()=>{document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
+document.querySelectorAll('.daily-chart-preset').forEach(button=>button.addEventListener('click',()=>setDailyChartRange(button.dataset.range)));
 function renderFinancialHealth(){const month=currentMonth(),totals=monthlyTotals(month),balances=accountBalances(),cash=Object.values(balances).reduce((s,n)=>s+n,0),debt=debts.reduce((s,d)=>s+(Number(d.balance)||0),0),now=new Date(),daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),elapsed=Math.max(1,now.getDate()),remaining=Math.max(0,daysInMonth-now.getDate()),predictedRemainingNet=((totals.income-totals.expense)/elapsed)*remaining,forecast=cash+predictedRemainingNet;$('forecastMonth').textContent=monthLabel(month);$('netWorthValue').textContent=money(cash-debt);$('netWorthValue').style.color=cash-debt<0?'var(--red)':'var(--green)';$('forecastBalance').textContent=money(forecast);$('forecastBalance').style.color=forecast<0?'var(--red)':'var(--green)';$('forecastNote').textContent=`ประมาณจากข้อมูล ${now.getDate()} วันแรก และคาดการณ์อีก ${remaining} วัน โดยสมมติว่าอัตรารายรับ/รายจ่ายใกล้เคียงเดิม ไม่รวมบิลอนาคตที่ยังไม่บันทึกเป็นรายการ`}
 function renderHome(){const totals=monthlyTotals(currentMonth()),balances=accountBalances();const totalBalance=Object.values(balances).reduce((s,n)=>s+n,0);$('balance').textContent=money(totalBalance);$('balance').style.color=totalBalance>0?'var(--green)':totalBalance<0?'var(--red)':'';$('income').textContent=money(totals.income);$('expense').textContent=money(totals.expense);$('homeAccounts').innerHTML=accounts.length?accounts.map(a=>`<div class="summaryline"><span>${esc(a.name)}</span><strong>${money(balances[a.name]||0)}</strong></div>`).join(''):emptyHTML('ยังไม่มีบัญชี');const recent=sortedTx().slice(0,5);$('recentList').innerHTML=recent.length?recent.map(transactionHTML).join(''):emptyHTML('ยังไม่มีรายการ เริ่มบันทึกรายการแรกได้เลยค่ะ');renderFinancialHealth();renderDailyChart();renderHomePlan()}
 function renderHistory(){const q=$('search').value.trim().toLowerCase(),f=$('filter').value,month=$('historyMonth').value,from=$('historyFrom').value,to=$('historyTo').value;const arr=sortedTx().filter(t=>{const d=String(t.date||'');return(f==='All'||t.type===f)&&(!month||d.startsWith(month))&&(!from||d>=from)&&(!to||d<=to)&&(!q||[t.title,t.note,t.category,t.account,t.to].some(v=>String(v||'').toLowerCase().includes(q)))});const total=arr.filter(t=>t.type==='Expense').reduce((sum,t)=>sum+(Number(t.amount)||0),0);const limit=$('historyLimit')?.value||'5',shown=limit==='all'?arr:arr.slice(0,Number(limit));$('historyCount').textContent=`พบ ${arr.length} รายการ · แสดง ${shown.length} · รายจ่ายรวม ${money(total)}`;$('historyList').innerHTML=shown.length?shown.map(transactionHTML).join(''):emptyHTML('ไม่พบรายการที่ตรงกับเงื่อนไข')}
@@ -1237,9 +919,10 @@ function groupByCategory(arr,typeName){const groups={};arr.filter(t=>t.type===ty
 function shiftMonth(month,delta){const [y,m]=month.split('-').map(Number),d=new Date(y,m-1+delta,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
 function monthLabel(month){const [y,m]=month.split('-').map(Number);return `${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m-1]} ${String(y+543).slice(-2)}`}
 function categoryTotals(arr,typeName){const groups={};arr.filter(t=>t.type===typeName).forEach(t=>{const c=t.category||'ไม่ระบุหมวดหมู่';groups[c]=(groups[c]||0)+(Number(t.amount)||0)});return Object.entries(groups).sort((a,b)=>b[1]-a[1])}
+function renderReportComparison(month){const previous=shiftMonth(month,-1),now=monthlyTotals(month),before=monthlyTotals(previous);[['Income','income'],['Expense','expense']].forEach(([key,id])=>{const current=now[key.toLowerCase()],old=before[key.toLowerCase()],valueEl=$(`report${key}Change`),noteEl=$(`report${key}ChangeNote`);if(old===0&&current===0){valueEl.textContent='0.0%';noteEl.textContent='ไม่มีการเปลี่ยนแปลง';noteEl.className='report-change'}else if(old===0){valueEl.textContent='ใหม่';noteEl.textContent=`เดือนก่อน ${money(old)} · เดือนนี้ ${money(current)}`;noteEl.className='report-change '+(key==='Expense'?'bad':'good')}else{const pct=((current-old)/old)*100;valueEl.textContent=`${pct>0?'+':''}${pct.toFixed(1)}%`;noteEl.textContent=`${money(old)} → ${money(current)}`;const favorable=key==='Income'?pct>=0:pct<=0;noteEl.className='report-change '+(favorable?'good':pct===0?'':'bad')}})}
 function renderReportTrend(month){const months=Array.from({length:6},(_,i)=>shiftMonth(month,i-5)),data=months.map(key=>({month:key,...monthlyTotals(key)})),max=Math.max(1,...data.flatMap(d=>[d.income,d.expense]));$('reportTrend').innerHTML=data.map(d=>`<div class="trend-month"><div class="trend-month-label">${monthLabel(d.month)}</div><div class="trend-bars"><div class="trend-bar-line"><div class="trend-bar-track"><div class="trend-bar-fill income" style="width:${Math.max(0,d.income/max*100)}%"></div></div><span class="trend-value">${money(d.income)}</span></div><div class="trend-bar-line"><div class="trend-bar-track"><div class="trend-bar-fill expense" style="width:${Math.max(0,d.expense/max*100)}%"></div></div><span class="trend-value">${money(d.expense)}</span></div></div></div>`).join('')}
 function renderExpenseDonut(arr){const groups=categoryTotals(arr,'Expense'),total=groups.reduce((s,x)=>s+x[1],0),colors=['#ff737d','#65d6a0','#9cb8ef','#f3c969','#bd9bff','#63c7d5','#ffad70','#d2d7dd','#a6b3bf','#e38ca9'];$('expenseDonutTotal').textContent=money(total);if(!groups.length||total<=0){$('expenseDonut').style.background='conic-gradient(#353b42 0deg 360deg)';$('expenseDonutLegend').innerHTML='<div class="report-empty">ยังไม่มีรายจ่ายในเดือนนี้</div>';return}let cursor=0;const stops=groups.map(([name,value],i)=>{const start=cursor;cursor+=value/total*360;return `${colors[i%colors.length]} ${start.toFixed(2)}deg ${cursor.toFixed(2)}deg`});$('expenseDonut').style.background=`conic-gradient(${stops.join(',')})`;$('expenseDonutLegend').innerHTML=groups.slice(0,8).map(([name,value],i)=>`<div class="report-legend-row"><span class="report-legend-swatch" style="background:${colors[i%colors.length]}"></span><span class="report-legend-name">${esc(name)} <span style="color:var(--muted)">${(value/total*100).toFixed(1)}%</span></span><strong class="report-legend-value">${money(value)}</strong></div>`).join('')+(groups.length>8?`<div class="small">อีก ${groups.length-8} หมวดหมู่รวมอยู่ในกราฟ</div>`:'')}
-function renderReports(){const month=$('reportMonth').value||currentMonth(),arr=tx.filter(t=>String(t.date||'').startsWith(month)),m=monthlyTotals(month);$('reportIncome').textContent=money(m.income);$('reportExpense').textContent=money(m.expense);$('reportNet').textContent=money(m.net);$('reportNet').style.color=m.net<0?'var(--red)':'var(--green)';$('reportCount').textContent=String(m.count);$('categoryReport').innerHTML=groupByCategory(arr,'Expense');$('incomeReport').innerHTML=groupByCategory(arr,'Income');renderReportTrend(month);renderExpenseDonut(arr)}
+function renderReports(){const month=$('reportMonth').value||currentMonth(),arr=tx.filter(t=>String(t.date||'').startsWith(month)),m=monthlyTotals(month);$('reportIncome').textContent=money(m.income);$('reportExpense').textContent=money(m.expense);$('reportNet').textContent=money(m.net);$('reportNet').style.color=m.net<0?'var(--red)':'var(--green)';$('reportCount').textContent=String(m.count);$('categoryReport').innerHTML=groupByCategory(arr,'Expense');$('incomeReport').innerHTML=groupByCategory(arr,'Income');renderReportComparison(month);renderReportTrend(month);renderExpenseDonut(arr)}
 function planMonth(){return $('budgetMonth')?.value||currentMonth()}
 function monthExpenseByCategory(month,category){return tx.filter(t=>t.type==='Expense'&&String(t.date||'').startsWith(month)&&(t.category||'ไม่ระบุหมวดหมู่')===category).reduce((s,t)=>s+(Number(t.amount)||0),0)}
 function monthPaid(bill,month){return Array.isArray(bill.paidMonths)&&bill.paidMonths.includes(month)}
@@ -1361,7 +1044,7 @@ $('exportJson').addEventListener('click',exportJSON);$('headerBackup').addEventL
 $('restoreAutoBackup').addEventListener('click',()=>{let data;try{data=JSON.parse(localStorage.getItem(AUTO_BACKUP_KEY)||'null')}catch(e){}if(!data){alert('ยังไม่มีข้อมูลสำรองอัตโนมัติในเบราว์เซอร์นี้ค่ะ');return}if(!confirm(`กู้คืนข้อมูลสำรองเมื่อ ${data.snapshotAt||'ไม่ทราบเวลา'} ใช่ไหมคะ? ข้อมูลปัจจุบันจะถูกแทนที่ แต่จะเก็บสำรองชุดปัจจุบันก่อน`))return;try{snapshotBeforeChange();restoreSnapshotData(data);$('backupMessage').textContent='กู้คืนข้อมูลสำรองอัตโนมัติเรียบร้อยแล้ว';alert('กู้คืนข้อมูลสำเร็จค่ะ')}catch(err){alert('กู้คืนไม่สำเร็จ: '+err.message)}});
 $('importFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.transactions)||!Array.isArray(data.accounts)||!data.categories||!Array.isArray(data.categories.Expense)||!Array.isArray(data.categories.Income))throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');const valid=data.transactions.every(t=>t&&['Income','Expense','Transfer'].includes(t.type)&&Number.isFinite(Number(t.amount))&&Number(t.amount)>0&&t.date&&t.title);if(!valid)throw new Error('พบรายการที่ข้อมูลไม่ครบหรือไม่ถูกต้อง');if(!confirm(`นำเข้า ${data.transactions.length} รายการ และแทนที่รายการ/บัญชี/หมวดหมู่ปัจจุบันใช่ไหมคะ? ระบบจะเก็บข้อมูลชุดก่อนหน้าไว้ในสำรองอัตโนมัติก่อน`))return;snapshotBeforeChange();restoreSnapshotData(data);$('backupMessage').textContent='นำเข้าข้อมูลเรียบร้อยแล้ว';alert('นำเข้าข้อมูลสำเร็จค่ะ')}catch(err){alert('นำเข้าไม่สำเร็จ: '+err.message)}finally{e.target.value=''}});
 window.addEventListener('storage',e=>{if([TX_KEY,ACC_KEY,CAT_KEY,BUDGET_KEY,BILL_KEY,DEBT_KEY,GOAL_KEY].includes(e.key)){const reload=confirm('พบข้อมูล MyMoney ถูกเปลี่ยนจากแท็บหรือหน้าต่างอื่น ต้องการโหลดข้อมูลล่าสุดไหมคะ?');if(reload)location.reload()}});
-document.documentElement.classList.add('home-report-mode');document.body.classList.add('home-report-mode');$('page-home').classList.add('active');$('page-reports').classList.remove('active');if(homeReportPager)homeReportPager.scrollLeft=0;lastPagerPage='home';$('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
+$('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
 $('langTh').addEventListener('click',()=>setLanguage('th'));
 $('langEn').addEventListener('click',()=>setLanguage('en'));
 if(appLang==='th'){$('langTh').classList.remove('secondary');$('langTh').classList.add('primary');$('langEn').classList.remove('primary');$('langEn').classList.add('secondary');}else{$('langEn').classList.remove('secondary');$('langEn').classList.add('primary');$('langTh').classList.remove('primary');$('langTh').classList.add('secondary');}
