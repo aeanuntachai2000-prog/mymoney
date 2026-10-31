@@ -603,6 +603,24 @@ body.dashboard-mode #page-home .daily-chart-selected{margin-top:7px;padding:8px;
 body.dashboard-mode #page-home .daily-chart-subtitle{margin-top:2px}
 @media(max-height:740px){body.dashboard-mode #page-home .daily-chart-bars{max-height:125px}body.dashboard-mode #page-home .daily-chart-card{padding:10px}body.dashboard-mode #page-home .daily-chart-total{margin-top:6px}body.dashboard-mode #page-home .daily-chart-total strong{font-size:19px}}
 
+
+/* Daily chart detail bottom sheet */
+#dailyChartSelected{display:none!important}
+.daily-detail-backdrop{position:fixed;inset:0;z-index:1200;background:rgba(0,0,0,.62);display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:1;transition:opacity .2s ease}
+.daily-detail-backdrop[hidden]{display:none!important}
+.daily-detail-sheet{width:min(100%,560px);max-height:min(78dvh,680px);display:flex;flex-direction:column;background:#1b1f24;border:1px solid #343a42;border-bottom:0;border-radius:22px 22px 0 0;box-shadow:0 -12px 40px #0008;padding:10px 17px calc(16px + env(safe-area-inset-bottom));transform:translateY(0);animation:dailySheetIn .22s ease-out}
+@keyframes dailySheetIn{from{transform:translateY(35px);opacity:.7}to{transform:translateY(0);opacity:1}}
+.daily-detail-grabber{width:42px;height:4px;border-radius:99px;background:#59616a;margin:1px auto 12px;flex:0 0 auto}
+.daily-detail-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line);flex:0 0 auto}
+.daily-detail-top h3{font-size:16px;margin:0;font-weight:800}
+.daily-detail-close{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:#292e34;color:var(--ink);font-size:21px;line-height:1;display:grid;place-items:center;flex:0 0 auto}
+.daily-detail-content{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;min-height:0;padding-top:12px}
+.daily-detail-content .daily-chart-detail-head{align-items:center;margin-bottom:10px}
+.daily-detail-content .daily-chart-detail-head>strong{font-size:18px}
+.daily-detail-content .daily-chart-detail-list{margin-top:10px}
+body.daily-sheet-open{overflow:hidden}
+@media(min-width:600px){.daily-detail-backdrop{align-items:center;padding:20px}.daily-detail-sheet{border:1px solid #343a42;border-radius:22px;max-height: min(75dvh,680px)}}
+
 </style>
 </head>
 <body style="background:#000000">
@@ -851,6 +869,14 @@ body.dashboard-mode #page-home .daily-chart-subtitle{margin-top:2px}
   <button class="nav-btn active" data-go="home"><span class="symbol">⌂</span>ภาพรวม</button><button class="nav-btn" data-go="history"><span class="symbol">☷</span>ประวัติ</button><button class="nav-btn" data-go="record"><span class="symbol">＋</span>บันทึก</button><button class="nav-btn" data-go="reports"><span class="symbol">▥</span>รายงาน</button><button class="nav-btn" data-go="settings"><span class="symbol">⚙</span>ตั้งค่า</button>
 </nav>
 
+
+<div id="dailyChartSheet" class="daily-detail-backdrop" hidden aria-hidden="true">
+  <section class="daily-detail-sheet" role="dialog" aria-modal="true" aria-labelledby="dailyChartSheetTitle">
+    <div class="daily-detail-grabber" aria-hidden="true"></div>
+    <div class="daily-detail-top"><h3 id="dailyChartSheetTitle">รายละเอียดรายการประจำวัน</h3><button type="button" class="daily-detail-close" id="dailyChartSheetClose" aria-label="ปิด">×</button></div>
+    <div id="dailyChartSheetContent" class="daily-detail-content"></div>
+  </section>
+</div>
 <script>
 setTimeout(() => {
 'use strict';
@@ -928,7 +954,7 @@ const menuTrigger=$('menuTrigger'),appMenu=$('appMenu');
 menuTrigger?.addEventListener('click',()=>{const opening=appMenu.hidden;appMenu.hidden=!opening;menuTrigger.setAttribute('aria-expanded',String(opening));});
 $('quickAdd')?.addEventListener('click',()=>navigate('record'));
 document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('dailyChartSheet')&&!$('dailyChartSheet').hidden){closeDailyChartSheet();return}if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ'}
@@ -938,6 +964,21 @@ function monthlyTotals(month){let income=0,expense=0,count=0;tx.forEach(t=>{if(S
 function sortedTx(arr=tx){return[...arr].sort((a,b)=>String(b.date).localeCompare(String(a.date))||(Number(b.id)||0)-(Number(a.id)||0))}
 function transactionHTML(t){const income=t.type==='Income',expense=t.type==='Expense',sign=income?'+':expense?'−':'',color=income?'var(--green)':expense?'var(--red)':'#9cb8ef',icon=income?'＋':expense?'−':'⇄',label=income?'รายรับ':expense?'รายจ่าย':'โอนเงิน',meta=t.type==='Transfer'?`${esc(t.account||'')} → ${esc(t.to||'')}`:`${esc(t.category||'ไม่ระบุหมวดหมู่')} · ${esc(t.account||'')}`;return `<article class="item"><div class="ico">${icon}</div><div class="details"><div class="title">${esc(t.title||label)}</div><div class="meta">${label} · ${meta}<br>${esc(t.date||'')}${t.note?' · '+esc(t.note):''}</div></div><div class="right" style="color:${color}">${sign}${money(t.amount)}<div class="rowbuttons"><button data-edit="${esc(t.id)}">แก้ไข</button><button data-del="${esc(t.id)}">ลบ</button></div></div></article>`}
 function emptyHTML(msg='ยังไม่มีรายการ'){return `<div class="empty">${msg}</div>`}
+
+
+function openDailyChartSheet(){
+ const overlay=$('dailyChartSheet'),content=$('dailyChartSheetContent'),selected=$('dailyChartSelected');
+ if(!overlay||!content||!selected)return;
+ content.innerHTML=selected.innerHTML;
+ overlay.hidden=false;overlay.setAttribute('aria-hidden','false');document.body.classList.add('daily-sheet-open');
+ $('dailyChartSheetClose')?.focus({preventScroll:true});
+}
+function closeDailyChartSheet(){
+ const overlay=$('dailyChartSheet');if(!overlay||overlay.hidden)return;
+ overlay.hidden=true;overlay.setAttribute('aria-hidden','true');document.body.classList.remove('daily-sheet-open');
+}
+$('dailyChartSheetClose')?.addEventListener('click',closeDailyChartSheet);
+$('dailyChartSheet')?.addEventListener('click',e=>{if(e.target===$('dailyChartSheet'))closeDailyChartSheet()});
 
 /* Daily cash flow chart with selectable date range */
 function setDailyChartRange(preset){
@@ -965,7 +1006,7 @@ function renderDailyChart(){
  if(fullMonth){const wantedDays=[1,7,14,21,28,lastDay],uniqueDays=[...new Set(wantedDays)].filter(day=>day<=lastDay);labelIndices=new Set(uniqueDays.map(day=>dates.findIndex(date=>Number(date.slice(8,10))===day)).filter(i=>i>=0));}
  else {labelIndices=new Set([0,Math.floor((dates.length-1)/4),Math.floor((dates.length-1)/2),Math.floor(3*(dates.length-1)/4),dates.length-1]);}
  axis.innerHTML=[...labelIndices].sort((a,b)=>a-b).map(i=>`<span style="grid-column:${i+1}">${fullMonth?Number(dates[i].slice(8,10)):Number(dates[i].slice(8,10))+'/'+Number(dates[i].slice(5,7))}</span>`).join('');bars.innerHTML='';
- dailyTotals.forEach((amount,index)=>{const date=dates[index],wrap=document.createElement('div');wrap.className='daily-chart-bar-wrap';const bar=document.createElement('button');bar.type='button';bar.className='daily-chart-bar '+(dailyChartType==='Expense'?'expense':'income');bar.style.height=`${maxAmount>0?Math.max(3,(amount/maxAmount)*100):3}%`;bar.setAttribute('aria-label',`${date}: ${money(amount)}`);bar.title=`${date}: ${money(amount)}`;if(dailyChartSelectedDate===date)bar.classList.add('selected');bar.addEventListener('click',()=>{dailyChartSelectedDate=date;renderDailyChart()});wrap.appendChild(bar);bars.appendChild(wrap)});
+ dailyTotals.forEach((amount,index)=>{const date=dates[index],wrap=document.createElement('div');wrap.className='daily-chart-bar-wrap';const bar=document.createElement('button');bar.type='button';bar.className='daily-chart-bar '+(dailyChartType==='Expense'?'expense':'income');bar.style.height=`${maxAmount>0?Math.max(3,(amount/maxAmount)*100):3}%`;bar.setAttribute('aria-label',`${date}: ${money(amount)}`);bar.title=`${date}: ${money(amount)}`;if(dailyChartSelectedDate===date)bar.classList.add('selected');bar.addEventListener('click',()=>{dailyChartSelectedDate=date;renderDailyChart();openDailyChartSheet()});wrap.appendChild(bar);bars.appendChild(wrap)});
  const selected=$('dailyChartSelected');
  if(dates.includes(dailyChartSelectedDate)){
   const i=dates.indexOf(dailyChartSelectedDate),dayTransactions=sortedTx(tx.filter(item=>item.type===dailyChartType&&String(item.date||'')===dailyChartSelectedDate));
@@ -974,10 +1015,10 @@ function renderDailyChart(){
   selected.innerHTML=`<div class="daily-chart-detail-head"><div><strong>${esc(dailyChartSelectedDate)}</strong><div class="daily-chart-detail-meta">${dailyChartType==='Expense'?'รายการรายจ่าย':'รายการรายรับ'} · ${dayTransactions.length} รายการ</div></div><strong>${esc(money(dayTotal||dailyTotals[i]||0))}</strong></div><div class="daily-chart-detail-list">${rows}</div>`;
  }else selected.textContent='แตะแท่งกราฟเพื่อดูรายการและยอดเงินของวันนั้น';
 }
-document.querySelectorAll('.daily-chart-tab').forEach(button=>button.addEventListener('click',()=>{dailyChartType=button.dataset.chartType;document.querySelectorAll('.daily-chart-tab').forEach(tab=>tab.classList.toggle('active',tab===button));renderDailyChart()}));
-$('dailyChartFrom').addEventListener('change',()=>{document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
-$('dailyChartTo').addEventListener('change',()=>{document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
-document.querySelectorAll('.daily-chart-preset').forEach(button=>button.addEventListener('click',()=>setDailyChartRange(button.dataset.range)));
+document.querySelectorAll('.daily-chart-tab').forEach(button=>button.addEventListener('click',()=>{closeDailyChartSheet();dailyChartType=button.dataset.chartType;document.querySelectorAll('.daily-chart-tab').forEach(tab=>tab.classList.toggle('active',tab===button));renderDailyChart()}));
+$('dailyChartFrom').addEventListener('change',()=>{closeDailyChartSheet();document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
+$('dailyChartTo').addEventListener('change',()=>{closeDailyChartSheet();document.querySelectorAll('.daily-chart-preset').forEach(b=>b.classList.remove('active'));dailyChartSelectedDate='';renderDailyChart()});
+document.querySelectorAll('.daily-chart-preset').forEach(button=>button.addEventListener('click',()=>{closeDailyChartSheet();setDailyChartRange(button.dataset.range)}));
 function renderFinancialHealth(){const month=currentMonth(),totals=monthlyTotals(month),balances=accountBalances(),cash=Object.values(balances).reduce((s,n)=>s+n,0),debt=debts.reduce((s,d)=>s+(Number(d.balance)||0),0),now=new Date(),daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),elapsed=Math.max(1,now.getDate()),remaining=Math.max(0,daysInMonth-now.getDate()),predictedRemainingNet=((totals.income-totals.expense)/elapsed)*remaining,forecast=cash+predictedRemainingNet;$('forecastMonth').textContent=monthLabel(month);$('netWorthValue').textContent=money(cash-debt);$('netWorthValue').style.color=cash-debt<0?'var(--red)':'var(--green)';$('forecastBalance').textContent=money(forecast);$('forecastBalance').style.color=forecast<0?'var(--red)':'var(--green)';$('forecastNote').textContent=`ประมาณจากข้อมูล ${now.getDate()} วันแรก และคาดการณ์อีก ${remaining} วัน โดยสมมติว่าอัตรารายรับ/รายจ่ายใกล้เคียงเดิม ไม่รวมบิลอนาคตที่ยังไม่บันทึกเป็นรายการ`}
 function renderHome(){const totals=monthlyTotals(currentMonth()),balances=accountBalances();const totalBalance=Object.values(balances).reduce((s,n)=>s+n,0);$('balance').textContent=money(totalBalance);$('balance').style.color=totalBalance>0?'var(--green)':totalBalance<0?'var(--red)':'';$('income').textContent=money(totals.income);$('expense').textContent=money(totals.expense);$('homeAccounts').innerHTML=accounts.length?accounts.map(a=>`<div class="summaryline"><span>${esc(a.name)}</span><strong>${money(balances[a.name]||0)}</strong></div>`).join(''):emptyHTML('ยังไม่มีบัญชี');const recent=sortedTx().slice(0,5);$('recentList').innerHTML=recent.length?recent.map(transactionHTML).join(''):emptyHTML('ยังไม่มีรายการ เริ่มบันทึกรายการแรกได้เลยค่ะ');renderFinancialHealth();renderDailyChart();renderHomePlan()}
 function renderHistory(){const q=$('search').value.trim().toLowerCase(),f=$('filter').value,month=$('historyMonth').value,from=$('historyFrom').value,to=$('historyTo').value;const arr=sortedTx().filter(t=>{const d=String(t.date||'');return(f==='All'||t.type===f)&&(!month||d.startsWith(month))&&(!from||d>=from)&&(!to||d<=to)&&(!q||[t.title,t.note,t.category,t.account,t.to].some(v=>String(v||'').toLowerCase().includes(q)))});const total=arr.filter(t=>t.type==='Expense').reduce((sum,t)=>sum+(Number(t.amount)||0),0);const limit=$('historyLimit')?.value||'5',shown=limit==='all'?arr:arr.slice(0,Number(limit));$('historyCount').textContent=`พบ ${arr.length} รายการ · แสดง ${shown.length} · รายจ่ายรวม ${money(total)}`;$('historyList').innerHTML=shown.length?shown.map(transactionHTML).join(''):emptyHTML('ไม่พบรายการที่ตรงกับเงื่อนไข')}
