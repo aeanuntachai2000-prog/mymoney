@@ -562,6 +562,43 @@ footer{padding-top:16px}
   #page-record .card{padding:13px}
 }
 
+
+/* MyMoney single-dashboard navigation refresh */
+.bottom-nav{display:none!important}
+.app{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+.top{position:relative;z-index:40;margin-bottom:12px}
+.menu-trigger{width:42px;height:42px;border:1px solid #3a424a;border-radius:13px;background:#20252a;color:#eef2f5;font-size:25px;line-height:1;display:grid;place-items:center;box-shadow:0 5px 18px #0005}
+.menu-trigger[aria-expanded="true"]{background:#303840;border-color:#68737e}
+.app-menu{position:absolute;z-index:60;right:0;top:calc(100% + 8px);width:min(310px,calc(100vw - 24px));padding:14px;background:#191d21;border:1px solid #3a424a;border-radius:19px;box-shadow:0 18px 50px #000b;backdrop-filter:blur(18px);transform-origin:top right;animation:menuPop .16s ease-out}
+@keyframes menuPop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.app-menu-heading{display:grid;gap:3px;padding:2px 3px 12px;border-bottom:1px solid #343b42;margin-bottom:10px;font-weight:800}
+.app-menu-heading small{font-size:11px;color:var(--muted);font-weight:500}
+.app-menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.app-menu-item{min-width:0;display:flex;align-items:center;gap:9px;padding:10px 9px;border:1px solid #30373e;border-radius:12px;background:#22272c;color:#e9edf0;text-align:left;font-size:12px;font-weight:700}
+.app-menu-item:active{background:#343c44;border-color:#69747f}
+.app-menu-item span{width:28px;height:28px;flex:0 0 28px;display:grid;place-items:center;border-radius:9px;background:#303840;color:#dce4e9;font-size:17px}
+/* Dashboard stays still; secondary screens keep their existing scroll behavior. */
+body.dashboard-mode{overflow:hidden}
+body.dashboard-mode .app{height:100dvh;overflow:hidden}
+body.dashboard-mode #page-home.active{height:calc(100dvh - 76px - env(safe-area-inset-bottom));overflow:hidden;display:flex;flex-direction:column;gap:10px}
+body.dashboard-mode #page-home .forecast-card,
+body.dashboard-mode #page-home > .section,
+body.dashboard-mode #page-home > .feature-grid,
+body.dashboard-mode #page-home > .card:not(.daily-chart-card),
+body.dashboard-mode #page-home > .list{display:none!important}
+body.dashboard-mode #page-home .balance{flex:0 0 auto;padding:15px 17px}
+body.dashboard-mode #page-home .big{font-size:clamp(28px,7.5vw,38px);margin:5px 0 11px}
+body.dashboard-mode #page-home .stats{padding-top:10px}
+body.dashboard-mode #page-home .daily-chart-card{flex:1 1 auto;min-height:0;margin:0;display:flex;flex-direction:column;padding:13px;overflow:hidden}
+body.dashboard-mode #page-home .daily-chart-controls{margin-top:9px}
+body.dashboard-mode #page-home .daily-chart-range{margin-top:7px}
+body.dashboard-mode #page-home .daily-chart-presets{margin-top:6px;gap:5px}
+body.dashboard-mode #page-home .daily-chart-total{margin-top:9px}
+body.dashboard-mode #page-home .daily-chart-bars{flex:1 1 auto;min-height:70px;height:auto;max-height:190px;margin-top:8px}
+body.dashboard-mode #page-home .daily-chart-selected{margin-top:7px;padding:8px;font-size:11px}
+body.dashboard-mode #page-home .daily-chart-subtitle{margin-top:2px}
+@media(max-height:740px){body.dashboard-mode #page-home .daily-chart-bars{max-height:125px}body.dashboard-mode #page-home .daily-chart-card{padding:10px}body.dashboard-mode #page-home .daily-chart-total{margin-top:6px}body.dashboard-mode #page-home .daily-chart-total strong{font-size:19px}}
+
 </style>
 </head>
 <body style="background:#000000">
@@ -582,7 +619,22 @@ footer{padding-top:16px}
 <div class="app">
   <header class="top">
     <div class="brand"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney logo"><div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div></div>
-    <button class="btn secondary" id="headerBackup" title="สำรองข้อมูล">⇧ สำรอง</button>
+    <button class="menu-trigger" id="menuTrigger" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="appMenu">☷</button>
+    <div class="app-menu" id="appMenu" hidden>
+      <div class="app-menu-heading"><span>เมนู MyMoney</span><small>เลือกฟังก์ชันที่ต้องการ</small></div>
+      <div class="app-menu-grid">
+        <button type="button" class="app-menu-item" data-go="home"><span>⌂</span>ภาพรวม</button>
+        <button type="button" class="app-menu-item" data-go="record"><span>＋</span>บันทึกรายการ</button>
+        <button type="button" class="app-menu-item" data-go="history"><span>☷</span>ประวัติ</button>
+        <button type="button" class="app-menu-item" data-go="reports"><span>▥</span>รายงาน</button>
+        <button type="button" class="app-menu-item" data-go="budget"><span>▤</span>งบประมาณ</button>
+        <button type="button" class="app-menu-item" data-go="bills"><span>◷</span>บิลประจำ</button>
+        <button type="button" class="app-menu-item" data-go="debts"><span>↘</span>ติดตามหนี้</button>
+        <button type="button" class="app-menu-item" data-go="goals"><span>◎</span>เป้าหมายออม</button>
+        <button type="button" class="app-menu-item" data-go="settings"><span>⚙</span>ตั้งค่า</button>
+        <button type="button" class="app-menu-item" id="headerBackup"><span>⇧</span>สำรองข้อมูล</button>
+      </div>
+    </div>
   </header>
 
   <section class="page active" id="page-home">
@@ -843,6 +895,9 @@ function currentMonth(){return localDate().slice(0,7)}
 function download(name,content,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 const pageScrollPositions={};
 function navigate(page){
+  const menu=$('appMenu'),trigger=$('menuTrigger');
+  if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');
+  document.body.classList.toggle('dashboard-mode',page==='home');
   const current=document.querySelector('.page.active');
   const currentPage=current?.id?.replace('page-','')||'home';
   if(currentPage)pageScrollPositions[currentPage]=window.scrollY||window.pageYOffset||0;
@@ -863,6 +918,10 @@ function navigate(page){
   const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
   requestAnimationFrame(()=>window.scrollTo({top:targetY,behavior:'auto'}));
 }
+const menuTrigger=$('menuTrigger'),appMenu=$('appMenu');
+menuTrigger?.addEventListener('click',()=>{const opening=appMenu.hidden;appMenu.hidden=!opening;menuTrigger.setAttribute('aria-expanded',String(opening));});
+document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ'}
@@ -1044,7 +1103,7 @@ $('exportJson').addEventListener('click',exportJSON);$('headerBackup').addEventL
 $('restoreAutoBackup').addEventListener('click',()=>{let data;try{data=JSON.parse(localStorage.getItem(AUTO_BACKUP_KEY)||'null')}catch(e){}if(!data){alert('ยังไม่มีข้อมูลสำรองอัตโนมัติในเบราว์เซอร์นี้ค่ะ');return}if(!confirm(`กู้คืนข้อมูลสำรองเมื่อ ${data.snapshotAt||'ไม่ทราบเวลา'} ใช่ไหมคะ? ข้อมูลปัจจุบันจะถูกแทนที่ แต่จะเก็บสำรองชุดปัจจุบันก่อน`))return;try{snapshotBeforeChange();restoreSnapshotData(data);$('backupMessage').textContent='กู้คืนข้อมูลสำรองอัตโนมัติเรียบร้อยแล้ว';alert('กู้คืนข้อมูลสำเร็จค่ะ')}catch(err){alert('กู้คืนไม่สำเร็จ: '+err.message)}});
 $('importFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.transactions)||!Array.isArray(data.accounts)||!data.categories||!Array.isArray(data.categories.Expense)||!Array.isArray(data.categories.Income))throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');const valid=data.transactions.every(t=>t&&['Income','Expense','Transfer'].includes(t.type)&&Number.isFinite(Number(t.amount))&&Number(t.amount)>0&&t.date&&t.title);if(!valid)throw new Error('พบรายการที่ข้อมูลไม่ครบหรือไม่ถูกต้อง');if(!confirm(`นำเข้า ${data.transactions.length} รายการ และแทนที่รายการ/บัญชี/หมวดหมู่ปัจจุบันใช่ไหมคะ? ระบบจะเก็บข้อมูลชุดก่อนหน้าไว้ในสำรองอัตโนมัติก่อน`))return;snapshotBeforeChange();restoreSnapshotData(data);$('backupMessage').textContent='นำเข้าข้อมูลเรียบร้อยแล้ว';alert('นำเข้าข้อมูลสำเร็จค่ะ')}catch(err){alert('นำเข้าไม่สำเร็จ: '+err.message)}finally{e.target.value=''}});
 window.addEventListener('storage',e=>{if([TX_KEY,ACC_KEY,CAT_KEY,BUDGET_KEY,BILL_KEY,DEBT_KEY,GOAL_KEY].includes(e.key)){const reload=confirm('พบข้อมูล MyMoney ถูกเปลี่ยนจากแท็บหรือหน้าต่างอื่น ต้องการโหลดข้อมูลล่าสุดไหมคะ?');if(reload)location.reload()}});
-$('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
+document.body.classList.add('dashboard-mode');$('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
 $('langTh').addEventListener('click',()=>setLanguage('th'));
 $('langEn').addEventListener('click',()=>setLanguage('en'));
 if(appLang==='th'){$('langTh').classList.remove('secondary');$('langTh').classList.add('primary');$('langEn').classList.remove('primary');$('langEn').classList.add('secondary');}else{$('langEn').classList.remove('secondary');$('langEn').classList.add('primary');$('langTh').classList.remove('primary');$('langTh').classList.add('secondary');}
