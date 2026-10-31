@@ -676,6 +676,12 @@ body.report-swipe-mode footer{display:none}
 }
 @media(max-width:380px){body.report-swipe-mode #page-reports .report-donut-layout{grid-template-columns:minmax(100px,.75fr) minmax(0,1.25fr)}}
 
+
+/* Finger-tracking swipe tuning for iOS */
+body.swipe-animating{touch-action:pan-y;}
+body.swipe-animating .swipe-transition-page{-webkit-transform:translateZ(0);transform:translateZ(0);contain:paint;}
+#page-home,#page-reports{-webkit-user-select:none;user-select:none;}
+#page-home button,#page-home input,#page-home select,#page-reports button,#page-reports input,#page-reports select{-webkit-user-select:auto;user-select:auto;}
 </style>
 </head>
 <body style="background:#000000">
@@ -1012,29 +1018,13 @@ $('quickAdd')?.addEventListener('click',()=>navigate('record'));
 document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('dailyChartSheet')&&!$('dailyChartSheet').hidden){closeDailyChartSheet();return}if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
-// Horizontal swipe between Overview and Financial Report, with a native-feeling slide.
-let swipeTransitionBusy=false;
-function finishSwipeTransition(from,to,direction){
-  from.classList.remove('swipe-transition-page');
-  to.classList.remove('swipe-transition-page');
-  from.classList.remove('active');
-  to.classList.add('active');
-  document.body.classList.remove('swipe-animating');
-  if(direction==='forward')document.body.classList.remove('dashboard-mode');
-  else document.body.classList.remove('report-swipe-mode');
-  swipeTransitionBusy=false;
-}
-function animateSwipePage(direction){
-  if(swipeTransitionBusy)return;
-  const home=$('page-home'),reports=$('page-reports');
-  const from=direction==='forward'?home:reports;
-  const to=direction==='forward'?reports:home;
-  if(!from||!to)return;
-  swipeTransitionBusy=true;
-  const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// iPhone-like interactive swipe: the page follows the finger, then settles with momentum.
+let swipeTransitionBusy=false,swipeGesture=null;
+function swipePages(direction){return direction==='forward'?[$('page-home'),$('page-reports')]:[$('page-reports'),$('page-home')];}
+function prepareSwipeDrag(direction){
+  const [from,to]=swipePages(direction);if(!from||!to)return null;
   if(direction==='forward'){
     document.body.classList.add('report-swipe-mode');
-    // Keep dashboard-mode during the transition so the outgoing Overview keeps its exact compact layout.
     renderReports();
   }else{
     document.body.classList.add('dashboard-mode');
@@ -1043,54 +1033,80 @@ function animateSwipePage(direction){
   document.body.classList.add('swipe-animating');
   from.classList.add('active','swipe-transition-page');
   to.classList.add('active','swipe-transition-page');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===(direction==='forward'?'reports':'home')));
+  from.style.zIndex='15';to.style.zIndex='16';
   const width=Math.max(1,window.innerWidth);
-  const outX=direction==='forward'?-width:width;
-  const inX=direction==='forward'?width:-width;
-  if(reduceMotion){
-    finishSwipeTransition(from,to,direction);
+  const start=direction==='forward'?width:-width;
+  from.style.transform='translate3d(-50%,0,0)';
+  to.style.transform=`translate3d(calc(-50% + ${start}px),0,0)`;
+  return {from,to,direction,width,start};
+}
+function cleanSwipePages(from,to,direction,commit){
+  from.classList.remove('swipe-transition-page');to.classList.remove('swipe-transition-page');
+  from.style.transform='';to.style.transform='';from.style.zIndex='';to.style.zIndex='';
+  from.classList.toggle('active',!commit);to.classList.toggle('active',commit);
+  document.body.classList.remove('swipe-animating');
+  if(commit){
+    if(direction==='forward')document.body.classList.remove('dashboard-mode');
+    else document.body.classList.remove('report-swipe-mode');
     requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
-    return;
+  }else{
+    if(direction==='forward')document.body.classList.remove('report-swipe-mode');
+    else document.body.classList.remove('dashboard-mode');
   }
-  const timing={duration:430,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'};
-  const outgoing=from.animate([
-    {transform:'translate3d(-50%,0,0)'},
-    {transform:`translate3d(calc(-50% + ${outX}px),0,0)`}
-  ],timing);
-  const incoming=to.animate([
-    {transform:`translate3d(calc(-50% + ${inX}px),0,0)`},
-    {transform:'translate3d(-50%,0,0)'}
-  ],timing);
-  Promise.all([outgoing.finished,incoming.finished]).catch(()=>{}).finally(()=>{
-    outgoing.cancel();incoming.cancel();
-    finishSwipeTransition(from,to,direction);
-    requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
-  });
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===(commit?(direction==='forward'?'reports':'home'):(direction==='forward'?'home':'reports'))));
+  swipeTransitionBusy=false;
 }
-function showSwipeReport(){
-  const menu=$('appMenu'),trigger=$('menuTrigger');
-  if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');
-  animateSwipePage('forward');
+function settleSwipeGesture(commit){
+  if(!swipeGesture)return;
+  const g=swipeGesture;swipeGesture=null;swipeTransitionBusy=true;
+  const endOut=commit?(g.direction==='forward'?-g.width:g.width):0;
+  const endIn=commit?0:g.start;
+  const duration=commit?Math.max(170,Math.min(300,300*(1-Math.min(1,Math.abs(g.dx)/g.width)))):190;
+  const easing=commit?'cubic-bezier(.22,.8,.25,1)':'cubic-bezier(.32,.72,.25,1)';
+  const out=g.from.animate([{transform:g.from.style.transform},{transform:`translate3d(calc(-50% + ${endOut}px),0,0)`}],{duration,easing,fill:'forwards'});
+  const incoming=g.to.animate([{transform:g.to.style.transform},{transform:`translate3d(calc(-50% + ${endIn}px),0,0)`}],{duration,easing,fill:'forwards'});
+  Promise.all([out.finished,incoming.finished]).catch(()=>{}).finally(()=>{out.cancel();incoming.cancel();cleanSwipePages(g.from,g.to,g.direction,commit);});
 }
-function showSwipeOverview(){animateSwipePage('back');}
-let swipeStartX=0,swipeStartY=0,swipeStartedAt=0;
 function attachReportSwipe(element,fromPage){
   if(!element)return;
+  let startX=0,startY=0,startTime=0,active=false,direction=null,gesture=null;
   element.addEventListener('touchstart',event=>{
     if(swipeTransitionBusy||event.touches.length!==1)return;
     const target=event.target;
     if(target.closest('button,input,select,textarea,a,[role="button"],.daily-detail-backdrop'))return;
-    const touch=event.touches[0];swipeStartX=touch.clientX;swipeStartY=touch.clientY;swipeStartedAt=Date.now();
+    const touch=event.touches[0];startX=touch.clientX;startY=touch.clientY;startTime=performance.now();active=true;direction=null;gesture=null;
   },{passive:true});
+  element.addEventListener('touchmove',event=>{
+    if(!active||event.touches.length!==1||swipeTransitionBusy)return;
+    const touch=event.touches[0],dx=touch.clientX-startX,dy=touch.clientY-startY;
+    if(!direction){
+      if(Math.abs(dx)<8&&Math.abs(dy)<8)return;
+      if(Math.abs(dy)>Math.abs(dx)*1.08){active=false;return;}
+      if(Math.abs(dx)<Math.abs(dy)*1.08)return;
+      if(fromPage==='home'&&dx<0&&$('page-home').classList.contains('active'))direction='forward';
+      else if(fromPage==='reports'&&dx>0&&document.body.classList.contains('report-swipe-mode'))direction='back';
+      else{active=false;return;}
+      gesture=prepareSwipeDrag(direction);if(!gesture){active=false;return;}
+    }
+    if(gesture){
+      event.preventDefault();
+      const width=gesture.width;
+      const clamped=direction==='forward'?Math.max(-width,Math.min(0,dx)):Math.min(width,Math.max(0,dx));
+      gesture.dx=clamped;
+      gesture.from.style.transform=`translate3d(calc(-50% + ${clamped}px),0,0)`;
+      gesture.to.style.transform=`translate3d(calc(-50% + ${gesture.start+clamped}px),0,0)`;
+    }
+  },{passive:false});
   element.addEventListener('touchend',event=>{
-    if(!swipeStartedAt||!event.changedTouches.length)return;
-    const touch=event.changedTouches[0],dx=touch.clientX-swipeStartX,dy=touch.clientY-swipeStartY,elapsed=Date.now()-swipeStartedAt;
-    swipeStartedAt=0;
-    if(Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.35||elapsed>900)return;
-    if(fromPage==='home'&&dx<0&&$('page-home').classList.contains('active'))showSwipeReport();
-    else if(fromPage==='reports'&&dx>0&&document.body.classList.contains('report-swipe-mode'))showSwipeOverview();
+    if(!active)return;active=false;
+    if(!gesture)return;
+    const elapsed=Math.max(1,performance.now()-startTime),distance=Math.abs(gesture.dx||0),velocity=distance/elapsed;
+    const commit=distance>gesture.width*.22|| (distance>18&&velocity>.32);
+    swipeTransitionBusy=true;swipeGesture=gesture;settleSwipeGesture(commit);
+    if(direction==='forward'&&commit){const menu=$('appMenu'),trigger=$('menuTrigger');if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');}
+    direction=null;gesture=null;
   },{passive:true});
-  element.addEventListener('touchcancel',()=>{swipeStartedAt=0;},{passive:true});
+  element.addEventListener('touchcancel',()=>{active=false;if(gesture){swipeGesture=gesture;settleSwipeGesture(false);}direction=null;gesture=null;},{passive:true});
 }
 attachReportSwipe($('page-home'),'home');
 attachReportSwipe($('page-reports'),'reports');
