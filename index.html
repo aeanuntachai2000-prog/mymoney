@@ -43,10 +43,10 @@
 *{box-sizing:border-box}
 html,body{-webkit-text-size-adjust:100%;touch-action:pan-x pan-y}
 [hidden]{display:none!important}
-html{background:#080A09!important}body{margin:0;background:#080A09!important;color:var(--ink);font:15px "Inter","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;font-variant-numeric:tabular-nums}
+html{background:#080A09!important;height:100%;overscroll-behavior:none}body{margin:0;background:#080A09!important;color:var(--ink);font:15px "Inter","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;font-variant-numeric:tabular-nums;min-height:100%;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.app{max-width:680px;margin:auto;padding:14px 12px calc(84px + env(safe-area-inset-bottom))}
+.app{max-width:680px;margin:auto;padding:14px 12px calc(84px + env(safe-area-inset-bottom));overscroll-behavior:contain}
 .top{display:flex;justify-content:space-between;align-items:center;margin:2px 3px 12px}.brand{display:flex;align-items:center;gap:11px;min-width:0}.brand-icon{width:48px;height:48px;border-radius:14px;object-fit:cover;flex-shrink:0;border:1px solid #00B887;box-shadow:0 0 18px #00B88733}.brand-copy{min-width:0}
 .eyebrow{font-size:9.5px;letter-spacing:1.2px;color:var(--muted);font-weight:600;margin:0 0 3px}
 h1{font-size:21px;margin:0;font-weight:600}h2{font-size:16px;margin:0;font-weight:600}h3{font-size:14px;margin:0;font-weight:600}
@@ -620,6 +620,33 @@ input,select{padding:7px 9px;border-radius:9px;font-size:13px}
 .btn.save.save-expense{background:linear-gradient(135deg,#FF6B7A,#C93A4A);color:#FFF;border-color:#FF6B7A;box-shadow:0 8px 22px #FF6B7A33}
 .btn.save.save-transfer{background:linear-gradient(135deg,#D6B875,#A8893F);color:#1A1608;border-color:#D6B875;box-shadow:0 8px 22px #D6B87533}
 .btn.save.save-income{background:linear-gradient(135deg,#00B887,#087A5B);color:#0A1F18;border-color:#00B887;box-shadow:0 8px 22px #00B88733}
+
+/* Prevent scroll bounce/overscroll on iOS and desktop */
+html,body{overscroll-behavior:none}
+.app{overscroll-behavior:contain}
+.slip-raw{overscroll-behavior:contain}
+
+/* ===== Dashboard above-the-fold compact ===== */
+.daily-chart-card{padding:10px}
+.daily-chart-bars{height:90px;gap:2px;margin-top:6px}
+.daily-chart-header h2{font-size:14px;margin-top:3px}
+.daily-chart-subtitle{font-size:10px}
+.daily-chart-eyebrow{font-size:9px}
+.daily-chart-presets{gap:4px;margin-top:6px}
+.daily-chart-preset{padding:4px 8px;font-size:10px}
+.daily-chart-range{gap:6px;margin-top:6px}
+.daily-chart-range label{font-size:10px}
+.daily-chart-range input{height:34px;font-size:12px}
+.daily-chart-tabs{gap:4px}
+.daily-chart-tab{padding:4px 10px;font-size:11px}
+.daily-chart-total{margin-top:6px;font-size:11px}
+.daily-chart-selected{font-size:10px;margin-top:4px}
+.forecast-card{padding:10px}
+.feature-stats{gap:6px}
+.feature-stat{padding:5px 7px}
+.balance{padding:12px}
+.big{margin:4px 0 8px}
+.stats{padding-top:6px;gap:6px}
 </style>
 </head>
 <body style="background:#000000">
@@ -651,15 +678,7 @@ input,select{padding:7px 9px;border-radius:9px;font-size:13px}
         <div><small>รายจ่ายเดือนนี้</small><strong class="exp" id="expense">฿0.00</strong></div>
       </div>
     </section>
-    <section class="card stack forecast-card" aria-live="polite">
-      <div class="section" style="margin:0 0 4px"><div><p class="eyebrow">FINANCIAL HEALTH</p><h2>สุขภาพการเงินเดือนนี้</h2></div><span class="pill" id="forecastMonth"></span></div>
-      <div class="feature-stats">
-        <div class="feature-stat"><span>มูลค่าสุทธิเงินสดหักหนี้</span><strong id="netWorthValue">฿0.00</strong></div>
-        <div class="feature-stat"><span>คาดการณ์เงินปลายเดือน</span><strong id="forecastBalance">฿0.00</strong></div>
-      </div>
-      <p class="small" id="forecastNote">ประมาณการจากอัตรารายรับและรายจ่ายของเดือนปัจจุบัน ไม่ใช่ยอดรับประกัน</p>
-    </section>
-    <section class="card daily-chart-card">
+<section class="card daily-chart-card">
       <div class="daily-chart-header"><div><div class="daily-chart-eyebrow">DAILY OVERVIEW</div><h2 style="margin-top:5px">กระแสเงินรายวัน</h2><p class="daily-chart-subtitle">ดูรายรับหรือรายจ่ายแยกตามวันที่</p></div><span class="daily-chart-icon" aria-hidden="true">▥</span></div>
       <div class="daily-chart-controls">
         <div class="daily-chart-tabs" role="group" aria-label="ประเภทกราฟ">
@@ -684,6 +703,15 @@ input,select{padding:7px 9px;border-radius:9px;font-size:13px}
       </div>
       <div id="dailyChartSelected" class="daily-chart-selected" aria-live="polite">แตะแท่งกราฟเพื่อดูรายการและยอดเงินของวันนั้น</div>
     </section>
+    <section class="card stack forecast-card" aria-live="polite">
+      <div class="section" style="margin:0 0 4px"><div><p class="eyebrow">FINANCIAL HEALTH</p><h2>สุขภาพการเงินเดือนนี้</h2></div><span class="pill" id="forecastMonth"></span></div>
+      <div class="feature-stats">
+        <div class="feature-stat"><span>มูลค่าสุทธิเงินสดหักหนี้</span><strong id="netWorthValue">฿0.00</strong></div>
+        <div class="feature-stat"><span>คาดการณ์เงินปลายเดือน</span><strong id="forecastBalance">฿0.00</strong></div>
+      </div>
+      <p class="small" id="forecastNote">ประมาณการจากอัตรารายรับและรายจ่ายของเดือนปัจจุบัน ไม่ใช่ยอดรับประกัน</p>
+    </section>
+    
     <div class="section"><div><p class="eyebrow">MY FINANCIAL PLAN</p><h2>วางแผนการเงิน</h2></div><span class="pill" id="homePlanMonth"></span></div>
     <div class="feature-grid">
       <button class="feature-link" data-go="budget"><span class="feature-icon">▤</span><strong>งบประมาณ</strong><small id="homeBudgetPreview">ตั้งงบรายเดือน</small></button>
