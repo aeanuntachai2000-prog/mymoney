@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" sizes="32x32" href="mymoney-favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="mymoney-icon.png">
 <link rel="apple-touch-startup-image" href="splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
@@ -43,7 +43,7 @@
 *{box-sizing:border-box}
 html,body{-webkit-text-size-adjust:100%;touch-action:pan-x pan-y}
 [hidden]{display:none!important}
-html{background:#080A09!important}body{margin:0;background:#080A09!important;color:var(--ink);font:15px "Prompt",-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif}
+html{background:#080A09!important}body{margin:0;background:#080A09!important;color:var(--ink);font:15px "Inter","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;font-variant-numeric:tabular-nums}
 button,input,select{font:inherit}
 button{cursor:pointer}
 .app{max-width:680px;margin:auto;padding:14px 12px calc(84px + env(safe-area-inset-bottom))}
@@ -615,6 +615,11 @@ input,select{padding:7px 9px;border-radius:9px;font-size:13px}
 .feature-meta{font-size:10.5px}
 .summaryline{padding:4px 0}
 .message{font-size:11px}
+
+/* Save button color by type */
+.btn.save.save-expense{background:linear-gradient(135deg,#FF6B7A,#C93A4A);color:#FFF;border-color:#FF6B7A;box-shadow:0 8px 22px #FF6B7A33}
+.btn.save.save-transfer{background:linear-gradient(135deg,#D6B875,#A8893F);color:#1A1608;border-color:#D6B875;box-shadow:0 8px 22px #D6B87533}
+.btn.save.save-income{background:linear-gradient(135deg,#00B887,#087A5B);color:#0A1F18;border-color:#00B887;box-shadow:0 8px 22px #00B88733}
 </style>
 </head>
 <body style="background:#000000">
@@ -918,7 +923,7 @@ function navigate(page){
 }
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
-function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ'}
+function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ';const _sb=$('save');_sb.classList.remove('save-expense','save-transfer','save-income');if(t==='Expense')_sb.classList.add('save-expense');else if(t==='Transfer')_sb.classList.add('save-transfer');else _sb.classList.add('save-income')}
 document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>setType(b.dataset.type)));
 function accountBalances(){const out={};accounts.forEach(a=>out[a.name]=Number(a.opening)||0);tx.forEach(t=>{const amount=Number(t.amount)||0;if(t.type==='Income'){if(t.account)out[t.account]=(out[t.account]||0)+amount}else if(t.type==='Expense'){if(t.account)out[t.account]=(out[t.account]||0)-amount}else if(t.type==='Transfer'){if(t.account)out[t.account]=(out[t.account]||0)-amount;if(t.to)out[t.to]=(out[t.to]||0)+amount}});return out}
 function monthlyTotals(month){let income=0,expense=0,count=0;tx.forEach(t=>{if(String(t.date||'').startsWith(month)){count++;if(t.type==='Income')income+=Number(t.amount)||0;if(t.type==='Expense')expense+=Number(t.amount)||0}});return{income,expense,count,net:income-expense}}
