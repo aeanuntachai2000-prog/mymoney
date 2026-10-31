@@ -535,6 +535,7 @@ footer{padding-top:16px}
   .app{padding:10px 10px calc(82px + env(safe-area-inset-bottom))}
   .top{margin:0 2px 11px}
   .brand-icon{width:38px;height:38px}
+  .brand-menu-trigger{width:40px;height:40px;flex-basis:40px}
   h1{font-size:21px}
   .balance{padding:16px;border-radius:18px}
   .big{font-size:clamp(26px,7.2vw,34px);margin:5px 0 12px}
@@ -567,9 +568,12 @@ footer{padding-top:16px}
 .bottom-nav{display:none!important}
 .app{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
 .top{position:relative;z-index:40;margin-bottom:12px}
-.menu-trigger{width:42px;height:42px;border:1px solid #3a424a;border-radius:13px;background:#20252a;color:#eef2f5;font-size:25px;line-height:1;display:grid;place-items:center;box-shadow:0 5px 18px #0005}
-.menu-trigger[aria-expanded="true"]{background:#303840;border-color:#68737e}
-.app-menu{position:absolute;z-index:60;right:0;top:calc(100% + 8px);width:min(310px,calc(100vw - 24px));padding:14px;background:#191d21;border:1px solid #3a424a;border-radius:19px;box-shadow:0 18px 50px #000b;backdrop-filter:blur(18px);transform-origin:top right;animation:menuPop .16s ease-out}
+.brand-menu-trigger{width:48px;height:48px;flex:0 0 48px;padding:0;border:0;border-radius:14px;background:transparent;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 1px #146b55,0 0 18px #00d99a20;overflow:hidden}
+.brand-menu-trigger .brand-icon{width:100%;height:100%;border:0;border-radius:14px;box-shadow:none}
+.brand-menu-trigger[aria-expanded="true"]{outline:2px solid #42bd91;outline-offset:3px}
+.quick-add{width:44px;height:44px;flex:0 0 44px;border:1px solid #3c9b79;border-radius:14px;background:linear-gradient(145deg,#1d9b70,#116448);color:#fff;font-size:29px;line-height:1;display:grid;place-items:center;box-shadow:0 5px 18px #00b77a30}
+.quick-add:active{transform:scale(.96)}
+.app-menu{position:absolute;z-index:60;left:0;top:calc(100% + 8px);width:min(310px,calc(100vw - 24px));padding:14px;background:#191d21;border:1px solid #3a424a;border-radius:19px;box-shadow:0 18px 50px #000b;backdrop-filter:blur(18px);transform-origin:top right;animation:menuPop .16s ease-out}
 @keyframes menuPop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 .app-menu-heading{display:grid;gap:3px;padding:2px 3px 12px;border-bottom:1px solid #343b42;margin-bottom:10px;font-weight:800}
 .app-menu-heading small{font-size:11px;color:var(--muted);font-weight:500}
@@ -618,13 +622,15 @@ body.dashboard-mode #page-home .daily-chart-subtitle{margin-top:2px}
 
 <div class="app">
   <header class="top">
-    <div class="brand"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney logo"><div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div></div>
-    <button class="menu-trigger" id="menuTrigger" type="button" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="appMenu">☷</button>
+    <div class="brand">
+      <button class="brand-menu-trigger" id="menuTrigger" type="button" aria-label="เปิดเมนู MyMoney" aria-expanded="false" aria-controls="appMenu"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney"></button>
+      <div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div>
+    </div>
+    <button class="quick-add" id="quickAdd" type="button" aria-label="เพิ่มรายการ" title="บันทึกรายการ">＋</button>
     <div class="app-menu" id="appMenu" hidden>
       <div class="app-menu-heading"><span>เมนู MyMoney</span><small>เลือกฟังก์ชันที่ต้องการ</small></div>
       <div class="app-menu-grid">
         <button type="button" class="app-menu-item" data-go="home"><span>⌂</span>ภาพรวม</button>
-        <button type="button" class="app-menu-item" data-go="record"><span>＋</span>บันทึกรายการ</button>
         <button type="button" class="app-menu-item" data-go="history"><span>☷</span>ประวัติ</button>
         <button type="button" class="app-menu-item" data-go="reports"><span>▥</span>รายงาน</button>
         <button type="button" class="app-menu-item" data-go="budget"><span>▤</span>งบประมาณ</button>
@@ -920,6 +926,7 @@ function navigate(page){
 }
 const menuTrigger=$('menuTrigger'),appMenu=$('appMenu');
 menuTrigger?.addEventListener('click',()=>{const opening=appMenu.hidden;appMenu.hidden=!opening;menuTrigger.setAttribute('aria-expanded',String(opening));});
+$('quickAdd')?.addEventListener('click',()=>navigate('record'));
 document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
