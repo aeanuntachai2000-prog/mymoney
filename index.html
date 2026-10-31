@@ -581,28 +581,6 @@ footer{padding-top:16px}
 .app-menu-item{min-width:0;display:flex;align-items:center;gap:9px;padding:10px 9px;border:1px solid #30373e;border-radius:12px;background:#22272c;color:#e9edf0;text-align:left;font-size:12px;font-weight:700}
 .app-menu-item:active{background:#343c44;border-color:#69747f}
 .app-menu-item span{width:28px;height:28px;flex:0 0 28px;display:grid;place-items:center;border-radius:9px;background:#303840;color:#dce4e9;font-size:17px}
-/* Dashboard stays still; secondary screens keep their existing scroll behavior. */
-body.dashboard-mode{overflow:hidden}
-body.dashboard-mode .app{height:100dvh;overflow:hidden}
-body.dashboard-mode #page-home.active{height:calc(100dvh - 76px - env(safe-area-inset-bottom));overflow:hidden;display:flex;flex-direction:column;gap:10px}
-body.dashboard-mode #page-home .forecast-card,
-body.dashboard-mode #page-home > .section,
-body.dashboard-mode #page-home > .feature-grid,
-body.dashboard-mode #page-home > .card:not(.daily-chart-card),
-body.dashboard-mode #page-home > .list{display:none!important}
-body.dashboard-mode #page-home .balance{flex:0 0 auto;padding:15px 17px}
-body.dashboard-mode #page-home .big{font-size:clamp(28px,7.5vw,38px);margin:5px 0 11px}
-body.dashboard-mode #page-home .stats{padding-top:10px}
-body.dashboard-mode #page-home .daily-chart-card{flex:1 1 auto;min-height:0;margin:0;display:flex;flex-direction:column;padding:13px;overflow:hidden}
-body.dashboard-mode #page-home .daily-chart-controls{margin-top:9px}
-body.dashboard-mode #page-home .daily-chart-range{margin-top:7px}
-body.dashboard-mode #page-home .daily-chart-presets{margin-top:6px;gap:5px}
-body.dashboard-mode #page-home .daily-chart-total{margin-top:9px}
-body.dashboard-mode #page-home .daily-chart-bars{flex:1 1 auto;min-height:70px;height:auto;max-height:190px;margin-top:8px}
-body.dashboard-mode #page-home .daily-chart-selected{margin-top:7px;padding:8px;font-size:11px}
-body.dashboard-mode #page-home .daily-chart-subtitle{margin-top:2px}
-@media(max-height:740px){body.dashboard-mode #page-home .daily-chart-bars{max-height:125px}body.dashboard-mode #page-home .daily-chart-card{padding:10px}body.dashboard-mode #page-home .daily-chart-total{margin-top:6px}body.dashboard-mode #page-home .daily-chart-total strong{font-size:19px}}
-
 
 /* Daily chart detail bottom sheet */
 #dailyChartSelected{display:none!important}
@@ -622,233 +600,116 @@ body.daily-sheet-open{overflow:hidden}
 @media(min-width:600px){.daily-detail-backdrop{align-items:center;padding:20px}.daily-detail-sheet{border:1px solid #343a42;border-radius:22px;max-height: min(75dvh,680px)}}
 
 
-/* Full-screen swipe companion: Overview <-> Financial Report */
+/* Stable two-sheet workspace: fixed sheet geometry + native iOS horizontal scrolling. */
+:root{--mymoney-viewport-height:100vh}
+@supports(height:100svh){:root{--mymoney-viewport-height:100svh}}
 .dashboard-swipe-hint{font-size:10px;color:#7f8b95;white-space:nowrap}
-.report-swipe-back-hint{display:none;font-size:10px;color:#8e9aa5;margin-top:3px}
-body.report-swipe-mode{overflow:hidden;overscroll-behavior:none}
-/* Both swipe pages use the exact same measured viewport below the app header.
-   This prevents the page layers from appearing wider/taller than the real content. */
-body.swipe-animating{overflow:hidden!important;overscroll-behavior:none}
-body.swipe-animating .swipe-transition-page{display:block!important;position:fixed;z-index:15;top:var(--swipe-top,0px);left:var(--swipe-left,0px);width:var(--swipe-width,100%);height:var(--swipe-height,70vh)!important;bottom:auto;min-height:0;margin:0;padding:0;overflow:hidden;background:#000;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
-body.swipe-animating .swipe-transition-page#page-home{display:flex!important;flex-direction:column;}
-body.swipe-animating .swipe-transition-page#page-reports{display:grid!important;}
-@media(prefers-reduced-motion:reduce){body.swipe-animating .swipe-transition-page{will-change:auto}}
-body.report-swipe-mode .app{height:100dvh;overflow:hidden;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
-body.report-swipe-mode #page-reports.active{height:calc(100dvh - 76px - env(safe-area-inset-bottom));overflow:hidden;display:grid;grid-template-rows:auto auto auto minmax(96px,1fr) auto minmax(112px,1.08fr);gap:6px;min-height:0;min-width:0;align-content:stretch}
-body.report-swipe-mode #page-reports .report-swipe-heading{margin:0 3px 1px;min-height:34px}
-body.report-swipe-mode #page-reports .report-swipe-back-hint{display:block}
-body.report-swipe-mode #page-reports .report-swipe-summary{padding:9px 12px;gap:5px;min-height:0}
-body.report-swipe-mode #page-reports .report-swipe-summary label{margin:0 0 3px;font-size:10px}
-body.report-swipe-mode #page-reports .report-swipe-summary input{height:36px;min-height:36px;line-height:36px}
-body.report-swipe-mode #page-reports .report-swipe-summary .stats{padding-top:5px;gap:8px}
-body.report-swipe-mode #page-reports .report-swipe-summary .stats div{gap:3px}
-body.report-swipe-mode #page-reports .report-swipe-summary .stats strong{font-size:14px}
-body.report-swipe-mode #page-reports .report-swipe-summary .summaryline{padding:5px 0;font-size:12px}
-body.report-swipe-mode #page-reports .report-swipe-trend-heading,
-body.report-swipe-mode #page-reports .report-swipe-donut-heading{margin:2px 3px 0;min-height:22px}
-body.report-swipe-mode #page-reports .report-swipe-trend-heading .report-subtitle,
-body.report-swipe-mode #page-reports .report-swipe-donut-heading .report-subtitle{display:none}
-body.report-swipe-mode #page-reports .report-swipe-trend{min-height:0;min-width:0;overflow:hidden;padding:9px 11px;gap:6px}
-body.report-swipe-mode #page-reports .report-swipe-trend .trend-legend{font-size:10px;gap:11px}
-body.report-swipe-mode #page-reports .report-swipe-trend .trend-list{gap:4px;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-body.report-swipe-mode #page-reports .report-swipe-trend .trend-month{grid-template-columns:43px minmax(0,1fr);gap:6px}
-body.report-swipe-mode #page-reports .report-swipe-trend .trend-month-label{font-size:9px}
-body.report-swipe-mode #page-reports .report-swipe-trend .trend-bars{gap:2px}
-body.report-swipe-mode #page-reports .report-swipe-trend .trend-bar-line{gap:5px}
-body.report-swipe-mode #page-reports .report-swipe-trend .trend-bar-track{height:6px}
-body.report-swipe-mode #page-reports .report-swipe-trend .trend-value{font-size:9px;min-width:57px}
-body.report-swipe-mode #page-reports .report-swipe-donut{min-height:0;min-width:0;overflow:hidden;padding:8px 10px;display:flex;align-items:center}
-body.report-swipe-mode #page-reports .report-donut-layout{width:100%;grid-template-columns:minmax(105px, .78fr) minmax(0,1.22fr);gap:8px}
-body.report-swipe-mode #page-reports .report-donut{width:min(100%,132px)}
-body.report-swipe-mode #page-reports .report-donut-center strong{font-size:12px}
-body.report-swipe-mode #page-reports .report-donut-center span{font-size:9px}
-body.report-swipe-mode #page-reports .report-legend{gap:5px;max-height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-body.report-swipe-mode #page-reports .report-legend-row{grid-template-columns:7px minmax(0,1fr) auto;gap:5px;font-size:9px}
-body.report-swipe-mode #page-reports .report-legend-swatch{width:7px;height:7px}
-body.report-swipe-mode #page-reports .report-legend-value{font-size:9px}
-body.report-swipe-mode #page-reports .report-swipe-omit{display:none!important}
-body.report-swipe-mode footer{display:none}
-@media(max-height:740px){
- body.report-swipe-mode #page-reports.active{grid-template-rows:auto auto auto minmax(96px,1fr) auto minmax(112px,.95fr);gap:4px}
- body.report-swipe-mode #page-reports .report-swipe-summary{padding:7px 10px}
- body.report-swipe-mode #page-reports .report-swipe-trend{padding:7px 9px}
- body.report-swipe-mode #page-reports .report-swipe-trend .trend-list{gap:2px}
- body.report-swipe-mode #page-reports .report-swipe-donut{padding:6px 8px}
- body.report-swipe-mode #page-reports .report-donut{width:min(100%,112px)}
+.report-swipe-back-hint{display:block;font-size:9px;color:#8e9aa5;margin-top:2px}
+html.home-report-mode{
+  width:100%;height:var(--mymoney-viewport-height);min-height:0;
+  overflow:hidden!important;overscroll-behavior:none;background:#000;
 }
-@media(max-width:380px){body.report-swipe-mode #page-reports .report-donut-layout{grid-template-columns:minmax(100px,.75fr) minmax(0,1.25fr)}}
-
-
-/* Finger-tracking swipe tuning for iOS */
-body.swipe-animating{touch-action:pan-y;}
-body.swipe-animating .swipe-transition-page{-webkit-transform:translateZ(0);transform:translateZ(0);contain:paint;}
-#page-home,#page-reports{-webkit-user-select:none;user-select:none;touch-action:auto;overscroll-behavior-x:contain;}
-#page-home button,#page-home input,#page-home select,#page-reports button,#page-reports input,#page-reports select{-webkit-user-select:auto;user-select:auto;}
-
-
-/* Two equal "paper pages": Overview and Reports share one viewport.
-   Horizontal paging belongs to the outer pager; vertical reading belongs
-   to each page itself. This keeps the two scroll directions independent. */
 body.home-report-mode{
-  height:100dvh!important;min-height:100dvh;overflow:hidden!important;
-  overscroll-behavior:none;background:#000;
+  position:fixed;top:0;left:0;right:0;width:100%;
+  height:var(--mymoney-viewport-height);min-height:0;max-height:var(--mymoney-viewport-height);
+  overflow:hidden!important;overscroll-behavior:none;background:#000;
 }
 body.home-report-mode .app{
-  height:100dvh!important;max-height:100dvh;min-height:0;
-  display:flex;flex-direction:column;overflow:hidden;
-  padding:10px 15px calc(8px + env(safe-area-inset-bottom));
+  display:grid;grid-template-rows:48px minmax(0,1fr);row-gap:9px;
+  width:100%;max-width:680px;height:var(--mymoney-viewport-height);
+  min-height:0;max-height:var(--mymoney-viewport-height);
+  margin:0 auto;padding:10px 15px calc(12px + env(safe-area-inset-bottom));
+  overflow:hidden;
 }
-body.home-report-mode .app>.top{flex:0 0 auto;margin:0 2px 10px;}
+body.home-report-mode .app>.top{
+  grid-row:1;align-self:start;display:flex;flex:initial;
+  width:100%;height:48px;min-height:48px;max-height:48px;
+  margin:0 2px;position:relative;z-index:40;
+}
 body.home-report-mode #homeReportPager{
-  position:relative;display:flex!important;flex:1 1 0%;
-  width:100%;min-width:0;min-height:0;height:0;margin:0;padding:0;
-  gap:0;align-items:stretch;
+  grid-row:2;position:relative;isolation:isolate;
+  display:flex!important;flex-flow:row nowrap;align-items:stretch;
+  width:100%;height:100%;min-width:0;min-height:0;max-height:100%;
+  margin:0;padding:0;gap:0;
   overflow-x:auto!important;overflow-y:hidden!important;
-  scroll-snap-type:x mandatory;scroll-snap-stop:always;
-  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x mandatory;scroll-snap-stop:always;scroll-padding:0;
+  scroll-behavior:auto!important;
   overscroll-behavior-x:contain;overscroll-behavior-y:none;
-  touch-action:pan-x pan-y;scrollbar-width:none;
+  touch-action:pan-x;overflow-anchor:none;
+  scrollbar-width:none;
 }
 body.home-report-mode #homeReportPager::-webkit-scrollbar{display:none}
 body.home-report-mode #homeReportPager>.page{
-  position:relative!important;display:block!important;flex:0 0 100%!important;
-  width:100%!important;max-width:none!important;min-width:100%!important;
-  height:100%!important;min-height:0!important;max-height:100%;
-  margin:0!important;padding:2px 1px calc(16px + env(safe-area-inset-bottom));
+  /* A sheet's box never changes while it is partially visible. */
+  position:relative!important;inset:auto!important;
+  display:block;flex:0 0 100%!important;flex-shrink:0!important;
+  width:100%!important;min-width:100%!important;max-width:100%!important;
+  height:100%!important;min-height:100%!important;max-height:100%!important;
+  margin:0!important;padding:3px 1px 4px!important;
   box-sizing:border-box;scroll-snap-align:start;scroll-snap-stop:always;
-  overflow-x:hidden!important;overflow-y:auto!important;
-  -webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;
-  touch-action:pan-x pan-y;contain:layout paint style;
+  overflow:clip!important;overscroll-behavior:none;overflow-anchor:none;
+  touch-action:pan-x;transform:none!important;transition:none!important;
 }
-/* Overview: retain the compact dashboard composition, but let this sheet
-   scroll vertically if the device is short or text is enlarged. */
-body.home-report-mode #page-home.active{
-  display:flex!important;flex-direction:column;gap:10px;
-  height:100%!important;min-height:0!important;overflow-y:auto!important;
+/* Sheet 1: keep the existing overview composition fixed inside its paper. */
+body.home-report-mode #homeReportPager>#page-home{
+  display:flex!important;flex-direction:column;align-items:stretch;
+  gap:9px;height:100%!important;min-height:0!important;overflow:clip!important;
 }
-body.home-report-mode #page-home .balance{flex:0 0 auto}
-body.home-report-mode #page-home .daily-chart-card{
-  flex:1 0 auto;min-height:300px;overflow:hidden;
+body.home-report-mode #page-home>:not(.balance):not(.daily-chart-card){display:none!important}
+body.home-report-mode #page-home .balance{
+  flex:0 0 auto;min-height:0;margin:0;padding:13px 15px;
 }
-/* Reports: natural document flow inside an equal-sized sheet. No compressed
-   grid rows, overlapping charts, or hidden report sections. */
-body.home-report-mode #page-reports,
-body.home-report-mode #page-reports.active{
-  display:block!important;height:100%!important;min-height:0!important;
-  overflow-y:auto!important;overflow-x:hidden!important;
-  padding:2px 1px calc(24px + env(safe-area-inset-bottom));
-}
-body.home-report-mode #page-reports .report-swipe-omit{display:block!important}
-body.home-report-mode #page-reports .report-swipe-back-hint{display:block}
-body.home-report-mode #page-reports .report-swipe-summary,
-body.home-report-mode #page-reports .report-swipe-trend,
-body.home-report-mode #page-reports .report-swipe-donut{
-  min-height:0;overflow:visible;position:relative;
-}
-body.home-report-mode #page-reports .report-swipe-trend .trend-list,
-body.home-report-mode #page-reports .report-legend{
-  max-height:none;overflow:visible;
-}
-body.home-report-mode footer{display:none!important}
-body.home-report-mode #page-home button,
-body.home-report-mode #page-home input,
-body.home-report-mode #page-home select,
-body.home-report-mode #page-reports button,
-body.home-report-mode #page-reports input,
-body.home-report-mode #page-reports select{touch-action:manipulation}
-@media(prefers-reduced-motion:reduce){body.home-report-mode #homeReportPager{scroll-behavior:auto}}
-
-
-
-/* MyMoney: fixed, equal-size horizontal pages (no vertical page scrolling).
-   The Overview and Reports are two sheets in one viewport; content is fitted
-   inside each sheet. Later we can redesign each sheet's information layout. */
-html:has(body.home-report-mode),
-html:has(body.home-report-mode) body{
-  width:100%;height:100%;min-height:100%;overflow:hidden!important;
-  overscroll-behavior:none;
-}
-body.home-report-mode{
-  position:fixed;inset:0;width:100%;height:100dvh;min-height:0;
-  overflow:hidden!important;overscroll-behavior:none;
-}
-body.home-report-mode .app{
-  width:100%;max-width:680px;height:100dvh;max-height:100dvh;min-height:0;
-  margin:0 auto;padding:10px 15px calc(76px + env(safe-area-inset-bottom));
-  display:flex;flex-direction:column;overflow:hidden;
-}
-body.home-report-mode .app>.top{flex:0 0 auto;margin:0 2px 9px;}
-body.home-report-mode #homeReportPager{
-  position:relative;display:flex!important;flex:1 1 0%;
-  width:100%;height:0;min-width:0;min-height:0;margin:0;padding:0;gap:0;
-  align-items:stretch;overflow-x:auto!important;overflow-y:hidden!important;
-  scroll-snap-type:x mandatory;scroll-snap-stop:always;
-  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
-  overscroll-behavior-x:contain;overscroll-behavior-y:none;
-  touch-action:pan-x;scrollbar-width:none;
-}
-body.home-report-mode #homeReportPager::-webkit-scrollbar{display:none}
-body.home-report-mode #homeReportPager>.page{
-  position:relative!important;display:block!important;flex:0 0 100%!important;
-  width:100%!important;max-width:none!important;min-width:100%!important;
-  height:100%!important;min-height:0!important;max-height:100%;
-  margin:0!important;padding:2px 1px 4px!important;box-sizing:border-box;
-  scroll-snap-align:start;scroll-snap-stop:always;
-  overflow:hidden!important;overscroll-behavior:none;touch-action:pan-x;
-  contain:layout paint style;
-}
-/* Sheet 1: Overview — exactly fills the pager's available viewport. */
-body.home-report-mode #page-home,
-body.home-report-mode #page-home.active{
-  display:flex!important;flex-direction:column;gap:9px;
-  height:100%!important;min-height:0!important;overflow:hidden!important;
-}
-body.home-report-mode #page-home .forecast-card,
-body.home-report-mode #page-home>.section,
-body.home-report-mode #page-home>.feature-grid,
-body.home-report-mode #page-home>.card:not(.daily-chart-card),
-body.home-report-mode #page-home>.list{display:none!important}
-body.home-report-mode #page-home .balance{flex:0 0 auto;min-height:0;padding:13px 15px}
 body.home-report-mode #page-home .big{font-size:clamp(27px,7vw,36px);margin:4px 0 9px}
 body.home-report-mode #page-home .stats{padding-top:8px;gap:9px}
+body.home-report-mode #page-home .stats div{gap:4px}
 body.home-report-mode #page-home .daily-chart-card{
-  flex:1 1 0%;min-height:0;height:0;margin:0;padding:11px;
-  display:flex;flex-direction:column;overflow:hidden;
+  display:flex;flex:1 1 0%;flex-direction:column;
+  width:100%;height:0;min-height:0;min-width:0;
+  margin:0;padding:11px;overflow:hidden;
 }
-body.home-report-mode #page-home .daily-chart-controls{margin-top:7px}
-body.home-report-mode #page-home .daily-chart-range{margin-top:5px}
-body.home-report-mode #page-home .daily-chart-presets{margin-top:5px;gap:4px}
-body.home-report-mode #page-home .daily-chart-total{margin-top:6px}
-body.home-report-mode #page-home .daily-chart-bars{flex:1 1 0%;height:0;min-height:35px;max-height:none;margin-top:6px;overflow:hidden}
-body.home-report-mode #page-home .daily-chart-selected{margin-top:5px;padding:6px;font-size:10px}
-body.home-report-mode #page-home .daily-chart-subtitle{margin-top:2px}
-/* Sheet 2: Reports — a fixed grid. Nothing inside this sheet can scroll. */
-body.home-report-mode #page-reports,
-body.home-report-mode #page-reports.active{
-  display:grid!important;height:100%!important;min-height:0!important;
-  grid-template-columns:minmax(0,1fr);
-  grid-template-rows:32px minmax(0,1.25fr) 27px minmax(0,.95fr) 27px minmax(0,.95fr);
-  gap:5px;align-content:stretch;overflow:hidden!important;
-  padding:2px 1px 4px!important;
+body.home-report-mode #page-home .daily-chart-header{flex:0 0 auto;min-width:0}
+body.home-report-mode #page-home .daily-chart-controls{flex:0 0 auto;margin-top:7px}
+body.home-report-mode #page-home .daily-chart-range{flex:0 0 auto;margin-top:5px;gap:6px}
+body.home-report-mode #page-home .daily-chart-range label{min-width:0;font-size:10px;gap:3px}
+body.home-report-mode #page-home .daily-chart-range input{height:34px;min-height:34px;line-height:34px;font-size:11px;padding:0 4px}
+body.home-report-mode #page-home .daily-chart-presets{flex:0 0 auto;flex-wrap:nowrap;gap:4px;margin-top:5px}
+body.home-report-mode #page-home .daily-chart-preset{min-width:0;padding:6px 5px;font-size:9px;white-space:nowrap}
+body.home-report-mode #page-home .daily-chart-total{flex:0 0 auto;margin-top:6px;gap:2px}
+body.home-report-mode #page-home .daily-chart-total span{font-size:10px}
+body.home-report-mode #page-home .daily-chart-total strong{font-size:20px;line-height:1.2}
+body.home-report-mode #page-home .daily-chart-bars{
+  flex:1 1 0%;width:100%;height:0;min-height:32px;max-height:none;
+  margin-top:6px;padding-top:5px;gap:2px;overflow:hidden;
 }
+body.home-report-mode #page-home .daily-chart-axis{flex:0 0 auto;margin-top:5px;font-size:9px;gap:2px}
+body.home-report-mode #page-home .daily-chart-selected{display:none!important}
+body.home-report-mode #page-home .daily-chart-subtitle{margin-top:2px;font-size:10px;line-height:1.35}
+/* Sheet 2: fixed report grid. Keep every report block in its own stable grid row. */
+body.home-report-mode #homeReportPager>#page-reports{
+  display:grid!important;grid-template-columns:minmax(0,1fr);
+  grid-template-rows:54px minmax(0,.95fr) 18px minmax(0,1fr) 18px minmax(0,1fr);
+  align-content:stretch;align-items:stretch;gap:5px;
+  width:100%;height:100%!important;min-width:0;min-height:0;
+  margin:0!important;padding:3px 1px 4px!important;overflow:clip!important;
+}
+body.home-report-mode #page-reports>*{min-width:0;min-height:0}
 body.home-report-mode #page-reports .report-swipe-heading{
-  min-height:0;margin:0 3px;align-self:center;overflow:hidden;
+  display:flex;min-height:0;margin:0 3px!important;align-self:stretch;overflow:hidden;
 }
 body.home-report-mode #page-reports .report-swipe-heading h2{font-size:17px;line-height:1.15}
-body.home-report-mode #page-reports .report-swipe-back-hint{display:block;font-size:9px;margin-top:1px}
 body.home-report-mode #page-reports .report-swipe-summary{
-  min-height:0;height:100%;margin:0;padding:7px 10px;gap:3px;
-  display:grid;grid-template-rows:auto auto auto auto;overflow:hidden;
+  display:grid;grid-template-rows:auto auto auto auto;align-content:stretch;
+  min-width:0;min-height:0;height:100%;margin:0;padding:7px 10px;gap:3px;overflow:hidden;
 }
+body.home-report-mode #page-reports .report-swipe-summary>div{min-width:0;min-height:0}
 body.home-report-mode #page-reports .report-swipe-summary label{font-size:9px;margin:0 0 2px}
-body.home-report-mode #page-reports .report-swipe-summary input{
-  width:100%;height:29px;min-height:29px;line-height:29px;font-size:11px;padding:0 7px;
-}
+body.home-report-mode #page-reports .report-swipe-summary input{height:29px;min-height:29px;line-height:29px;padding:0 7px;font-size:11px}
 body.home-report-mode #page-reports .report-swipe-summary .stats{padding-top:4px;gap:7px}
 body.home-report-mode #page-reports .report-swipe-summary .stats div{gap:1px}
 body.home-report-mode #page-reports .report-swipe-summary .stats .small{font-size:9px}
 body.home-report-mode #page-reports .report-swipe-summary .stats strong{font-size:12px;line-height:1.2}
-body.home-report-mode #page-reports .report-swipe-summary .summaryline{padding:3px 0;font-size:10px;line-height:1.2}
+body.home-report-mode #page-reports .report-swipe-summary .summaryline{padding:2px 0;font-size:10px;line-height:1.2}
 body.home-report-mode #page-reports .report-swipe-trend-heading,
 body.home-report-mode #page-reports .report-swipe-donut-heading{
   min-height:0;margin:0 3px;align-self:end;overflow:hidden;
@@ -858,64 +719,62 @@ body.home-report-mode #page-reports .report-swipe-donut-heading h2{font-size:12p
 body.home-report-mode #page-reports .report-swipe-trend-heading .report-subtitle,
 body.home-report-mode #page-reports .report-swipe-donut-heading .report-subtitle{display:none}
 body.home-report-mode #page-reports .report-swipe-trend{
-  min-width:0;min-height:0;height:100%;margin:0;padding:6px 8px;
-  display:grid;grid-template-rows:auto minmax(0,1fr);gap:3px;overflow:hidden;
+  display:grid;grid-template-rows:auto minmax(0,1fr);gap:3px;
+  width:100%;height:100%;min-width:0;min-height:0;margin:0;padding:6px 8px;overflow:hidden;
 }
 body.home-report-mode #page-reports .report-swipe-trend .trend-legend{font-size:9px;gap:9px;line-height:1}
 body.home-report-mode #page-reports .report-swipe-trend .trend-list{
   display:grid;grid-template-rows:repeat(6,minmax(0,1fr));gap:1px;
-  min-width:0;min-height:0;height:100%;overflow:hidden!important;
+  width:100%;height:100%;min-width:0;min-height:0;overflow:hidden;
 }
 body.home-report-mode #page-reports .report-swipe-trend .trend-month{grid-template-columns:37px minmax(0,1fr);gap:4px;min-height:0}
 body.home-report-mode #page-reports .report-swipe-trend .trend-month-label{font-size:8px;white-space:nowrap}
 body.home-report-mode #page-reports .report-swipe-trend .trend-bars{gap:1px;min-width:0}
 body.home-report-mode #page-reports .report-swipe-trend .trend-bar-line{gap:3px;min-width:0}
 body.home-report-mode #page-reports .report-swipe-trend .trend-bar-track{height:4px;min-width:0}
-body.home-report-mode #page-reports .report-swipe-trend .trend-value{font-size:8px;min-width:49px;line-height:1}
+body.home-report-mode #page-reports .report-swipe-trend .trend-value{min-width:49px;font-size:8px;line-height:1}
 body.home-report-mode #page-reports .report-swipe-donut{
-  min-width:0;min-height:0;height:100%;margin:0;padding:5px 7px;
-  display:flex;align-items:center;overflow:hidden;
+  display:flex;align-items:center;width:100%;height:100%;min-width:0;min-height:0;
+  margin:0;padding:5px 7px;overflow:hidden;
 }
 body.home-report-mode #page-reports .report-donut-layout{
-  width:100%;height:100%;min-width:0;min-height:0;
-  grid-template-columns:minmax(76px,.75fr) minmax(0,1.25fr);gap:7px;
+  display:grid;grid-template-columns:minmax(76px,.75fr) minmax(0,1.25fr);
+  align-items:center;width:100%;height:100%;min-width:0;min-height:0;gap:7px;
 }
-body.home-report-mode #page-reports .report-donut{
-  width:min(100%,clamp(76px,15vh,112px));max-width:100%;
-}
+/* Use stable small-viewport height instead of dynamic vh for the chart size. */
+body.home-report-mode #page-reports .report-donut{width:min(100%,clamp(76px,15svh,112px));max-width:100%}
 body.home-report-mode #page-reports .report-donut-center strong{font-size:10px}
 body.home-report-mode #page-reports .report-donut-center span{font-size:8px}
 body.home-report-mode #page-reports .report-legend{
-  display:grid;grid-auto-rows:minmax(0,1fr);gap:1px;min-width:0;min-height:0;
-  max-height:100%;overflow:hidden!important;
+  display:grid;grid-auto-rows:minmax(0,1fr);gap:2px;
+  min-width:0;min-height:0;max-height:100%;overflow:hidden;
 }
-body.home-report-mode #page-reports .report-legend-row{
-  grid-template-columns:6px minmax(0,1fr) auto;gap:4px;min-width:0;font-size:8px;line-height:1;
-}
+body.home-report-mode #page-reports .report-legend-row{grid-template-columns:6px minmax(0,1fr) auto;gap:4px;min-width:0;font-size:8px;line-height:1}
 body.home-report-mode #page-reports .report-legend-swatch{width:6px;height:6px}
 body.home-report-mode #page-reports .report-legend-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body.home-report-mode #page-reports .report-legend-value{font-size:8px;white-space:nowrap}
-/* Category breakdowns are intentionally left out of this first fixed-page
-   skeleton; they can be placed in a later report layout without scrolling. */
 body.home-report-mode #page-reports .report-swipe-omit{display:none!important}
-body.home-report-mode footer{display:none!important}
-body.home-report-mode .bottom-nav{z-index:30}
-@media(max-height:700px){
-  body.home-report-mode .app{padding-top:7px}
-  body.home-report-mode .app>.top{margin-bottom:6px}
+body.home-report-mode footer,body.home-report-mode .bottom-nav{display:none!important}
+@media(max-height:720px){
+  body.home-report-mode .app{padding-top:7px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+  body.home-report-mode .app>.top{margin-bottom:0}
   body.home-report-mode #page-home .balance{padding:10px 12px}
-  body.home-report-mode #page-home .daily-chart-card{padding:8px}
-  body.home-report-mode #page-reports,
-  body.home-report-mode #page-reports.active{grid-template-rows:28px minmax(0,1.3fr) 23px minmax(0,.9fr) 23px minmax(0,.9fr);gap:3px}
+  body.home-report-mode #page-home .daily-chart-card{padding:8px;gap:6px}
+  body.home-report-mode #page-home .daily-chart-range input{height:30px;min-height:30px;line-height:30px}
+  body.home-report-mode #homeReportPager>#page-reports{grid-template-rows:54px minmax(0,.95fr) 17px minmax(0,1fr) 17px minmax(0,1fr);gap:3px}
   body.home-report-mode #page-reports .report-swipe-summary{padding:5px 8px;gap:2px}
   body.home-report-mode #page-reports .report-swipe-summary input{height:25px;min-height:25px;line-height:25px}
+  body.home-report-mode #page-reports .report-swipe-trend{padding:5px 7px}
+  body.home-report-mode #page-reports .report-swipe-donut{padding:4px 6px}
 }
 @media(max-width:380px){
+  body.home-report-mode .app{padding-left:10px;padding-right:10px}
+  body.home-report-mode #page-home .daily-chart-preset{padding-left:4px;padding-right:4px;font-size:8px}
   body.home-report-mode #page-reports .report-donut-layout{grid-template-columns:minmax(70px,.7fr) minmax(0,1.3fr);gap:5px}
   body.home-report-mode #page-reports .report-swipe-trend .trend-month{grid-template-columns:33px minmax(0,1fr);gap:3px}
   body.home-report-mode #page-reports .report-swipe-trend .trend-value{min-width:43px;font-size:7px}
 }
-@media(prefers-reduced-motion:reduce){body.home-report-mode #homeReportPager{scroll-behavior:auto}}
+@media(prefers-reduced-motion:reduce){body.home-report-mode #homeReportPager{scroll-behavior:auto!important}}
 
 </style>
 </head>
@@ -1175,6 +1034,9 @@ body.home-report-mode .bottom-nav{z-index:30}
 setTimeout(() => {
 'use strict';
 const splashShownAt=Date.now();
+// The two-sheet workspace uses CSS small-viewport units (100svh) so browser
+// chrome expanding/collapsing cannot resize the sheets during a finger swipe.
+// Height is intentionally not rewritten from window.innerHeight by JavaScript.
 // Keep the app viewport stable on iOS Safari. Input controls are also 16px on mobile
 // to avoid Safari automatically zooming in when a field receives focus.
 ['gesturestart','gesturechange','gestureend'].forEach(type => {
@@ -1225,17 +1087,24 @@ function navigate(page){
   const menu=$('appMenu'),trigger=$('menuTrigger');
   if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');
   document.body.classList.toggle('home-report-mode',isHomeReport);
-  document.body.classList.toggle('dashboard-mode',isHomeReport);
-  document.body.classList.remove('report-swipe-mode');
+  document.documentElement.classList.toggle('home-report-mode',isHomeReport);
   const current=document.querySelector('.page.active');
   const currentPage=current?.id?.replace('page-','')||'home';
   if(currentPage)pageScrollPositions[currentPage]=window.scrollY||window.pageYOffset||0;
-  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
+  if(isHomeReport){
+    document.querySelectorAll('.page').forEach(p=>{
+      if(p.id!=='page-home'&&p.id!=='page-reports')p.classList.remove('active');
+    });
+    // Keep the original home page class stable; pager position controls which sheet is visible.
+    $('page-home')?.classList.add('active');
+  }else{
+    document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
+  }
   document.documentElement.classList.toggle('record-page',page==='record');
   document.body.classList.toggle('record-page',page==='record');
   if(page!=='record'){document.documentElement.classList.remove('slip-read');document.body.classList.remove('slip-read');}
   else{document.documentElement.classList.remove('slip-read');document.body.classList.remove('slip-read');}
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
+  if(!isHomeReport)document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
   if(page==='home')renderHome();
   if(page==='settings')renderSettings();
   if(page==='reports')renderReports();
@@ -1243,8 +1112,12 @@ function navigate(page){
   if(['planning','budget','bills','debts'].includes(page))renderPlanning();
   if(page==='goals')renderGoals();
   if(isHomeReport&&homeReportPager){
-    lastPagerPage=page;
-    homeReportPager.scrollTo({left:page==='reports'?homeReportPager.clientWidth:0,behavior:'smooth'});
+    const targetLeft=page==='reports'?homeReportPager.clientWidth:0;
+    if(Math.abs(homeReportPager.scrollLeft-targetLeft)<1){setPagerPage(page);}
+    else{
+      const reduceMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      homeReportPager.scrollTo({left:targetLeft,behavior:reduceMotion?'auto':'smooth'});
+    }
   }else{
     const isPlanningSubpage=['budget','bills','debts','goals'].includes(currentPage);
     const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
@@ -1272,29 +1145,44 @@ document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=
 })();
 
 const homeReportPager=$('homeReportPager');
-let pagerSettleTimer=null,lastPagerPage='home';
+let pagerFallbackTimer=0,lastPagerPage='home';
+window.__mymoneyPagerPage='home';
 function setPagerPage(page){
   if(page!=='home'&&page!=='reports')return;
   lastPagerPage=page;
-  $('page-home')?.classList.toggle('active',page==='home');
-  $('page-reports')?.classList.toggle('active',page==='reports');
-  document.body.classList.add('home-report-mode','dashboard-mode');
-  document.body.classList.remove('report-swipe-mode');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
+  window.__mymoneyPagerPage=page;
+  document.querySelectorAll('.nav-btn').forEach(button=>{
+    button.classList.toggle('active',button.dataset.go===page);
+  });
 }
 function settleNativePager(){
   if(!homeReportPager)return;
-  const width=Math.max(1,homeReportPager.clientWidth);
-  const page=homeReportPager.scrollLeft>=width*.5?'reports':'home';
-  setPagerPage(page,true);
+  const width=homeReportPager.clientWidth;
+  if(!width)return;
+  const page=homeReportPager.scrollLeft>=width/2?'reports':'home';
+  setPagerPage(page);
 }
 if(homeReportPager){
-  homeReportPager.addEventListener('scroll',()=>{
-    clearTimeout(pagerSettleTimer);
-    pagerSettleTimer=setTimeout(settleNativePager,140);
-  },{passive:true});
-  homeReportPager.addEventListener('scrollend',settleNativePager,{passive:true});
+  const supportsScrollEnd='onscrollend' in homeReportPager;
+  if(supportsScrollEnd){
+    // Modern Safari/iOS: update state only after native scrolling and snap finish.
+    homeReportPager.addEventListener('scrollend',settleNativePager,{passive:true});
+  }else{
+    // Compatibility fallback for browsers without scrollend; do not run alongside it.
+    homeReportPager.addEventListener('scroll',()=>{
+      window.clearTimeout(pagerFallbackTimer);
+      pagerFallbackTimer=window.setTimeout(settleNativePager,180);
+    },{passive:true});
+  }
 }
+// Re-align only when device orientation changes; browser toolbar movement does not
+// rewrite the sheet height or its internal layout.
+window.addEventListener('orientationchange',()=>{
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(!homeReportPager)return;
+    homeReportPager.scrollLeft=window.__mymoneyPagerPage==='reports'?homeReportPager.clientWidth:0;
+  }));
+},{passive:true});
 
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',cats[t]||[]);fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ'}
@@ -1490,7 +1378,7 @@ $('exportJson').addEventListener('click',exportJSON);$('headerBackup').addEventL
 $('restoreAutoBackup').addEventListener('click',()=>{let data;try{data=JSON.parse(localStorage.getItem(AUTO_BACKUP_KEY)||'null')}catch(e){}if(!data){alert('ยังไม่มีข้อมูลสำรองอัตโนมัติในเบราว์เซอร์นี้ค่ะ');return}if(!confirm(`กู้คืนข้อมูลสำรองเมื่อ ${data.snapshotAt||'ไม่ทราบเวลา'} ใช่ไหมคะ? ข้อมูลปัจจุบันจะถูกแทนที่ แต่จะเก็บสำรองชุดปัจจุบันก่อน`))return;try{snapshotBeforeChange();restoreSnapshotData(data);$('backupMessage').textContent='กู้คืนข้อมูลสำรองอัตโนมัติเรียบร้อยแล้ว';alert('กู้คืนข้อมูลสำเร็จค่ะ')}catch(err){alert('กู้คืนไม่สำเร็จ: '+err.message)}});
 $('importFile').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.transactions)||!Array.isArray(data.accounts)||!data.categories||!Array.isArray(data.categories.Expense)||!Array.isArray(data.categories.Income))throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');const valid=data.transactions.every(t=>t&&['Income','Expense','Transfer'].includes(t.type)&&Number.isFinite(Number(t.amount))&&Number(t.amount)>0&&t.date&&t.title);if(!valid)throw new Error('พบรายการที่ข้อมูลไม่ครบหรือไม่ถูกต้อง');if(!confirm(`นำเข้า ${data.transactions.length} รายการ และแทนที่รายการ/บัญชี/หมวดหมู่ปัจจุบันใช่ไหมคะ? ระบบจะเก็บข้อมูลชุดก่อนหน้าไว้ในสำรองอัตโนมัติก่อน`))return;snapshotBeforeChange();restoreSnapshotData(data);$('backupMessage').textContent='นำเข้าข้อมูลเรียบร้อยแล้ว';alert('นำเข้าข้อมูลสำเร็จค่ะ')}catch(err){alert('นำเข้าไม่สำเร็จ: '+err.message)}finally{e.target.value=''}});
 window.addEventListener('storage',e=>{if([TX_KEY,ACC_KEY,CAT_KEY,BUDGET_KEY,BILL_KEY,DEBT_KEY,GOAL_KEY].includes(e.key)){const reload=confirm('พบข้อมูล MyMoney ถูกเปลี่ยนจากแท็บหรือหน้าต่างอื่น ต้องการโหลดข้อมูลล่าสุดไหมคะ?');if(reload)location.reload()}});
-document.body.classList.add('home-report-mode','dashboard-mode');if(homeReportPager)homeReportPager.scrollLeft=0;lastPagerPage='home';$('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
+document.documentElement.classList.add('home-report-mode');document.body.classList.add('home-report-mode');$('page-home').classList.add('active');$('page-reports').classList.remove('active');if(homeReportPager)homeReportPager.scrollLeft=0;setPagerPage('home');$('date').value=localDate();$('reportMonth').value=currentMonth();$('budgetMonth').value=currentMonth();setType('Expense');setDailyChartRange('month');render();renderPlanning();renderGoals();
 $('langTh').addEventListener('click',()=>setLanguage('th'));
 $('langEn').addEventListener('click',()=>setLanguage('en'));
 if(appLang==='th'){$('langTh').classList.remove('secondary');$('langTh').classList.add('primary');$('langEn').classList.remove('primary');$('langEn').classList.add('secondary');}else{$('langEn').classList.remove('secondary');$('langEn').classList.add('primary');$('langTh').classList.remove('primary');$('langTh').classList.add('secondary');}
