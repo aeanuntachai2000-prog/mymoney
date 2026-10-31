@@ -758,6 +758,165 @@ body.home-report-mode #page-reports input,
 body.home-report-mode #page-reports select{touch-action:manipulation}
 @media(prefers-reduced-motion:reduce){body.home-report-mode #homeReportPager{scroll-behavior:auto}}
 
+
+
+/* MyMoney: fixed, equal-size horizontal pages (no vertical page scrolling).
+   The Overview and Reports are two sheets in one viewport; content is fitted
+   inside each sheet. Later we can redesign each sheet's information layout. */
+html:has(body.home-report-mode),
+html:has(body.home-report-mode) body{
+  width:100%;height:100%;min-height:100%;overflow:hidden!important;
+  overscroll-behavior:none;
+}
+body.home-report-mode{
+  position:fixed;inset:0;width:100%;height:100dvh;min-height:0;
+  overflow:hidden!important;overscroll-behavior:none;
+}
+body.home-report-mode .app{
+  width:100%;max-width:680px;height:100dvh;max-height:100dvh;min-height:0;
+  margin:0 auto;padding:10px 15px calc(76px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;overflow:hidden;
+}
+body.home-report-mode .app>.top{flex:0 0 auto;margin:0 2px 9px;}
+body.home-report-mode #homeReportPager{
+  position:relative;display:flex!important;flex:1 1 0%;
+  width:100%;height:0;min-width:0;min-height:0;margin:0;padding:0;gap:0;
+  align-items:stretch;overflow-x:auto!important;overflow-y:hidden!important;
+  scroll-snap-type:x mandatory;scroll-snap-stop:always;
+  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;overscroll-behavior-y:none;
+  touch-action:pan-x;scrollbar-width:none;
+}
+body.home-report-mode #homeReportPager::-webkit-scrollbar{display:none}
+body.home-report-mode #homeReportPager>.page{
+  position:relative!important;display:block!important;flex:0 0 100%!important;
+  width:100%!important;max-width:none!important;min-width:100%!important;
+  height:100%!important;min-height:0!important;max-height:100%;
+  margin:0!important;padding:2px 1px 4px!important;box-sizing:border-box;
+  scroll-snap-align:start;scroll-snap-stop:always;
+  overflow:hidden!important;overscroll-behavior:none;touch-action:pan-x;
+  contain:layout paint style;
+}
+/* Sheet 1: Overview — exactly fills the pager's available viewport. */
+body.home-report-mode #page-home,
+body.home-report-mode #page-home.active{
+  display:flex!important;flex-direction:column;gap:9px;
+  height:100%!important;min-height:0!important;overflow:hidden!important;
+}
+body.home-report-mode #page-home .forecast-card,
+body.home-report-mode #page-home>.section,
+body.home-report-mode #page-home>.feature-grid,
+body.home-report-mode #page-home>.card:not(.daily-chart-card),
+body.home-report-mode #page-home>.list{display:none!important}
+body.home-report-mode #page-home .balance{flex:0 0 auto;min-height:0;padding:13px 15px}
+body.home-report-mode #page-home .big{font-size:clamp(27px,7vw,36px);margin:4px 0 9px}
+body.home-report-mode #page-home .stats{padding-top:8px;gap:9px}
+body.home-report-mode #page-home .daily-chart-card{
+  flex:1 1 0%;min-height:0;height:0;margin:0;padding:11px;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+body.home-report-mode #page-home .daily-chart-controls{margin-top:7px}
+body.home-report-mode #page-home .daily-chart-range{margin-top:5px}
+body.home-report-mode #page-home .daily-chart-presets{margin-top:5px;gap:4px}
+body.home-report-mode #page-home .daily-chart-total{margin-top:6px}
+body.home-report-mode #page-home .daily-chart-bars{flex:1 1 0%;height:0;min-height:35px;max-height:none;margin-top:6px;overflow:hidden}
+body.home-report-mode #page-home .daily-chart-selected{margin-top:5px;padding:6px;font-size:10px}
+body.home-report-mode #page-home .daily-chart-subtitle{margin-top:2px}
+/* Sheet 2: Reports — a fixed grid. Nothing inside this sheet can scroll. */
+body.home-report-mode #page-reports,
+body.home-report-mode #page-reports.active{
+  display:grid!important;height:100%!important;min-height:0!important;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:32px minmax(0,1.25fr) 27px minmax(0,.95fr) 27px minmax(0,.95fr);
+  gap:5px;align-content:stretch;overflow:hidden!important;
+  padding:2px 1px 4px!important;
+}
+body.home-report-mode #page-reports .report-swipe-heading{
+  min-height:0;margin:0 3px;align-self:center;overflow:hidden;
+}
+body.home-report-mode #page-reports .report-swipe-heading h2{font-size:17px;line-height:1.15}
+body.home-report-mode #page-reports .report-swipe-back-hint{display:block;font-size:9px;margin-top:1px}
+body.home-report-mode #page-reports .report-swipe-summary{
+  min-height:0;height:100%;margin:0;padding:7px 10px;gap:3px;
+  display:grid;grid-template-rows:auto auto auto auto;overflow:hidden;
+}
+body.home-report-mode #page-reports .report-swipe-summary label{font-size:9px;margin:0 0 2px}
+body.home-report-mode #page-reports .report-swipe-summary input{
+  width:100%;height:29px;min-height:29px;line-height:29px;font-size:11px;padding:0 7px;
+}
+body.home-report-mode #page-reports .report-swipe-summary .stats{padding-top:4px;gap:7px}
+body.home-report-mode #page-reports .report-swipe-summary .stats div{gap:1px}
+body.home-report-mode #page-reports .report-swipe-summary .stats .small{font-size:9px}
+body.home-report-mode #page-reports .report-swipe-summary .stats strong{font-size:12px;line-height:1.2}
+body.home-report-mode #page-reports .report-swipe-summary .summaryline{padding:3px 0;font-size:10px;line-height:1.2}
+body.home-report-mode #page-reports .report-swipe-trend-heading,
+body.home-report-mode #page-reports .report-swipe-donut-heading{
+  min-height:0;margin:0 3px;align-self:end;overflow:hidden;
+}
+body.home-report-mode #page-reports .report-swipe-trend-heading h2,
+body.home-report-mode #page-reports .report-swipe-donut-heading h2{font-size:12px;line-height:1.2}
+body.home-report-mode #page-reports .report-swipe-trend-heading .report-subtitle,
+body.home-report-mode #page-reports .report-swipe-donut-heading .report-subtitle{display:none}
+body.home-report-mode #page-reports .report-swipe-trend{
+  min-width:0;min-height:0;height:100%;margin:0;padding:6px 8px;
+  display:grid;grid-template-rows:auto minmax(0,1fr);gap:3px;overflow:hidden;
+}
+body.home-report-mode #page-reports .report-swipe-trend .trend-legend{font-size:9px;gap:9px;line-height:1}
+body.home-report-mode #page-reports .report-swipe-trend .trend-list{
+  display:grid;grid-template-rows:repeat(6,minmax(0,1fr));gap:1px;
+  min-width:0;min-height:0;height:100%;overflow:hidden!important;
+}
+body.home-report-mode #page-reports .report-swipe-trend .trend-month{grid-template-columns:37px minmax(0,1fr);gap:4px;min-height:0}
+body.home-report-mode #page-reports .report-swipe-trend .trend-month-label{font-size:8px;white-space:nowrap}
+body.home-report-mode #page-reports .report-swipe-trend .trend-bars{gap:1px;min-width:0}
+body.home-report-mode #page-reports .report-swipe-trend .trend-bar-line{gap:3px;min-width:0}
+body.home-report-mode #page-reports .report-swipe-trend .trend-bar-track{height:4px;min-width:0}
+body.home-report-mode #page-reports .report-swipe-trend .trend-value{font-size:8px;min-width:49px;line-height:1}
+body.home-report-mode #page-reports .report-swipe-donut{
+  min-width:0;min-height:0;height:100%;margin:0;padding:5px 7px;
+  display:flex;align-items:center;overflow:hidden;
+}
+body.home-report-mode #page-reports .report-donut-layout{
+  width:100%;height:100%;min-width:0;min-height:0;
+  grid-template-columns:minmax(76px,.75fr) minmax(0,1.25fr);gap:7px;
+}
+body.home-report-mode #page-reports .report-donut{
+  width:min(100%,clamp(76px,15vh,112px));max-width:100%;
+}
+body.home-report-mode #page-reports .report-donut-center strong{font-size:10px}
+body.home-report-mode #page-reports .report-donut-center span{font-size:8px}
+body.home-report-mode #page-reports .report-legend{
+  display:grid;grid-auto-rows:minmax(0,1fr);gap:1px;min-width:0;min-height:0;
+  max-height:100%;overflow:hidden!important;
+}
+body.home-report-mode #page-reports .report-legend-row{
+  grid-template-columns:6px minmax(0,1fr) auto;gap:4px;min-width:0;font-size:8px;line-height:1;
+}
+body.home-report-mode #page-reports .report-legend-swatch{width:6px;height:6px}
+body.home-report-mode #page-reports .report-legend-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.home-report-mode #page-reports .report-legend-value{font-size:8px;white-space:nowrap}
+/* Category breakdowns are intentionally left out of this first fixed-page
+   skeleton; they can be placed in a later report layout without scrolling. */
+body.home-report-mode #page-reports .report-swipe-omit{display:none!important}
+body.home-report-mode footer{display:none!important}
+body.home-report-mode .bottom-nav{z-index:30}
+@media(max-height:700px){
+  body.home-report-mode .app{padding-top:7px}
+  body.home-report-mode .app>.top{margin-bottom:6px}
+  body.home-report-mode #page-home .balance{padding:10px 12px}
+  body.home-report-mode #page-home .daily-chart-card{padding:8px}
+  body.home-report-mode #page-reports,
+  body.home-report-mode #page-reports.active{grid-template-rows:28px minmax(0,1.3fr) 23px minmax(0,.9fr) 23px minmax(0,.9fr);gap:3px}
+  body.home-report-mode #page-reports .report-swipe-summary{padding:5px 8px;gap:2px}
+  body.home-report-mode #page-reports .report-swipe-summary input{height:25px;min-height:25px;line-height:25px}
+}
+@media(max-width:380px){
+  body.home-report-mode #page-reports .report-donut-layout{grid-template-columns:minmax(70px,.7fr) minmax(0,1.3fr);gap:5px}
+  body.home-report-mode #page-reports .report-swipe-trend .trend-month{grid-template-columns:33px minmax(0,1fr);gap:3px}
+  body.home-report-mode #page-reports .report-swipe-trend .trend-value{min-width:43px;font-size:7px}
+}
+@media(prefers-reduced-motion:reduce){body.home-report-mode #homeReportPager{scroll-behavior:auto}}
+
 </style>
 </head>
 <body style="background:#000000">
