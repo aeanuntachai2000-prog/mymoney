@@ -626,9 +626,11 @@ body.daily-sheet-open{overflow:hidden}
 .dashboard-swipe-hint{font-size:10px;color:#7f8b95;white-space:nowrap}
 .report-swipe-back-hint{display:none;font-size:10px;color:#8e9aa5;margin-top:3px}
 body.report-swipe-mode{overflow:hidden;overscroll-behavior:none}
-/* Temporary fixed layers let the two screens slide past each other like an iOS page transition. */
+/* Both swipe pages use the exact same measured viewport below the app header.
+   This prevents the page layers from appearing wider/taller than the real content. */
 body.swipe-animating{overflow:hidden!important;overscroll-behavior:none}
-body.swipe-animating .swipe-transition-page{display:block!important;position:fixed;z-index:15;top:0;bottom:calc(76px + env(safe-area-inset-bottom));left:50%;width:min(100%,680px);height:auto!important;min-height:0;margin:0;padding:18px 15px 10px;overflow:hidden;background:#000;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+body.swipe-animating .swipe-transition-page{display:block!important;position:fixed;z-index:15;top:var(--swipe-top,0px);bottom:var(--swipe-bottom,76px);left:var(--swipe-left,0px);width:var(--swipe-width,100%);height:auto!important;min-height:0;margin:0;padding:0;overflow:hidden;background:#000;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+body.swipe-animating .swipe-transition-page#page-home{display:flex!important;flex-direction:column;}
 body.swipe-animating .swipe-transition-page#page-reports{display:grid!important;}
 @media(prefers-reduced-motion:reduce){body.swipe-animating .swipe-transition-page{will-change:auto}}
 body.report-swipe-mode .app{height:100dvh;overflow:hidden;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
@@ -1018,7 +1020,7 @@ $('quickAdd')?.addEventListener('click',()=>navigate('record'));
 document.addEventListener('click',e=>{if(appMenu&&!appMenu.hidden&&!e.target.closest('#appMenu')&&!e.target.closest('#menuTrigger')){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('dailyChartSheet')&&!$('dailyChartSheet').hidden){closeDailyChartSheet();return}if(e.key==='Escape'&&appMenu&&!appMenu.hidden){appMenu.hidden=true;menuTrigger?.setAttribute('aria-expanded','false');}});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
-// iPhone-like interactive swipe: the page follows the finger, then settles with momentum.
+// iPhone-like interactive swipe: both pages share the exact same measured content viewport.
 let swipeTransitionBusy=false,swipeGesture=null;
 function swipePages(direction){return direction==='forward'?[$('page-home'),$('page-reports')]:[$('page-reports'),$('page-home')];}
 function prepareSwipeDrag(direction){
@@ -1030,21 +1032,31 @@ function prepareSwipeDrag(direction){
     document.body.classList.add('dashboard-mode');
     renderHome();
   }
+  // Make both pages measurable in normal document flow before switching them to fixed layers.
+  from.classList.add('active');to.classList.add('active');
+  const rect=from.getBoundingClientRect();
+  const nav=document.querySelector('.bottom-nav');
+  const navTop=nav?nav.getBoundingClientRect().top:window.innerHeight-76;
+  const bounds={left:rect.left,width:rect.width,top:rect.top,bottom:Math.max(0,window.innerHeight-navTop)};
+  document.body.style.setProperty('--swipe-left',`${bounds.left}px`);
+  document.body.style.setProperty('--swipe-width',`${bounds.width}px`);
+  document.body.style.setProperty('--swipe-top',`${bounds.top}px`);
+  document.body.style.setProperty('--swipe-bottom',`${bounds.bottom}px`);
   document.body.classList.add('swipe-animating');
-  from.classList.add('active','swipe-transition-page');
-  to.classList.add('active','swipe-transition-page');
+  from.classList.add('swipe-transition-page');to.classList.add('swipe-transition-page');
   from.style.zIndex='15';to.style.zIndex='16';
-  const width=Math.max(1,window.innerWidth);
+  const width=Math.max(1,bounds.width);
   const start=direction==='forward'?width:-width;
-  from.style.transform='translate3d(-50%,0,0)';
-  to.style.transform=`translate3d(calc(-50% + ${start}px),0,0)`;
-  return {from,to,direction,width,start};
+  from.style.transform='translate3d(0,0,0)';
+  to.style.transform=`translate3d(${start}px,0,0)`;
+  return {from,to,direction,width,start,dx:0};
 }
 function cleanSwipePages(from,to,direction,commit){
   from.classList.remove('swipe-transition-page');to.classList.remove('swipe-transition-page');
   from.style.transform='';to.style.transform='';from.style.zIndex='';to.style.zIndex='';
   from.classList.toggle('active',!commit);to.classList.toggle('active',commit);
   document.body.classList.remove('swipe-animating');
+  ['--swipe-left','--swipe-width','--swipe-top','--swipe-bottom'].forEach(name=>document.body.style.removeProperty(name));
   if(commit){
     if(direction==='forward')document.body.classList.remove('dashboard-mode');
     else document.body.classList.remove('report-swipe-mode');
@@ -1063,8 +1075,8 @@ function settleSwipeGesture(commit){
   const endIn=commit?0:g.start;
   const duration=commit?Math.max(170,Math.min(300,300*(1-Math.min(1,Math.abs(g.dx)/g.width)))):190;
   const easing=commit?'cubic-bezier(.22,.8,.25,1)':'cubic-bezier(.32,.72,.25,1)';
-  const out=g.from.animate([{transform:g.from.style.transform},{transform:`translate3d(calc(-50% + ${endOut}px),0,0)`}],{duration,easing,fill:'forwards'});
-  const incoming=g.to.animate([{transform:g.to.style.transform},{transform:`translate3d(calc(-50% + ${endIn}px),0,0)`}],{duration,easing,fill:'forwards'});
+  const out=g.from.animate([{transform:g.from.style.transform},{transform:`translate3d(${endOut}px,0,0)`}],{duration,easing,fill:'forwards'});
+  const incoming=g.to.animate([{transform:g.to.style.transform},{transform:`translate3d(${endIn}px,0,0)`}],{duration,easing,fill:'forwards'});
   Promise.all([out.finished,incoming.finished]).catch(()=>{}).finally(()=>{out.cancel();incoming.cancel();cleanSwipePages(g.from,g.to,g.direction,commit);});
 }
 function attachReportSwipe(element,fromPage){
@@ -1093,15 +1105,15 @@ function attachReportSwipe(element,fromPage){
       const width=gesture.width;
       const clamped=direction==='forward'?Math.max(-width,Math.min(0,dx)):Math.min(width,Math.max(0,dx));
       gesture.dx=clamped;
-      gesture.from.style.transform=`translate3d(calc(-50% + ${clamped}px),0,0)`;
-      gesture.to.style.transform=`translate3d(calc(-50% + ${gesture.start+clamped}px),0,0)`;
+      gesture.from.style.transform=`translate3d(${clamped}px,0,0)`;
+      gesture.to.style.transform=`translate3d(${gesture.start+clamped}px,0,0)`;
     }
   },{passive:false});
-  element.addEventListener('touchend',event=>{
+  element.addEventListener('touchend',()=>{
     if(!active)return;active=false;
     if(!gesture)return;
     const elapsed=Math.max(1,performance.now()-startTime),distance=Math.abs(gesture.dx||0),velocity=distance/elapsed;
-    const commit=distance>gesture.width*.22|| (distance>18&&velocity>.32);
+    const commit=distance>gesture.width*.22||(distance>18&&velocity>.32);
     swipeTransitionBusy=true;swipeGesture=gesture;settleSwipeGesture(commit);
     if(direction==='forward'&&commit){const menu=$('appMenu'),trigger=$('menuTrigger');if(menu)menu.hidden=true;if(trigger)trigger.setAttribute('aria-expanded','false');}
     direction=null;gesture=null;
