@@ -1147,7 +1147,7 @@ function renderAccountingReports(){const el=$('accountingReports');if(!el)return
        if(r.credit===name){const t=accountTypeOfName(name);if(t==='Asset'||t==='Expense')bal-=amt;else bal+=amt;}
      });
    }
-   html+=`<div style="margin:6px 0"><strong>${esc(name)} (${ACCOUNT_TYPES[accountTypeOfName(name)]||''})</strong><div class="small">ยอดยกมา: ${money(bal)}</div><div style="overflow:auto"><table style="width:100%;font-size:11px;border-collapse:collapse"><thead><tr><th>วันที่</th><th>รายการ</th><th>เดบิต</th><th>เครดิต</th><th>ยอดคงเหลือ</th></tr></thead><tbody>`;
+   html+=`<div style="margin:6px 0"><strong>${esc(name)} (${ACCOUNT_TYPES[accountTypeOfName(name)]||''})</strong><div class="small">ยอดยกมา: ${money(bal)}</div><div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table style="width:100%;min-width:420px;font-size:11px;border-collapse:collapse"><thead><tr><th>วันที่</th><th>รายการ</th><th>เดบิต</th><th>เครดิต</th><th>ยอดคงเหลือ</th></tr></thead><tbody>`;
    periodEntries.filter(r=>r.debit===name||r.credit===name).forEach(e=>{
      const amt=Number(e.amount)||0;
      const isDebit=e.debit===name;
