@@ -461,10 +461,7 @@ body.record-page .app{min-height:100dvh;height:100%!important;overflow:hidden!im
 /* After reading a slip (or opening the slip reader): re-enable vertical scrolling */
 html.record-page.slip-read,body.record-page.slip-read{overflow-y:auto!important;height:auto!important;min-height:100%;}
 body.record-page.slip-read .app{height:auto!important;overflow:visible!important;}
-body.record-page .app{padding-top:8px;padding-bottom:60px}
-body.record-page .top{margin:0 3px 6px}
-body.record-page .brand-icon{width:40px;height:40px;border-radius:12px}
-body.record-page h1{font-size:22px}
+body.record-page .app{padding-top:12px;padding-bottom:60px}
 #page-record .section{margin:4px 3px 3px}
 #page-record .section h2{font-size:16px}
 #page-record .eyebrow{margin:0 0 2px}
@@ -697,7 +694,7 @@ html,body{overscroll-behavior:none}
 .dropdown-item.active .check{opacity:1}
 .dropdown-search{padding:6px}
 .dropdown-search input{padding:7px 9px;font-size:12px}
-.fab{position:fixed;z-index:30;width:54px;height:54px;border-radius:50%;background:rgba(16,185,129,0.45)!important;background-color:rgba(16,185,129,0.45)!important;background-image:none!important;color:#FFFFFF;border:1px solid rgba(255,255,255,0.30);font-size:28px;font-weight:700;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,0.20);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s,box-shadow .15s,filter .15s;touch-action:none;cursor:grab}.fab:active{transform:scale(.92)}.fab.dragging{cursor:grabbing;transform:scale(1.06);filter:brightness(1.12);box-shadow:0 12px 32px rgba(0,0,0,0.34)}@supports not (backdrop-filter: blur(12px)){.fab{background:rgba(16,185,129,0.72)!important}}
+.fab{position:fixed;z-index:30;width:54px;height:54px;border-radius:50%;background:rgba(16,185,129,0.28)!important;background-color:rgba(16,185,129,0.28)!important;background-image:none!important;color:#FFFFFF;border:1px solid rgba(255,255,255,0.30);font-size:28px;font-weight:700;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,0.20);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s,box-shadow .15s,filter .15s;touch-action:none;cursor:grab}.fab:active{transform:scale(.92)}.fab.dragging{cursor:grabbing;transform:scale(1.06);filter:brightness(1.12);box-shadow:0 12px 32px rgba(0,0,0,0.34)}@supports not (backdrop-filter: blur(12px)){.fab{background:rgba(16,185,129,0.60)!important}}
 .fab:active{transform:scale(.94)}
 .fab-menu{position:fixed;right:16px;bottom:calc(140px + env(safe-area-inset-bottom));z-index:29;display:grid;gap:10px;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .15s,transform .15s}
 .fab-menu.show{opacity:1;pointer-events:auto;transform:translateY(0)}
@@ -1314,7 +1311,36 @@ function enhanceSelect(selectId){
 }
 
 
-function positionFabMenu(){var fab=document.querySelector('.fab');var menu=document.querySelector('.fab-menu');if(!fab||!menu)return;if(!menu.classList.contains('show'))menu.classList.add('show');var fr=fab.getBoundingClientRect();var mr=menu.getBoundingClientRect();var margin=10;var left,top;if(fr.left+mr.width>window.innerWidth-margin){left=window.innerWidth-mr.width-margin;}else{left=Math.max(margin,fr.left);}if(fr.top-mr.height-8>=margin){top=fr.top-mr.height-8;}else{top=fr.bottom+8;if(top+mr.height>window.innerHeight-margin){top=Math.max(margin,window.innerHeight-mr.height-margin);}}left=Math.max(margin,Math.min(left,window.innerWidth-mr.width-margin));top=Math.max(margin,Math.min(top,window.innerHeight-mr.height-margin));menu.style.left=left+'px';menu.style.top=top+'px';menu.style.right='auto';menu.style.bottom='auto';}function toggleFAB(){var menu=document.querySelector('.fab-menu');if(!menu)return;if(menu.classList.contains('show')){menu.classList.remove('show');}else{menu.style.visibility='hidden';menu.classList.add('show');positionFabMenu();menu.style.visibility='';}}
+function positionFabMenu(){
+  var fab=document.querySelector('.fab');
+  var menu=document.querySelector('.fab-menu');
+  if(!fab||!menu) return;
+  if(!menu.classList.contains('show')) menu.classList.add('show');
+  var fr=fab.getBoundingClientRect();
+  var mr=menu.getBoundingClientRect();
+  var gap=14;
+  var margin=10;
+  var left, top;
+  // choose side with enough space
+  if(fr.right + gap + mr.width <= window.innerWidth - margin){
+    left = fr.right + gap;
+  } else if(fr.left - gap - mr.width >= margin){
+    left = fr.left - gap - mr.width;
+  } else {
+    // fallback: clamp to right side
+    left = Math.max(margin, window.innerWidth - mr.width - margin);
+  }
+  // vertically center menu with FAB
+  top = fr.top + (fr.height - mr.height) / 2;
+  top = Math.max(margin, Math.min(top, window.innerHeight - mr.height - margin));
+  left = Math.max(margin, Math.min(left, window.innerWidth - mr.width - margin));
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+  menu.style.right = 'auto';
+  menu.style.bottom = 'auto';
+}
+
+function toggleFAB(){var menu=document.querySelector('.fab-menu');if(!menu)return;if(menu.classList.contains('show')){menu.classList.remove('show');}else{menu.style.visibility='hidden';menu.classList.add('show');positionFabMenu();menu.style.visibility='';}}
 function initFAB(){
   try{
     if(document.querySelector('.fab')) return;
