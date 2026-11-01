@@ -868,7 +868,7 @@ body.record-page .brand-copy h1{font-size:20px}
         <p class="small">ประมวลผลรูปในเบราว์เซอร์ รูปสลิปไม่ถูกส่งไปยังเซิร์ฟเวอร์ OCR โดยโค้ดนี้ แต่ระบบต้องดาวน์โหลดตัวอ่านและชุดภาษาเมื่อใช้ครั้งแรก ยอดเงินและวันที่อาจอ่านผิด กรุณาตรวจสอบก่อนบันทึก</p>
       </div>
     </section>
-    <div class="actions"><button class="active" data-type="Expense">− รายจ่าย</button><button data-type="Income">＋ รายรับ</button><button data-type="Transfer">⇄ โอนเงิน</button></div>
+    <div class="actions"><button class="active" data-type="Expense">− รายจ่าย</button><button data-type="Income">＋ รายรับ</button><button data-type="Transfer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle"><path d="M16 3l4 4-4 4"/><path d="M20 7H4"/><path d="M8 21l-4-4 4-4"/><path d="M4 17h16"/></svg> โอนเงิน</button></div>
     <section class="card">
       <form id="form" class="stack">
         <div><label for="amount">จำนวนเงิน (บาท) *</label><input id="amount" class="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required></div>
@@ -1043,7 +1043,7 @@ document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',(
 function accountBalances(){const out={};accounts.forEach(a=>out[a.name]=Number(a.opening)||0);tx.forEach(t=>{const amount=Number(t.amount)||0;if(t.type==='Income'){if(t.account)out[t.account]=(out[t.account]||0)+amount}else if(t.type==='Expense'){if(t.account)out[t.account]=(out[t.account]||0)-amount}else if(t.type==='Transfer'){if(t.account)out[t.account]=(out[t.account]||0)-amount;if(t.to)out[t.to]=(out[t.to]||0)+amount}});return out}
 function monthlyTotals(month){let income=0,expense=0,count=0;tx.forEach(t=>{if(String(t.date||'').startsWith(month)){count++;if(t.type==='Income')income+=Number(t.amount)||0;if(t.type==='Expense')expense+=Number(t.amount)||0}});return{income,expense,count,net:income-expense}}
 function sortedTx(arr=tx){return[...arr].sort((a,b)=>String(b.date).localeCompare(String(a.date))||(Number(b.id)||0)-(Number(a.id)||0))}
-function transactionHTML(t){const income=t.type==='Income',expense=t.type==='Expense',sign=income?'+':expense?'−':'',color=income?'var(--green)':expense?'var(--red)':'#93C5FD',icon=income?'＋':expense?'−':'⇄',label=income?'รายรับ':expense?'รายจ่าย':'โอนเงิน',meta=t.type==='Transfer'?`${esc(t.account||'')} → ${esc(t.to||'')}`:`${esc(t.category||'ไม่ระบุหมวดหมู่')} · ${esc(t.account||'')}`;return `<article class="item"><div class="ico">${icon}</div><div class="details"><div class="title">${esc(t.title||label)}</div><div class="meta">${label} · ${meta}<br>${esc(t.date||'')}${t.note?' · '+esc(t.note):''}</div></div><div class="right" style="color:${color}">${sign}${money(t.amount)}<div class="rowbuttons"><button data-edit="${esc(t.id)}">แก้ไข</button><button data-del="${esc(t.id)}">ลบ</button></div></div></article>`}
+function transactionHTML(t){const income=t.type==='Income',expense=t.type==='Expense',sign=income?'+':expense?'−':'',color=income?'var(--green)':expense?'var(--red)':'#93C5FD',icon=income?'＋':expense?'−':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle"><path d="M16 3l4 4-4 4"/><path d="M20 7H4"/><path d="M8 21l-4-4 4-4"/><path d="M4 17h16"/></svg>',label=income?'รายรับ':expense?'รายจ่าย':'โอนเงิน',meta=t.type==='Transfer'?`${esc(t.account||'')} → ${esc(t.to||'')}`:`${esc(t.category||'ไม่ระบุหมวดหมู่')} · ${esc(t.account||'')}`;return `<article class="item"><div class="ico">${icon}</div><div class="details"><div class="title">${esc(t.title||label)}</div><div class="meta">${label} · ${meta}<br>${esc(t.date||'')}${t.note?' · '+esc(t.note):''}</div></div><div class="right" style="color:${color}">${sign}${money(t.amount)}<div class="rowbuttons"><button data-edit="${esc(t.id)}">แก้ไข</button><button data-del="${esc(t.id)}">ลบ</button></div></div></article>`}
 function emptyHTML(msg='ยังไม่มีรายการ'){return `<div class="empty">${msg}</div>`}
 
 /* Daily cash flow chart with selectable date range */
@@ -1354,7 +1354,7 @@ function initFAB(){
     menu.className='fab-menu';
     var item1=document.createElement('div');item1.className='fab-item';item1.innerHTML='<span>รับ</span><button type="button">+</button>';
     var item2=document.createElement('div');item2.className='fab-item';item2.innerHTML='<span>จ่าย</span><button type="button">-</button>';
-    var item3=document.createElement('div');item3.className='fab-item';item3.innerHTML='<span>โอน</span><button type="button">⇄</button>';
+    var item3=document.createElement('div');item3.className='fab-item';item3.innerHTML='<span>โอน</span><button type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle"><path d="M16 3l4 4-4 4"/><path d="M20 7H4"/><path d="M8 21l-4-4 4-4"/><path d="M4 17h16"/></svg></button>';
     menu.appendChild(item1);menu.appendChild(item2);menu.appendChild(item3);
     var btns=menu.querySelectorAll('button');
     btns[0].addEventListener('click',function(){toggleFAB();setType('Income');navigate('record');});
