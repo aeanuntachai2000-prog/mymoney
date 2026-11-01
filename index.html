@@ -694,7 +694,7 @@ html,body{overscroll-behavior:none}
 .dropdown-item.active .check{opacity:1}
 .dropdown-search{padding:6px}
 .dropdown-search input{padding:7px 9px;font-size:12px}
-.fab{position:fixed;z-index:30;width:54px;height:54px;border-radius:50%;background:rgba(16,185,129,0.28)!important;background-color:rgba(16,185,129,0.28)!important;background-image:none!important;color:#FFFFFF;border:1px solid rgba(255,255,255,0.30);font-size:28px;font-weight:700;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,0.20);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s,box-shadow .15s,filter .15s;touch-action:none;cursor:grab}.fab:active{transform:scale(.92)}.fab.dragging{cursor:grabbing;transform:scale(1.06);filter:brightness(1.12);box-shadow:0 12px 32px rgba(0,0,0,0.34)}@supports not (backdrop-filter: blur(12px)){.fab{background:rgba(16,185,129,0.60)!important}}
+.fab{position:fixed;z-index:30;width:54px;height:54px;border-radius:50%;background:rgba(16,185,129,0.28)!important;background-color:rgba(16,185,129,0.28)!important;background-image:none!important;color:rgba(255,255,255,0.88)!important;border:1px solid rgba(255,255,255,0.30);font-size:28px;font-weight:700;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,0.20);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s,box-shadow .15s,filter .15s;touch-action:none;cursor:grab}.fab:active{transform:scale(.92)}.fab.dragging{cursor:grabbing;transform:scale(1.06);filter:brightness(1.12);box-shadow:0 12px 32px rgba(0,0,0,0.34)}@supports not (backdrop-filter: blur(12px)){.fab{background:rgba(16,185,129,0.60)!important}}
 .fab:active{transform:scale(.94)}
 .fab-menu{position:fixed;right:16px;bottom:calc(140px + env(safe-area-inset-bottom));z-index:29;display:grid;gap:10px;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .15s,transform .15s}
 .fab-menu.show{opacity:1;pointer-events:auto;transform:translateY(0)}
@@ -1352,9 +1352,9 @@ function initFAB(){
     document.body.appendChild(fab);
     var menu=document.createElement('div');
     menu.className='fab-menu';
-    var item1=document.createElement('div');item1.className='fab-item';item1.innerHTML='<span>income</span><button type="button">+</button>';
-    var item2=document.createElement('div');item2.className='fab-item';item2.innerHTML='<span>expense</span><button type="button">-</button>';
-    var item3=document.createElement('div');item3.className='fab-item';item3.innerHTML='<span>transfer</span><button type="button">โ”</button>';
+    var item1=document.createElement('div');item1.className='fab-item';item1.innerHTML='<span>รับ</span><button type="button">+</button>';
+    var item2=document.createElement('div');item2.className='fab-item';item2.innerHTML='<span>จ่าย</span><button type="button">-</button>';
+    var item3=document.createElement('div');item3.className='fab-item';item3.innerHTML='<span>โอน</span><button type="button">โ”</button>';
     menu.appendChild(item1);menu.appendChild(item2);menu.appendChild(item3);
     var btns=menu.querySelectorAll('button');
     btns[0].addEventListener('click',function(){toggleFAB();setType('Income');navigate('record');});
