@@ -1102,95 +1102,119 @@ function renderReportTrend(month){const months=Array.from({length:6},(_,i)=>shif
 function renderExpenseDonut(arr){const groups=categoryTotals(arr,'Expense'),total=groups.reduce((s,x)=>s+x[1],0),colors=['#F87171','#6EE7B7','#93C5FD','#FBBF24','#C4B5FD','#67E8F9','#FDBA74','#E2E8F0','#94A3B8','#F9A8D4'];$('expenseDonutTotal').textContent=money(total);if(!groups.length||total<=0){$('expenseDonut').style.background='conic-gradient(#334155 0deg 360deg)';$('expenseDonutLegend').innerHTML='<div class="report-empty">ยังไม่มีรายจ่ายในเดือนนี้</div>';return}let cursor=0;const stops=groups.map(([name,value],i)=>{const start=cursor;cursor+=value/total*360;return `${colors[i%colors.length]} ${start.toFixed(2)}deg ${cursor.toFixed(2)}deg`});$('expenseDonut').style.background=`conic-gradient(${stops.join(',')})`;$('expenseDonutLegend').innerHTML=groups.slice(0,8).map(([name,value],i)=>`<div class="report-legend-row"><span class="report-legend-swatch" style="background:${colors[i%colors.length]}"></span><span class="report-legend-name">${esc(name)} <span style="color:var(--muted)">${(value/total*100).toFixed(1)}%</span></span><strong class="report-legend-value">${money(value)}</strong></div>`).join('')+(groups.length>8?`<div class="small">อีก ${groups.length-8} หมวดหมู่รวมอยู่ในกราฟ</div>`:'')}
 function renderReports(){const month=$('reportMonth').value||currentMonth(),arr=tx.filter(t=>String(t.date||'').startsWith(month)),m=monthlyTotals(month);$('reportIncome').textContent=money(m.income);$('reportExpense').textContent=money(m.expense);$('reportNet').textContent=money(m.net);$('reportNet').style.color=m.net<0?'var(--red)':'var(--green)';$('reportCount').textContent=String(m.count);$('categoryReport').innerHTML=groupByCategory(arr,'Expense');$('incomeReport').innerHTML=groupByCategory(arr,'Income');renderReportComparison(month);renderReportTrend(month);renderExpenseDonut(arr);renderAccountingReports()}
 function accountTypeOfName(name){const a=accounts.find(x=>x.name===name);if(a)return a.accountType;for(const k of ['Expense','Income']){const c=(cats[k]||[]).find(x=>catName(x)===name);if(c)return catType(c);}return 'Expense';}
-let tbQuery='',glQuery='',tbSelected=null,glSelected=null,lastReportMonth=null;
-function renderAccountingReports(){const el=$('accountingReports');if(!el)return;const entries=getJournalEntries();const month=$('reportMonth').value||currentMonth();
- if(month!==lastReportMonth){tbQuery='';glQuery='';tbSelected=null;glSelected=null;lastReportMonth=month;}
- const periodStart=month+'-01';const [py,pm]=month.split('-').map(Number);const lastDay=new Date(py,pm,0).getDate();const periodEnd=month+'-'+String(lastDay).padStart(2,'0');
- const beforeEntries=entries.filter(r=>String(r.date||'')<periodStart);const periodEntries=entries.filter(r=>String(r.date||'')>=periodStart && String(r.date||'')<=periodEnd).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))||Number(a.sourceId||0)-Number(b.sourceId||0));
- const openingBal={};accounts.forEach(a=>openingBal[a.name]=Number(a.opening)||0);beforeEntries.forEach(r=>{const amt=Number(r.amount)||0;if(accounts.some(a=>a.name===r.debit)){const t=accountTypeOfName(r.debit);if(t==='Asset'||t==='Expense')openingBal[r.debit]=(openingBal[r.debit]||0)+amt;else openingBal[r.debit]=(openingBal[r.debit]||0)-amt;}if(accounts.some(a=>a.name===r.credit)){const t=accountTypeOfName(r.credit);if(t==='Asset'||t==='Expense')openingBal[r.credit]=(openingBal[r.credit]||0)-amt;else openingBal[r.credit]=(openingBal[r.credit]||0)+amt;}});
- const glNames=[...new Set(entries.map(r=>r.debit).concat(entries.map(r=>r.credit)))].sort();
+let tbFrom='',tbTo='',glFrom='',glTo='';
+let tbQuery='',glQuery='',glSelected=null,lastReportMonth=null;
+function renderAccountingReports(){const el=$('accountingReports');if(!el)return;const entries=getJournalEntries();const month=$('reportMonth')?.value||currentMonth();
+ const [py,pm]=month.split('-').map(Number);const lastDay=new Date(py,pm,0).getDate();
+ const monthStart=`${month}-01`,monthEnd=`${month}-${String(lastDay).padStart(2,'0')}`;
+ if(month!==lastReportMonth){tbFrom=monthStart;tbTo=monthEnd;glFrom=monthStart;glTo=monthEnd;tbQuery='';glQuery='';glSelected=null;lastReportMonth=month;}
+ if(!tbFrom)tbFrom=monthStart;if(!tbTo)tbTo=monthEnd;if(!glFrom)glFrom=monthStart;if(!glTo)glTo=monthEnd;
+
+ function getAccountOpeningBefore(accName,fromDate){
+  const t=accountTypeOfName(accName);const accObj=accounts.find(a=>a.name===accName);let bal=accObj?(Number(accObj.opening)||0):0;
+  const be=entries.filter(r=>String(r.date||'')<fromDate);
+  be.forEach(r=>{const amt=Number(r.amount)||0;if(r.debit===accName){if(t==='Asset'||t==='Expense')bal+=amt;else bal-=amt;}if(r.credit===accName){if(t==='Asset'||t==='Expense')bal-=amt;else bal+=amt;}});
+  return bal;
+ }
+
+ const allAccountNames=[...new Set(accounts.map(a=>a.name).concat(entries.map(r=>r.debit)).concat(entries.map(r=>r.credit)))].sort();
  let html='';
 
- // Trial Balance (search)
+ // ================= 1. TRIAL BALANCE =================
  html+='<h3>งบทดลอง (Trial Balance)</h3>';
- html+=`<div style="display:flex;gap:6px;align-items:center;margin:6px 0"><input id="tbSearch" type="text" placeholder="ค้นหาชื่อบัญชี..." value="${esc(tbQuery)}" style="flex:1"><button id="tbClear" class="btn secondary" type="button" title="ล้างคำค้นหา">✕</button></div>`;
+ html+=`<div class="grid" style="margin:8px 0"><div><label for="tbFrom">ตั้งแต่วันที่</label><input type="date" id="tbFrom" value="${esc(tbFrom)}"></div><div><label for="tbTo">ถึงวันที่</label><input type="date" id="tbTo" value="${esc(tbTo)}"></div></div>`;
+ html+=`<div style="display:flex;gap:6px;align-items:center;margin:6px 0 10px"><input id="tbSearch" type="text" placeholder="ค้นหาชื่อบัญชีในงบทดลอง..." value="${esc(tbQuery)}" style="flex:1"><button id="tbClear" class="btn secondary" type="button" title="ล้างคำค้นหา">✕</button></div>`;
 
- const tb={};entries.forEach(r=>{if(!tb[r.debit])tb[r.debit]={debit:0,credit:0};if(!tb[r.credit])tb[r.credit]={debit:0,credit:0};tb[r.debit].debit+=r.amount;tb[r.credit].credit+=r.amount;});
- let tbd=0,tbc=0;Object.keys(tb).forEach(n=>{tbd+=tb[n].debit;tbc+=tb[n].credit;});
+ const effTbFrom=tbFrom<=tbTo?tbFrom:tbTo,effTbTo=tbFrom<=tbTo?tbTo:tbFrom;
+ const tbPeriodEntries=entries.filter(r=>String(r.date||'')>=effTbFrom && String(r.date||'')<=effTbTo);
+ const tbd=tbPeriodEntries.reduce((s,r)=>s+(Number(r.amount)||0),0);const tbc=tbd;
 
- if(!tbQuery){
-   html+='<div class="small" style="margin:4px 0 8px">พิมพ์ชื่อบัญชีเพื่อค้นหา</div>';
+ const tbRows=[];const qTb=(tbQuery||'').trim().toLowerCase();
+ allAccountNames.forEach(name=>{
+  const t=accountTypeOfName(name);const openBal=getAccountOpeningBefore(name,effTbFrom);
+  const pDebit=tbPeriodEntries.filter(r=>r.debit===name).reduce((s,r)=>s+(Number(r.amount)||0),0);
+  const pCredit=tbPeriodEntries.filter(r=>r.credit===name).reduce((s,r)=>s+(Number(r.amount)||0),0);
+  let endBal=openBal;
+  if(t==='Asset'||t==='Expense'){endBal+=(pDebit-pCredit);}else{endBal+=(pCredit-pDebit);}
+  const hasActivity=Math.abs(openBal)>0.0001||pDebit>0||pCredit>0||Math.abs(endBal)>0.0001;
+  const isConfigured=accounts.some(a=>a.name===name);
+  if(!hasActivity&&!isConfigured&&!qTb)return;
+  if(qTb&&!name.toLowerCase().includes(qTb))return;
+  tbRows.push({name,type:t,openBal,debit:pDebit,credit:pCredit,balance:endBal});
+ });
+
+ const dispTbDebit=tbRows.reduce((s,r)=>s+r.debit,0);const dispTbCredit=tbRows.reduce((s,r)=>s+r.credit,0);
+ const tbFooterLabel=qTb?`รวมที่แสดง (${tbRows.length} บัญชี)`:`รวมทั้งหมด (${tbRows.length} บัญชี)`;
+ const tbFooterDebit=qTb?dispTbDebit:tbd;const tbFooterCredit=qTb?dispTbCredit:tbc;
+ html+=`<div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table style="width:100%;min-width:440px;font-size:12px;border-collapse:collapse;white-space:nowrap"><thead><tr style="border-bottom:1px solid var(--line);color:var(--muted)"><th style="padding:7px 8px;text-align:left">ชื่อบัญชี</th><th style="padding:7px 8px;text-align:right">เดบิต</th><th style="padding:7px 8px;text-align:right">เครดิต</th><th style="padding:7px 8px;text-align:right">ยอดคงเหลือ</th></tr></thead><tbody>`;
+ if(!tbRows.length){
+  html+=`<tr><td colspan="4" style="text-align:center;padding:14px;color:var(--muted)">ไม่พบข้อมูลบัญชีตามเงื่อนไขที่เลือก</td></tr>`;
  }else{
-   const q=tbQuery.toLowerCase();const matches=glNames.filter(n=>n.toLowerCase().includes(q));
-   if(!matches.length){
-     html+='<div class="small" style="margin:4px 0 8px">ไม่พบข้อมูลบัญชีที่ตรงกับคำค้นหา</div>';
-   }else if(!tbSelected){
-     html+='<div style="display:grid;gap:4px;margin:6px 0">';
-     matches.forEach(n=>{html+=`<button class="btn secondary" data-tb-select="${esc(n)}" style="text-align:left">${esc(n)} (${ACCOUNT_TYPES[accountTypeOfName(n)]||''})</button>`;});
-     html+='</div>';
-   }
-   if(tbSelected){
-     const v=tb[tbSelected]||{debit:0,credit:0};
-     html+=`<div style="margin:8px 0;padding:10px;background:var(--panel2);border:1px solid var(--line);border-radius:10px">`;
-     html+=`<div style="margin-bottom:6px"><strong>บัญชีที่เลือก: ${esc(tbSelected)}</strong> <span class="small">(${ACCOUNT_TYPES[accountTypeOfName(tbSelected)]||''})</span></div>`;
-     html+=`<div class="summaryline" style="padding:4px 0"><span>เดบิต</span><strong>${money(v.debit)}</strong></div>`;
-     html+=`<div class="summaryline" style="padding:4px 0"><span>เครดิต</span><strong>${money(v.credit)}</strong></div>`;
-     html+=`<div class="summaryline" style="padding:4px 0"><span>ยอดคงเหลือ</span><strong>${money(v.debit-v.credit)}</strong></div>`;
-     html+=`<button id="tbBack" class="btn secondary" type="button" style="margin-top:8px;width:100%">← กลับไปเลือกบัญชีอื่น</button>`;
-     html+=`</div>`;
-   }
+  tbRows.forEach(row=>{
+   html+=`<tr style="border-bottom:1px solid #ffffff10"><td style="padding:7px 8px"><strong>${esc(row.name)}</strong><div class="small" style="color:var(--muted)">${esc(ACCOUNT_TYPES[row.type]||'')} · ยอดยกมา ${money(row.openBal)}</div></td><td style="padding:7px 8px;text-align:right">${row.debit>0?money(row.debit):'—'}</td><td style="padding:7px 8px;text-align:right">${row.credit>0?money(row.credit):'—'}</td><td style="padding:7px 8px;text-align:right;font-weight:600">${money(row.balance)}</td></tr>`;
+  });
  }
- html+=`<div class="summaryline" style="margin-top:8px"><span>รวมเดบิต</span><strong>${money(tbd)}</strong></div>`;
- html+=`<div class="summaryline"><span>รวมเครดิต</span><strong>${money(tbc)}</strong></div>`;
+ html+=`</tbody><tfoot><tr style="border-top:1px solid var(--line);font-weight:600"><td style="padding:8px">${tbFooterLabel}</td><td style="padding:8px;text-align:right" class="inc">${money(tbFooterDebit)}</td><td style="padding:8px;text-align:right" class="exp">${money(tbFooterCredit)}</td><td style="padding:8px;text-align:right">${Math.abs(tbFooterDebit-tbFooterCredit)<0.0001?'<span class="pill" style="background:#064E3B;color:#6EE7B7">สมดุล ✓</span>':'<span class="pill" style="background:#4C0519;color:#FDA4AF">ไม่สมดุล ✕</span>'}</td></tr></tfoot></table></div>`;
+ html+=`<div class="summaryline" style="margin-top:8px"><span>รวมเดบิตงบทดลอง (ทั้งงวด)</span><strong>${money(tbd)}</strong></div>`;
+ html+=`<div class="summaryline" style="margin-top:8px"><span>รวมเครดิตงบทดลอง (ทั้งงวด)</span><strong>${money(tbc)}</strong></div>`;
 
- // General Ledger (search)
- html+='<h3 style="margin-top:14px">บัญชีแยกประเภท (General Ledger)</h3>';
- html+=`<div style="display:flex;gap:6px;align-items:center;margin:6px 0"><input id="glSearch" type="text" placeholder="ค้นหาชื่อบัญชี..." value="${esc(glQuery)}" style="flex:1"><button id="glClear" class="btn secondary" type="button" title="ล้างคำค้นหา">✕</button></div>`;
- if(!glQuery){
-   html+='<div class="small" style="margin:4px 0 8px">พิมพ์ชื่อบัญชีเพื่อค้นหา</div>';
+ // ================= 2. GENERAL LEDGER =================
+ html+='<h3 style="margin-top:16px">บัญชีแยกประเภท (General Ledger)</h3>';
+ html+=`<div class="grid" style="margin:8px 0"><div><label for="glFrom">ตั้งแต่วันที่</label><input type="date" id="glFrom" value="${esc(glFrom)}"></div><div><label for="glTo">ถึงวันที่</label><input type="date" id="glTo" value="${esc(glTo)}"></div></div>`;
+ html+=`<div style="display:flex;gap:6px;align-items:center;margin:6px 0 8px"><input id="glSearch" type="text" placeholder="ค้นหาบัญชีเพื่อดูแยกประเภท..." value="${esc(glQuery)}" style="flex:1"><button id="glClear" class="btn secondary" type="button" title="ล้างคำค้นหา">✕</button></div>`;
+
+ const qGl=(glQuery||'').trim().toLowerCase();
+ const availableGlAccounts=allAccountNames.filter(n=>!qGl||n.toLowerCase().includes(qGl));
+ html+=`<div class="small" style="margin:4px 0 6px;color:var(--muted)">เลือกบัญชีที่ต้องการดูรายการ (${availableGlAccounts.length} บัญชี):</div>`;
+ html+=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;max-height:140px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:2px">`;
+ if(!availableGlAccounts.length){
+  html+=`<div class="small" style="color:var(--muted);padding:4px">ไม่พบชื่อบัญชีที่ค้นหา</div>`;
  }else{
-   const q=glQuery.toLowerCase();const matches=glNames.filter(n=>n.toLowerCase().includes(q));
-   if(!matches.length){
-     html+='<div class="small" style="margin:4px 0 8px">ไม่พบข้อมูลบัญชีที่ตรงกับคำค้นหา</div>';
-   }else if(!glSelected){
-     html+='<div style="display:grid;gap:4px;margin:6px 0">';
-     matches.forEach(n=>{html+=`<button class="btn secondary" data-gl-select="${esc(n)}" style="text-align:left">${esc(n)} (${ACCOUNT_TYPES[accountTypeOfName(n)]||''})</button>`;});
-     html+='</div>';
-   }
-   if(glSelected){
-     let bal=accounts.some(a=>a.name===glSelected)?(openingBal[glSelected]||0):0;
-     if(!accounts.some(a=>a.name===glSelected)){beforeEntries.forEach(r=>{const amt=Number(r.amount)||0;if(r.debit===glSelected){const t=accountTypeOfName(glSelected);if(t==='Asset'||t==='Expense')bal+=amt;else bal-=amt;}if(r.credit===glSelected){const t=accountTypeOfName(glSelected);if(t==='Asset'||t==='Expense')bal-=amt;else bal+=amt;}});}
-     const glRows=periodEntries.filter(r=>r.debit===glSelected||r.credit===glSelected);
-     html+=`<div style="margin:8px 0;padding:10px;background:var(--panel2);border:1px solid var(--line);border-radius:10px">`;
-     html+=`<div style="margin-bottom:6px"><strong>บัญชีที่เลือก: ${esc(glSelected)}</strong> <span class="small">(${ACCOUNT_TYPES[accountTypeOfName(glSelected)]||''})</span></div>`;
-     html+=`<div class="small" style="margin-bottom:8px">ยอดยกมา: <strong>${money(bal)}</strong></div>`;
-     html+=`<div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table style="width:100%;min-width:440px;font-size:11px;border-collapse:collapse;white-space:nowrap"><thead><tr style="border-bottom:1px solid var(--line)"><th style="padding:6px 8px;text-align:left">วันที่</th><th style="padding:6px 8px;text-align:left">รายการ</th><th style="padding:6px 8px;text-align:right">เดบิต</th><th style="padding:6px 8px;text-align:right">เครดิต</th><th style="padding:6px 8px;text-align:right">ยอดคงเหลือ</th></tr></thead><tbody>`;
-     if(!glRows.length){
-       html+=`<tr><td colspan="5" style="padding:12px 8px;text-align:center;color:var(--muted)">ไม่มีรายการเคลื่อนไหวในงวดนี้ (ยอดยกไป: ${money(bal)})</td></tr>`;
-     }else{
-       glRows.forEach(e=>{
-         const amt=Number(e.amount)||0;const isDebit=e.debit===glSelected;const t=accountTypeOfName(glSelected);
-         if(isDebit){if(t==='Asset'||t==='Expense')bal+=amt;else bal-=amt;}
-         else{if(t==='Asset'||t==='Expense')bal-=amt;else bal+=amt;}
-         html+=`<tr style="border-bottom:1px solid #ffffff10"><td style="padding:6px 8px">${esc(formatDateDisplay(e.date||''))}</td><td style="padding:6px 8px">${esc(e.title||'')}</td><td style="padding:6px 8px;text-align:right">${isDebit?money(amt):money(0)}</td><td style="padding:6px 8px;text-align:right">${isDebit?money(0):money(amt)}</td><td style="padding:6px 8px;text-align:right">${money(bal)}</td></tr>`;
-       });
-     }
-     html+=`</tbody></table></div>`;
-     html+=`<button id="glBack" class="btn secondary" type="button" style="margin-top:8px;width:100%">← กลับไปเลือกบัญชีอื่น</button>`;
-     html+=`</div>`;
-   }
+  availableGlAccounts.forEach(name=>{
+   const isSel=glSelected===name;
+   html+=`<button type="button" class="btn ${isSel?'primary':'secondary'}" data-gl-select="${esc(name)}" style="font-size:12px;padding:6px 10px">${esc(name)} <span class="small" style="opacity:.85">(${ACCOUNT_TYPES[accountTypeOfName(name)]||''})</span></button>`;
+  });
+ }
+ html+=`</div>`;
+
+ if(glSelected){
+  const effGlFrom=glFrom<=glTo?glFrom:glTo,effGlTo=glFrom<=glTo?glTo:glFrom;
+  const t=accountTypeOfName(glSelected);const glOpening=getAccountOpeningBefore(glSelected,effGlFrom);
+  const glPeriodEntries=entries.filter(r=>(r.debit===glSelected||r.credit===glSelected)&&String(r.date||'')>=effGlFrom&&String(r.date||'')<=effGlTo).sort((a,b)=>String(a.date).localeCompare(String(b.date))||Number(a.sourceId||0)-Number(b.sourceId||0));
+
+  let runningBal=glOpening,periodDebitTotal=0,periodCreditTotal=0;
+  html+=`<div style="margin:8px 0;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px">`;
+  html+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px"><div><strong style="font-size:15px">${esc(glSelected)}</strong><div class="small" style="color:var(--muted)">ประเภทบัญชี: ${esc(ACCOUNT_TYPES[t]||'')} · ช่วงวันที่ ${esc(formatDateDisplay(effGlFrom))} ถึง ${esc(formatDateDisplay(effGlTo))}</div></div><button id="glReset" class="btn secondary" type="button" style="font-size:11px;padding:4px 8px">✕ ปิด</button></div>`;
+  html+=`<div class="small" style="margin-bottom:8px;padding:6px 8px;background:#141922;border-radius:8px;border:1px solid var(--line)">ยอดยกมา ณ ก่อนวันที่ ${esc(formatDateDisplay(effGlFrom))}: <strong>${money(glOpening)}</strong></div>`;
+
+  html+=`<div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table style="width:100%;min-width:440px;font-size:11px;border-collapse:collapse;white-space:nowrap"><thead><tr style="border-bottom:1px solid var(--line);color:var(--muted)"><th style="padding:6px 8px;text-align:left">วันที่</th><th style="padding:6px 8px;text-align:left">รายการ</th><th style="padding:6px 8px;text-align:right">เดบิต</th><th style="padding:6px 8px;text-align:right">เครดิต</th><th style="padding:6px 8px;text-align:right">ยอดคงเหลือ</th></tr></thead><tbody>`;
+  if(!glPeriodEntries.length){
+   html+=`<tr><td colspan="5" style="padding:14px 8px;text-align:center;color:var(--muted)">ไม่มีรายการเคลื่อนไหวในช่วงเวลานี้ (ยอดยกไป: ${money(runningBal)})</td></tr>`;
+  }else{
+   glPeriodEntries.forEach(e=>{
+    const amt=Number(e.amount)||0;const isDebit=e.debit===glSelected;
+    if(isDebit){periodDebitTotal+=amt;if(t==='Asset'||t==='Expense')runningBal+=amt;else runningBal-=amt;}
+    else{periodCreditTotal+=amt;if(t==='Asset'||t==='Expense')runningBal-=amt;else runningBal+=amt;}
+    html+=`<tr style="border-bottom:1px solid #ffffff10"><td style="padding:6px 8px">${esc(formatDateDisplay(e.date||''))}</td><td style="padding:6px 8px">${esc(e.title||'')}</td><td style="padding:6px 8px;text-align:right">${isDebit?money(amt):'—'}</td><td style="padding:6px 8px;text-align:right">${!isDebit?money(amt):'—'}</td><td style="padding:6px 8px;text-align:right;font-weight:600">${money(runningBal)}</td></tr>`;
+   });
+  }
+  html+=`</tbody><tfoot><tr style="border-top:1px solid var(--line);font-weight:600"><td colspan="2" style="padding:6px 8px">รวมการเคลื่อนไหวในงวด</td><td style="padding:6px 8px;text-align:right" class="inc">${money(periodDebitTotal)}</td><td style="padding:6px 8px;text-align:right" class="exp">${money(periodCreditTotal)}</td><td style="padding:6px 8px;text-align:right">${money(runningBal)}</td></tr></tfoot></table></div>`;
+  html+=`<button id="glBack" class="btn secondary" type="button" style="margin-top:10px;width:100%">← ล้างการเลือกบัญชี (กลับไปเลือกรายการบัญชี)</button></div>`;
+ }else{
+  html+=`<div class="small" style="padding:10px;text-align:center;color:var(--muted);background:var(--panel2);border-radius:10px;border:1px solid var(--line)">แตะเลือกบัญชีด้านบนเพื่อดูรายละเอียดบัญชีแยกประเภท</div>`;
  }
 
- // Income Statement
+ // ================= 3. INCOME STATEMENT =================
  const incomeTx=tx.filter(t=>t.type==='Income' && String(t.date||'').startsWith(month));
  const expenseTx=tx.filter(t=>t.type==='Expense' && String(t.date||'').startsWith(month));
  const totalIncome=incomeTx.reduce((s,t)=>s+(Number(t.amount)||0),0);const totalExpense=expenseTx.reduce((s,t)=>s+(Number(t.amount)||0),0);
- html+='<h3 style="margin-top:14px">งบกำไรขาดทุน (Income Statement)</h3>';
+ html+='<h3 style="margin-top:16px">งบกำไรขาดทุน (Income Statement)</h3>';
  html+=`<div class="summaryline"><span>รายได้รวม (งวด ${month})</span><strong class="inc">${money(totalIncome)}</strong></div>`;
  html+=`<div class="summaryline"><span>ค่าใช้จ่ายรวม (งวด ${month})</span><strong class="exp">${money(totalExpense)}</strong></div>`;
  html+=`<div class="summaryline"><span>กำไร (ขาดทุน) สุทธิ</span><strong>${money(totalIncome-totalExpense)}</strong></div>`;
 
- // Balance Sheet
+ // ================= 4. BALANCE SHEET =================
+ const periodEnd=monthEnd;
  const periodEndEntries=entries.filter(r=>String(r.date||'')<=periodEnd);
  const cumBalances={};accounts.forEach(a=>cumBalances[a.name]=Number(a.opening)||0);
  periodEndEntries.forEach(r=>{const amt=Number(r.amount)||0;if(accounts.some(a=>a.name===r.debit)){const t=accountTypeOfName(r.debit);if(t==='Asset'||t==='Expense')cumBalances[r.debit]=(cumBalances[r.debit]||0)+amt;else cumBalances[r.debit]=(cumBalances[r.debit]||0)-amt;}if(accounts.some(a=>a.name===r.credit)){const t=accountTypeOfName(r.credit);if(t==='Asset'||t==='Expense')cumBalances[r.credit]=(cumBalances[r.credit]||0)-amt;else cumBalances[r.credit]=(cumBalances[r.credit]||0)+amt;}});
@@ -1202,13 +1226,13 @@ function renderAccountingReports(){const el=$('accountingReports');if(!el)return
  const openLiab=accounts.filter(a=>a.accountType==='Liability').reduce((s,a)=>s+(Number(a.opening)||0),0);
  const openEquity=accounts.filter(a=>a.accountType==='Equity').reduce((s,a)=>s+(Number(a.opening)||0),0);
  const openDiff=openAssets-(openLiab+openEquity);
- html+='<h3 style="margin-top:14px">งบแสดงฐานะการเงิน (Balance Sheet)</h3>';
+ html+='<h3 style="margin-top:16px">งบแสดงฐานะการเงิน (Balance Sheet)</h3>';
  html+=`<div class="summaryline"><span>สินทรัพย์ (ณ ${periodEnd})</span><strong>${money(assets)}</strong></div>`;
  html+=`<div class="summaryline"><span>หนี้สิน (ณ ${periodEnd})</span><strong>${money(liab)}</strong></div>`;
  html+=`<div class="summaryline"><span>ส่วนของเจ้าของ (รวมกำไรสะสม)</span><strong>${money(equity)}</strong></div>`;
  html+=`<div class="summaryline"><span>รวมหนี้สิน+ส่วนของเจ้าของ</span><strong>${money(liab+equity)}</strong></div>`;
  if(Math.abs(assets-(liab+equity))>0.0001) html+=`<div class="warning-note">ส่วนต่างงบดุล: ${money(assets-(liab+equity))}</div>`;
- html+='<h3 style="margin-top:14px">ตรวจสอบยอดเปิดบัญชี</h3>';
+ html+='<h3 style="margin-top:16px">ตรวจสอบยอดเปิดบัญชี</h3>';
  if(accounts.length){html+=`<div class="summaryline"><span>สินทรัพย์เปิด</span><strong>${money(openAssets)}</strong></div>`;html+=`<div class="summaryline"><span>หนี้สินเปิด</span><strong>${money(openLiab)}</strong></div>`;html+=`<div class="summaryline"><span>ทุนเปิด</span><strong>${money(openEquity)}</strong></div>`;if(Math.abs(openDiff)>0.0001) html+=`<div class="warning-note">ยอดเปิดบัญชีไม่สมดุล ส่วนต่าง ${money(openDiff)}</div>`;else html+=`<div class="small">ยอดเปิดบัญชีสมดุล</div>`;}else{html+='<div class="small">ยังตรวจสอบไม่ได้: ไม่มีข้อมูลบัญชี</div>';}
 
  const activeId=document.activeElement?document.activeElement.id:null;
@@ -1218,18 +1242,23 @@ function renderAccountingReports(){const el=$('accountingReports');if(!el)return
  el.innerHTML=html;
 
  // attach listeners
- const tbIn=$('tbSearch');if(tbIn){tbIn.addEventListener('input',e=>{tbQuery=e.target.value;tbSelected=null;renderAccountingReports();});}
- const tbCl=$('tbClear');if(tbCl){tbCl.addEventListener('click',()=>{tbQuery='';tbSelected=null;renderAccountingReports();const inp=$('tbSearch');if(inp)inp.focus();});}
- const glIn=$('glSearch');if(glIn){glIn.addEventListener('input',e=>{glQuery=e.target.value;glSelected=null;renderAccountingReports();});}
- const glCl=$('glClear');if(glCl){glCl.addEventListener('click',()=>{glQuery='';glSelected=null;renderAccountingReports();const inp=$('glSearch');if(inp)inp.focus();});}
- el.querySelectorAll('[data-tb-select]').forEach(b=>b.addEventListener('click',()=>{tbSelected=b.dataset.tbSelect;renderAccountingReports();}));
- el.querySelectorAll('[data-gl-select]').forEach(b=>b.addEventListener('click',()=>{glSelected=b.dataset.glSelect;renderAccountingReports();}));
- const tbBack=$('tbBack');if(tbBack){tbBack.addEventListener('click',()=>{tbSelected=null;renderAccountingReports();});}
- const glBack=$('glBack');if(glBack){glBack.addEventListener('click',()=>{glSelected=null;renderAccountingReports();});}
+ const tbF=$('tbFrom');if(tbF)tbF.addEventListener('change',e=>{tbFrom=e.target.value;renderAccountingReports();});
+ const tbT=$('tbTo');if(tbT)tbT.addEventListener('change',e=>{tbTo=e.target.value;renderAccountingReports();});
+ const tbIn=$('tbSearch');if(tbIn)tbIn.addEventListener('input',e=>{tbQuery=e.target.value;renderAccountingReports();});
+ const tbCl=$('tbClear');if(tbCl)tbCl.addEventListener('click',()=>{tbQuery='';renderAccountingReports();const inp=$('tbSearch');if(inp)inp.focus();});
+
+ const glF=$('glFrom');if(glF)glF.addEventListener('change',e=>{glFrom=e.target.value;renderAccountingReports();});
+ const glT=$('glTo');if(glT)glT.addEventListener('change',e=>{glTo=e.target.value;renderAccountingReports();});
+ const glIn=$('glSearch');if(glIn)glIn.addEventListener('input',e=>{glQuery=e.target.value;renderAccountingReports();});
+ const glCl=$('glClear');if(glCl)glCl.addEventListener('click',()=>{glQuery='';renderAccountingReports();const inp=$('glSearch');if(inp)inp.focus();});
+
+ el.querySelectorAll('[data-gl-select]').forEach(b=>b.addEventListener('click',()=>{glSelected=(glSelected===b.dataset.glSelect?null:b.dataset.glSelect);renderAccountingReports();}));
+ const glBack=$('glBack');if(glBack)glBack.addEventListener('click',()=>{glSelected=null;renderAccountingReports();});
+ const glReset=$('glReset');if(glReset)glReset.addEventListener('click',()=>{glSelected=null;renderAccountingReports();});
 
  if(activeId&&(activeId==='tbSearch'||activeId==='glSearch')&&$(activeId)){
-   $(activeId).focus();
-   if(selStart!==null&&selEnd!==null){try{$(activeId).setSelectionRange(selStart,selEnd);}catch(_){}}
+  $(activeId).focus();
+  if(selStart!==null&&selEnd!==null){try{$(activeId).setSelectionRange(selStart,selEnd);}catch(_){}}
  }
 }
 
