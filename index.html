@@ -1354,7 +1354,7 @@ function initFAB(){
     menu.className='fab-menu';
     var item1=document.createElement('div');item1.className='fab-item';item1.innerHTML='<span>รับ</span><button type="button">+</button>';
     var item2=document.createElement('div');item2.className='fab-item';item2.innerHTML='<span>จ่าย</span><button type="button">-</button>';
-    var item3=document.createElement('div');item3.className='fab-item';item3.innerHTML='<span>โอน</span><button type="button">โ”</button>';
+    var item3=document.createElement('div');item3.className='fab-item';item3.innerHTML='<span>โอน</span><button type="button">⇄</button>';
     menu.appendChild(item1);menu.appendChild(item2);menu.appendChild(item3);
     var btns=menu.querySelectorAll('button');
     btns[0].addEventListener('click',function(){toggleFAB();setType('Income');navigate('record');});
