@@ -730,7 +730,18 @@ body.record-page .brand-icon{width:34px;height:34px;border-radius:9px}
 .brand-copy .eyebrow{margin:0 0 2px}
 .brand-copy h1{margin:0;font-size:20px;font-weight:600;line-height:1.2}
 body.record-page .brand-copy h1{font-size:20px}
-.coa-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}.coa-row .btn{padding:6px 9px;font-size:12px}.coa-caret{background:none;border:0;color:var(--muted);width:24px;flex-shrink:0;font-size:15px}.coa-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}.pill.coa-ok{background:#064E3B;color:#6EE7B7}.pill.coa-hd{background:#1E293B;color:#93C5FD}.pill.coa-warn{background:#422006;color:#FCD34D}.pill.coa-off{background:#4C0519;color:#FDA4AF}
+.coa-row{display:flex;align-items:center;gap:8px;padding:10px 8px;border-bottom:1px solid var(--line);border-radius:8px;transition:background .15s}.coa-row:hover{background:var(--panel2)}.coa-row .btn{padding:6px 9px;font-size:12px}.coa-caret{background:none;border:0;color:var(--muted);width:24px;flex-shrink:0;font-size:15px;cursor:pointer}.coa-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}.pill.coa-ok{background:#064E3B;color:#6EE7B7}.pill.coa-hd{background:#1E293B;color:#93C5FD}.pill.coa-warn{background:#422006;color:#FCD34D}.pill.coa-off{background:#4C0519;color:#FDA4AF}.pill.coa-verified{background:#064E3B;color:#6EE7B7}.map-controls{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.map-controls .btn{font-size:12px;padding:6px 10px}
+.dd-wrap{position:relative;display:block;width:100%}
+.dd-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;background:#141922;border:1px solid #2A3441;border-radius:10px;padding:0 10px;color:#F1F5F9;font-size:14px;cursor:pointer;box-sizing:border-box}
+.dd-trigger:focus{outline:2px solid #10B981;outline-offset:1px}
+.dd-trigger .chev{color:#94A3B8;font-size:11px;margin-left:8px;flex-shrink:0}
+.dd-panel{position:absolute;z-index:10000;width:100%;max-height:240px;overflow-y:auto;background:#1A2028;border:1px solid #2A3441;border-radius:10px;margin-top:4px;box-shadow:0 8px 24px #00000080}
+.dd-panel .dd-item{padding:9px 12px;cursor:pointer;font-size:14px;color:#F1F5F9;border-bottom:1px solid #ffffff10}
+.dd-panel .dd-item:last-child{border-bottom:0}
+.dd-panel .dd-item:hover,.dd-panel .dd-item.sel{background:#222A35}
+.dd-panel .dd-empty{padding:12px;text-align:center;color:#64748B;font-size:13px}
+.dd-search{display:block;width:100%;background:#141922;border:1px solid #2A3441;border-radius:8px;padding:8px 10px;color:#F1F5F9;font-size:14px;margin-bottom:6px;box-sizing:border-box}
+.dd-search:focus{outline:2px solid #10B981;outline-offset:1px}
 </style>
 </head>
 <body style="background:#000000">
@@ -1087,7 +1098,7 @@ function navigate(page){
   const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
   requestAnimationFrame(()=>window.scrollTo({top:targetY,behavior:'auto'}));
 }
-document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
+document.addEventListener('click',e=>{const go=e.target.closest('[data-go]');if(go){e.preventDefault();navigate(go.dataset.go)}});
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',catNames(cats[t]));fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ';const _sb=$('save');_sb.classList.remove('save-expense','save-transfer','save-income');if(t==='Expense')_sb.classList.add('save-expense');else if(t==='Transfer')_sb.classList.add('save-transfer');else _sb.classList.add('save-income')}
 document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>setType(b.dataset.type)));
@@ -1150,6 +1161,20 @@ function renderReports(){const month=$('reportMonth').value||currentMonth(),arr=
 function accountTypeOfName(name){const a=accounts.find(x=>x.name===name);if(a)return a.accountType;for(const k of ['Expense','Income']){const c=(cats[k]||[]).find(x=>catName(x)===name);if(c)return catType(c);}return 'Expense';}
 let tbFrom='',tbTo='',glFrom='',glTo='';
 let tbQuery='',glQuery='',glSelected=null,lastReportMonth=null;
+function accountCodeOfName(name){try{const coa=window.MyMoneyCOA&&window.MyMoneyCOA.get?window.MyMoneyCOA.get():null;const links=window.MyMoneyCOA&&window.MyMoneyCOA.links?window.MyMoneyCOA.links():null;if(!coa||!links)return '';const reg=(links.registry||[]).find(r=>r.name===name);if(!reg)return '';const coaId=(links.map||{})[reg.rid];const entry=(coa||[]).find(c=>c.id===coaId);return entry?entry.code:'';}catch(e){return ''}}
+function accountLabelOfName(name){const c=accountCodeOfName(name);return c?`${c} ${name}`:name}
+function initReportDropdowns(){
+  if(window.__reportDropdownsInited)return;window.__reportDropdownsInited=true;
+  const tbTrig=$('tbTrigger');if(tbTrig)tbTrig.addEventListener('click',()=>{const p=$('tbPanel');const op=p.style.display!=='none';p.style.display=op?'none':'block';if(!op){const s=$('tbDDSearch');if(s)s.focus();setTimeout(()=>{const items=p.querySelectorAll('.dd-item');if(items.length)items[0].classList.add('sel')},50)}tbTrig.setAttribute('aria-expanded',String(!op))});
+  const tbS=$('tbDDSearch');if(tbS)tbS.addEventListener('input',()=>{const q=tbS.value.trim().toLowerCase();const list=$('tbDDList');const names=allAccountNames.filter(n=>!q||n.toLowerCase().includes(q)||accountCodeOfName(n).toLowerCase().includes(q));list.innerHTML=names.length?names.map(n=>`<div class="dd-item" data-tb-name="${esc(n)}"><span>${esc(accountLabelOfName(n))}</span></div>`).join(''):'<div class="dd-empty">ไม่พบบัญชีที่ค้นหา</div>';list.querySelectorAll('.dd-item').forEach(it=>it.addEventListener('click',()=>{tbQuery=it.dataset.tbName;$('tbLabel').textContent=accountLabelOfName(tbQuery);const p=$('tbPanel');p.style.display='none';tbTrig.setAttribute('aria-expanded','false');renderAccountingReports()}))});
+  document.addEventListener('click',e=>{const dd=e.target.closest('#tbDD');if(!dd){const p=$('tbPanel');if(p)p.style.display='none';const t=$('tbTrigger');if(t)t.setAttribute('aria-expanded','false')}});
+  const glTrig=$('glTrigger');if(glTrig)glTrig.addEventListener('click',()=>{const p=$('glPanel');const op=p.style.display!=='none';p.style.display=op?'none':'block';if(!op){const s=$('glDDSearch');if(s)s.focus();setTimeout(()=>{const items=p.querySelectorAll('.dd-item');if(items.length)items[0].classList.add('sel')},50)}glTrig.setAttribute('aria-expanded',String(!op))});
+  const glS=$('glDDSearch');if(glS)glS.addEventListener('input',()=>{const q=glS.value.trim().toLowerCase();const list=$('glDDList');const names=allAccountNames.filter(n=>!q||n.toLowerCase().includes(q)||accountCodeOfName(n).toLowerCase().includes(q));list.innerHTML=names.length?names.map(n=>`<div class="dd-item" data-gl-name="${esc(n)}"><span>${esc(accountLabelOfName(n))}</span></div>`).join(''):'<div class="dd-empty">ไม่พบบัญชีที่ค้นหา</div>';list.querySelectorAll('.dd-item').forEach(it=>it.addEventListener('click',()=>{glSelected=it.dataset.glName;glQuery=it.dataset.glName;$('glLabel').textContent=accountLabelOfName(glSelected);const p=$('glPanel');p.style.display='none';glTrig.setAttribute('aria-expanded','false');renderAccountingReports()}))});
+  document.addEventListener('click',e=>{const dd=e.target.closest('#glDD');if(!dd){const p=$('glPanel');if(p)p.style.display='none';const t=$('glTrigger');if(t)t.setAttribute('aria-expanded','false')}});
+  const glBack=$('glBack');if(glBack)glBack.addEventListener('click',()=>{glSelected=null;renderAccountingReports();});
+  const glReset=$('glReset');if(glReset)glReset.addEventListener('click',()=>{glSelected=null;renderAccountingReports();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){const tp=$('tbPanel');if(tp)tp.style.display='none';const tt=$('tbTrigger');if(tt)tt.setAttribute('aria-expanded','false');const gp=$('glPanel');if(gp)gp.style.display='none';const gt=$('glTrigger');if(gt)gt.setAttribute('aria-expanded','false');}});
+}
 function renderAccountingReports(){const el=$('accountingReports');if(!el)return;const entries=getJournalEntries();const month=$('reportMonth')?.value||currentMonth();
  const [py,pm]=month.split('-').map(Number);const lastDay=new Date(py,pm,0).getDate();
  const monthStart=`${month}-01`,monthEnd=`${month}-${String(lastDay).padStart(2,'0')}`;
@@ -1167,9 +1192,9 @@ function renderAccountingReports(){const el=$('accountingReports');if(!el)return
  let html='';
 
  // ================= 1. TRIAL BALANCE =================
- html+='<h3>งบทดลอง (Trial Balance)</h3>';
- html+=`<div class="grid" style="margin:8px 0"><div><label for="tbFrom">ตั้งแต่วันที่</label><input type="date" id="tbFrom" value="${esc(tbFrom)}"></div><div><label for="tbTo">ถึงวันที่</label><input type="date" id="tbTo" value="${esc(tbTo)}"></div></div>`;
- html+=`<div style="display:flex;gap:6px;align-items:center;margin:6px 0 10px"><input id="tbSearch" type="text" placeholder="ค้นหาชื่อบัญชีในงบทดลอง..." value="${esc(tbQuery)}" style="flex:1"><button id="tbClear" class="btn secondary" type="button" title="ล้างคำค้นหา">✕</button></div>`;
+html+='<h3>งบทดลอง (Trial Balance)</h3>';
+  html+=`<div class="grid" style="margin:8px 0"><div><label for="tbFrom">ตั้งแต่วันที่</label><input type="date" id="tbFrom" value="${esc(tbFrom)}"></div><div><label for="tbTo">ถึงวันที่</label><input type="date" id="tbTo" value="${esc(tbTo)}"></div></div>`;
+  html+=`<div class="dd-wrap" id="tbDD"><div class="dd-trigger" id="tbTrigger" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-controls="tbPanel"><span id="tbLabel">${tbQuery?esc(accountLabelOfName(tbQuery)):'ค้นหาชื่อบัญชี...'}</span><span class="chev">▾</span></div><div class="dd-panel" id="tbPanel" style="display:none"><input class="dd-search" id="tbDDSearch" type="text" placeholder="พิมพ์ค้นหา..."><div id="tbDDList"></div></div></div>`;
 
  const effTbFrom=tbFrom<=tbTo?tbFrom:tbTo,effTbTo=tbFrom<=tbTo?tbTo:tbFrom;
  const tbPeriodEntries=entries.filter(r=>String(r.date||'')>=effTbFrom && String(r.date||'')<=effTbTo);
@@ -1205,9 +1230,9 @@ function renderAccountingReports(){const el=$('accountingReports');if(!el)return
  html+=`<div class="summaryline" style="margin-top:8px"><span>รวมเครดิตงบทดลอง (ทั้งงวด)</span><strong>${money(tbc)}</strong></div>`;
 
  // ================= 2. GENERAL LEDGER =================
- html+='<h3 style="margin-top:16px">บัญชีแยกประเภท (General Ledger)</h3>';
- html+=`<div class="grid" style="margin:8px 0"><div><label for="glFrom">ตั้งแต่วันที่</label><input type="date" id="glFrom" value="${esc(glFrom)}"></div><div><label for="glTo">ถึงวันที่</label><input type="date" id="glTo" value="${esc(glTo)}"></div></div>`;
- html+=`<div style="display:flex;gap:6px;align-items:center;margin:6px 0 8px"><input id="glSearch" type="text" placeholder="ค้นหาบัญชีเพื่อดูแยกประเภท..." value="${esc(glQuery)}" style="flex:1"><button id="glClear" class="btn secondary" type="button" title="ล้างคำค้นหา">✕</button></div>`;
+html+='<h3 style="margin-top:16px">บัญชีแยกประเภท (General Ledger)</h3>';
+  html+=`<div class="grid" style="margin:8px 0"><div><label for="glFrom">ตั้งแต่วันที่</label><input type="date" id="glFrom" value="${esc(glFrom)}"></div><div><label for="glTo">ถึงวันที่</label><input type="date" id="glTo" value="${esc(glTo)}"></div></div>`;
+  html+=`<div class="dd-wrap" id="glDD"><div class="dd-trigger" id="glTrigger" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-controls="glPanel"><span id="glLabel">${glSelected?esc(accountLabelOfName(glSelected)):'เลือกบัญชีเพื่อดูแยกประเภท...'}</span><span class="chev">▾</span></div><div class="dd-panel" id="glPanel" style="display:none"><input class="dd-search" id="glDDSearch" type="text" placeholder="พิมพ์ค้นหาชื่อบัญชี..."><div id="glDDList"></div></div></div>`;
 
  const qGl=(glQuery||'').trim().toLowerCase();
  const availableGlAccounts=allAccountNames.filter(n=>!qGl||n.toLowerCase().includes(qGl));
@@ -1283,29 +1308,21 @@ function renderAccountingReports(){const el=$('accountingReports');if(!el)return
 
  const activeId=document.activeElement?document.activeElement.id:null;
  let selStart=null,selEnd=null;
- if(activeId==='tbSearch'||activeId==='glSearch'){try{selStart=document.activeElement.selectionStart;selEnd=document.activeElement.selectionEnd;}catch(_){}}
+ if(activeId==='tbDDSearch'||activeId==='glDDSearch'){try{selStart=document.activeElement.selectionStart;selEnd=document.activeElement.selectionEnd;}catch(_){}}
 
- el.innerHTML=html;
+el.innerHTML=html;
+  if(!window.__reportDropdownsInited){window.__reportDropdownsInited=true;initReportDropdowns()}
+  el.querySelectorAll('[data-gl-select]').forEach(b=>b.addEventListener('click',()=>{glSelected=(glSelected===b.dataset.glSelect?null:b.dataset.glSelect);renderAccountingReports();}));
 
- // attach listeners
- const tbF=$('tbFrom');if(tbF)tbF.addEventListener('change',e=>{tbFrom=e.target.value;renderAccountingReports();});
- const tbT=$('tbTo');if(tbT)tbT.addEventListener('change',e=>{tbTo=e.target.value;renderAccountingReports();});
- const tbIn=$('tbSearch');if(tbIn)tbIn.addEventListener('input',e=>{tbQuery=e.target.value;renderAccountingReports();});
- const tbCl=$('tbClear');if(tbCl)tbCl.addEventListener('click',()=>{tbQuery='';renderAccountingReports();const inp=$('tbSearch');if(inp)inp.focus();});
+  const tbF=$('tbFrom');if(tbF&&!tbF.__ddListener){tbF.addEventListener('change',e=>{tbFrom=e.target.value;renderAccountingReports()});tbF.__ddListener=true}
+  const tbT=$('tbTo');if(tbT&&!tbT.__ddListener){tbT.addEventListener('change',e=>{tbTo=e.target.value;renderAccountingReports()});tbT.__ddListener=true}
+  const glF=$('glFrom');if(glF&&!glF.__ddListener){glF.addEventListener('change',e=>{glFrom=e.target.value;renderAccountingReports()});glF.__ddListener=true}
+  const glT=$('glTo');if(glT&&!glT.__ddListener){glT.addEventListener('change',e=>{glTo=e.target.value;renderAccountingReports()});glT.__ddListener=true}
 
- const glF=$('glFrom');if(glF)glF.addEventListener('change',e=>{glFrom=e.target.value;renderAccountingReports();});
- const glT=$('glTo');if(glT)glT.addEventListener('change',e=>{glTo=e.target.value;renderAccountingReports();});
- const glIn=$('glSearch');if(glIn)glIn.addEventListener('input',e=>{glQuery=e.target.value;renderAccountingReports();});
- const glCl=$('glClear');if(glCl)glCl.addEventListener('click',()=>{glQuery='';renderAccountingReports();const inp=$('glSearch');if(inp)inp.focus();});
-
- el.querySelectorAll('[data-gl-select]').forEach(b=>b.addEventListener('click',()=>{glSelected=(glSelected===b.dataset.glSelect?null:b.dataset.glSelect);renderAccountingReports();}));
- const glBack=$('glBack');if(glBack)glBack.addEventListener('click',()=>{glSelected=null;renderAccountingReports();});
- const glReset=$('glReset');if(glReset)glReset.addEventListener('click',()=>{glSelected=null;renderAccountingReports();});
-
- if(activeId&&(activeId==='tbSearch'||activeId==='glSearch')&&$(activeId)){
-  $(activeId).focus();
-  if(selStart!==null&&selEnd!==null){try{$(activeId).setSelectionRange(selStart,selEnd);}catch(_){}}
- }
+if(activeId&&(activeId==='tbDDSearch'||activeId==='glDDSearch')&&$(activeId)){
+   $(activeId).focus();
+   if(selStart!==null&&selEnd!==null){try{$(activeId).setSelectionRange(selStart,selEnd);}catch(_){}}
+  }
 }
 
 function planMonth(){return $('budgetMonth')?.value||currentMonth()}
@@ -1441,7 +1458,6 @@ if(appLang==='th'){$('langTh').classList.remove('secondary');$('langTh').classLi
 if(appLang==='en')translateTree(document.body);
 const __i18nObserver=new MutationObserver(muts=>{if(appLang!=='en')return;for(const m of muts){if(m.type==='childList'){m.addedNodes.forEach(n=>translateNode(n));}else if(m.type==='characterData'){const n=m.target;if(n&&n.nodeType===3){if(n.__orig===undefined)n.__orig=n.nodeValue;const t=translateText(n.__orig);if(n.nodeValue!==t)n.nodeValue=t;}}}});
 __i18nObserver.observe(document.body,{childList:true,subtree:true,characterData:true});
-
   const splash=document.getElementById('splashScreen');
   const hideSplash=()=>{if(!splash||splash.classList.contains('splash-hide'))return;splash.classList.add('splash-hide');setTimeout(()=>splash.remove(),650);};
   setTimeout(hideSplash,Math.max(300,900-(Date.now()-splashShownAt)));
@@ -1599,8 +1615,9 @@ const DEFAULTS=`1000|สินทรัพย์||H
 5620|ค่าธรรมเนียมธนาคาร|5600
 5700|ค่าใช้จ่ายอื่น|5000|H
 5710|ค่าใช้จ่ายเบ็ดเตล็ด|5700`;
-let coa=[],links={version:1,registry:[],map:{}},locked=false,lockMsg='';
-const ui={tab:'tree',q:'',open:new Set(),hidden:false,editing:null,mapRid:null};
+let coa=[],links={version:2,registry:[],map:{}},locked=false,lockMsg='';
+const MAP_STATUS={Legacy:'Legacy',Mapped:'Mapped',Verified:'Verified',Unmapped:'Unmapped'};
+const ui={tab:'tree',q:'',open:new Set(),hidden:false,editing:null,mapRid:null,mapFilter:'all',mapKind:'all',mapQuery:''};
 const get=id=>coa.find(x=>x.id===id);
 const kids=id=>coa.filter(x=>x.parentId===id);
 const desc=id=>{const o=[];kids(id).forEach(k=>{o.push(k.id,...desc(k.id))});return o};
@@ -1610,9 +1627,19 @@ function buildDefaults(){const byCode={};const out=DEFAULTS.split('\n').map(l=>{
 function saveCoa(){if(locked)return false;try{localStorage.setItem(COA_KEY,JSON.stringify({version:1,accounts:coa}));return true}catch(e){return false}}
 function saveLinks(){if(locked)return false;try{localStorage.setItem(LINK_KEY,JSON.stringify(links));return true}catch(e){return false}}
 function readKey(k){let raw;try{raw=localStorage.getItem(k)}catch(e){return{err:1}}if(raw===null)return{missing:1};try{return{val:JSON.parse(raw)}}catch(e){return{err:1}}}
+function migrateLinksV2(l){
+  if(!l||!Array.isArray(l.registry)||!l.map||typeof l.map!=='object')return l;
+  let ch=false;
+  l.registry.forEach(r=>{
+    if(!r.status){r.status=r.map&&r.rid&&l.map[r.rid]?MAP_STATUS.Mapped:MAP_STATUS.Legacy;ch=true}
+  });
+  if(l.version!==2){l.version=2;ch=true}
+  if(ch)try{saveLinks()}catch(e){}
+  return l;
+}
 function init(){const r=readKey(COA_KEY);if(r.missing){coa=buildDefaults();saveCoa()}else if(r.err||!r.val||!Array.isArray(r.val.accounts)){locked=true;lockMsg='ข้อมูลผังบัญชีในเครื่องอ่านไม่ได้ ระบบจะไม่เขียนทับข้อมูลเดิม'}else coa=r.val.accounts;
- const l=readKey(LINK_KEY);if(l.val&&Array.isArray(l.val.registry)&&l.val.map&&typeof l.val.map==='object')links=l.val;else if(!l.missing){locked=true;lockMsg='ข้อมูลการจับคู่ในเครื่องอ่านไม่ได้ ระบบจะไม่เขียนทับข้อมูลเดิม'}
- if(!locked){const iss=integrity(coa);if(iss.length){locked=true;lockMsg='ผังบัญชีไม่ผ่านการตรวจสอบ: '+iss.slice(0,3).join('; ')}}}
+  const l=readKey(LINK_KEY);if(l.val&&Array.isArray(l.val.registry)&&l.val.map&&typeof l.val.map==='object')links=migrateLinksV2(l.val);else if(!l.missing){locked=true;lockMsg='ข้อมูลการจับคู่ในเครื่องอ่านไม่ได้ ระบบจะไม่เขียนทับข้อมูลเดิม'}
+  if(!locked){const iss=integrity(coa);if(iss.length){locked=true;lockMsg='ผังบัญชีไม่ผ่านการตรวจสอบ: '+iss.slice(0,3).join('; ')}}}
 function integrity(list){const is=[],ids=new Set(),codes=new Set(),by=new Map(list.map(x=>[x.id,x]));
  list.forEach(x=>{if(ids.has(x.id))is.push('ID ซ้ำ '+x.id);ids.add(x.id);if(codes.has(x.code))is.push('รหัสซ้ำ '+x.code);codes.add(x.code);
  if(!/^[1-5]\d{3}$/.test(String(x.code)))is.push('รูปแบบรหัสไม่ถูกต้อง '+x.code);else if(DIGIT[String(x.code)[0]]!==x.type)is.push('รหัสไม่ตรงประเภท '+x.code);
@@ -1620,10 +1647,10 @@ function integrity(list){const is=[],ids=new Set(),codes=new Set(),by=new Map(li
  if(x.parentId){const p=by.get(x.parentId);if(!p)is.push('ไม่พบบัญชีแม่ '+x.code);else{if(!p.isHeader)is.push('บัญชีแม่ต้องเป็น Header '+x.code);if(p.type!==x.type)is.push('ประเภทไม่ตรงบัญชีแม่ '+x.code)}
   const seen=new Set([x.id]);let c=by.get(x.parentId);while(c){if(seen.has(c.id)){is.push('Parent Cycle '+x.code);break}seen.add(c.id);c=c.parentId?by.get(c.parentId):null}}});return is}
 function sources(){const o=[];accounts.forEach(a=>o.push({kind:'account',name:a.name,type:a.accountType}));['Income','Expense'].forEach(k=>(cats[k]||[]).forEach(c=>o.push({kind:k,name:catName(c),type:catType(c)})));return o}
-function sync(){const src=sources();if(locked)return src.map(s=>{const e=links.registry.find(r=>r.kind===s.kind&&r.name===s.name);s.rid=e?e.rid:null;return s});
- const used=new Set();let ch=false;src.forEach(s=>{let e=links.registry.find(r=>r.kind===s.kind&&r.name===s.name&&!used.has(r.rid));if(!e){e={rid:uuid(),kind:s.kind,name:s.name};links.registry.push(e);ch=true}used.add(e.rid);s.rid=e.rid});
- const keep=links.registry.filter(r=>used.has(r.rid));if(keep.length!==links.registry.length){links.registry=keep;Object.keys(links.map).forEach(k=>{if(!used.has(k))delete links.map[k]});ch=true}
- if(ch)saveLinks();return src}
+function sync(){const src=sources();if(locked)return src.map(s=>{const e=links.registry.find(r=>r.kind===s.kind&&r.name===s.name);s.rid=e?e.rid:null;s.status=e?e.status:MAP_STATUS.Unmapped;return s});
+  const used=new Set();let ch=false;src.forEach(s=>{let e=links.registry.find(r=>r.kind===s.kind&&r.name===s.name&&!used.has(r.rid));if(!e){e={rid:uuid(),kind:s.kind,name:s.name,status:MAP_STATUS.Unmapped};links.registry.push(e);ch=true}used.add(e.rid);s.rid=e.rid;s.status=e.status});
+  const keep=links.registry.filter(r=>used.has(r.rid));if(keep.length!==links.registry.length){links.registry=keep;Object.keys(links.map).forEach(k=>{if(!used.has(k))delete links.map[k]});ch=true}
+  if(ch)saveLinks();return src}
 function renameSource(kind,oldN,newN){if(locked)return;sync();const e=links.registry.find(r=>r.kind===kind&&r.name===oldN);if(e){e.name=newN;saveLinks()}}
 const canPost=(id,o)=>{const x=get(id);if(!x||!x.isActive||x.isHeader||!x.allowPosting||x.special==='template')return false;return x.special==='opening'?!!(o&&o.opening):true};
 const canMapTo=id=>{const x=get(id);return !!x&&x.isActive&&!x.isHeader&&x.allowPosting&&!isSpecial(x)};
@@ -1644,11 +1671,14 @@ function deactivate(id){const x=get(id);if(!x)return{ok:false,error:'ไม่�
 function activate(id){const x=get(id);if(!x)return{ok:false,error:'ไม่พบบัญชี'};if(locked)return{ok:false,error:lockMsg};const p=x.parentId&&get(x.parentId);if(p&&!p.isActive)return{ok:false,error:'ต้องเปิดใช้งานบัญชีแม่ก่อน'};x.isActive=true;saveCoa();return{ok:true}}
 function nextCode(parentId){const p=get(parentId);if(!p)return '';const n=+p.code,step=n%1000===0?100:n%100===0?10:1,max=step===100?900:step===10?90:9;for(let i=step;i<=max;i+=step){const c=String(n+i);if(!coa.some(y=>y.code===c))return c}return ''}
 function addCreditCard(name){const p=coa.find(x=>x.code==='2100');if(!p)return{ok:false,error:'ไม่พบ 2100'};let code='';for(let c=2111;c<=2199&&!code;c++)if(!coa.some(y=>y.code===String(c)))code=String(c);for(let c=2101;c<=2109&&!code;c++)if(!coa.some(y=>y.code===String(c)))code=String(c);if(!code)return{ok:false,error:'รหัสในช่วง 2100 เต็ม'};return addAccount({name,code,parentId:p.id,isHeader:false,allowPosting:true,isCreditCard:true})}
-function setLink(rid,coaId){if(locked)return{ok:false,error:lockMsg};const s=sync().find(z=>z.rid===rid);if(!s)return{ok:false,error:'ไม่พบรายการต้นทางที่ยืนยันตัวตนได้'};const x=get(coaId);if(!x||!canMapTo(coaId))return{ok:false,error:'จับคู่กับบัญชีนี้ไม่ได้ (Header/ปิดใช้งาน/Template/บัญชีพัก/ไม่อนุญาต Post)'};if(x.type!==s.type)return{ok:false,error:'ประเภทบัญชีไม่ตรงกัน (ต้องเป็น '+(TYPES[s.type]||s.type)+')'};links.map[rid]=coaId;saveLinks();return{ok:true}}
-function clearLink(rid){if(locked)return{ok:false,error:lockMsg};delete links.map[rid];saveLinks();return{ok:true}}
+function setLink(rid,coaId){if(locked)return{ok:false,error:lockMsg};const s=sync().find(z=>z.rid===rid);if(!s)return{ok:false,error:'ไม่พบรายการต้นทางที่ยืนยันตัวตนได้'};const x=get(coaId);if(!x||!canMapTo(coaId))return{ok:false,error:'จับคู่กับบัญชีนี้ไม่ได้ (Header/ปิดใช้งาน/Template/บัญชีพัก/ไม่อนุญาต Post)'};if(x.type!==s.type)return{ok:false,error:'ประเภทบัญชีไม่ตรงกัน (ต้องเป็น '+(TYPES[s.type]||s.type)+')'};links.map[rid]=coaId;const e=links.registry.find(r=>r.rid===rid);if(e)e.status=MAP_STATUS.Mapped;saveLinks();return{ok:true}}
+function verifyLink(rid){if(locked)return{ok:false,error:lockMsg};const e=links.registry.find(r=>r.rid===rid);if(!e||!links.map[rid])return{ok:false,error:'ไม่พบการจับคู่ที่ยืนยันได้'};if(!canMapTo(links.map[rid]))return{ok:false,error:'บัญชีเป้าหมายไม่ผ่านเงื่อนไขการยืนยัน'};e.status=MAP_STATUS.Verified;saveLinks();return{ok:true}}
+function unverifyLink(rid){if(locked)return{ok:false,error:lockMsg};const e=links.registry.find(r=>r.rid===rid);if(!e)return{ok:false,error:'ไม่พบหมายถึง'};e.status=links.map[rid]?MAP_STATUS.Mapped:MAP_STATUS.Unmapped;saveLinks();return{ok:true}}
 const isMapped=s=>!!(s.rid&&links.map[s.rid]&&canMapTo(links.map[s.rid]));
+const isVerified=s=>!!(s.rid&&links.map[s.rid]&&canMapTo(links.map[s.rid])&&(links.registry.find(r=>r.rid===s.rid)||{}).status===MAP_STATUS.Verified);
+function clearLink(rid){if(locked)return{ok:false,error:lockMsg};delete links.map[rid];const e=links.registry.find(r=>r.rid===rid);if(e)e.status=MAP_STATUS.Unmapped;saveLinks();return{ok:true}}
 const unmapped=()=>sync().filter(s=>!isMapped(s));
-window.MyMoneyCOA={get:()=>coa,links:()=>links,validate:(o,id)=>check(build(o,id?get(id):null),id?get(id):null),addAccount,updateAccount,deactivate,activate,addCreditCard,setLink,clearLink,canPost,canMapTo,unmapped,sources:sync,integrity:()=>integrity(coa),isLocked:()=>locked,nextCode};
+window.MyMoneyCOA={get:()=>coa,links:()=>links,validate:(o,id)=>check(build(o,id?get(id):null),id?get(id):null),addAccount,updateAccount,deactivate,activate,addCreditCard,setLink,clearLink,verifyLink,unverifyLink,canPost,canMapTo,isVerified,unmapped,sources:sync,integrity:()=>integrity(coa),isLocked:()=>locked,nextCode,status:(rid)=>(links.registry.find(r=>r.rid===rid)||{}).status||MAP_STATUS.Unmapped};
 window.coaRenameSource=renameSource;
 /* ---------- UI ---------- */
 const $$=id=>document.getElementById(id);
@@ -1659,8 +1689,21 @@ function treeHTML(){const q=ui.q.trim().toLowerCase();let h='';const walk=(x,d)=
  h+=`<div class="coa-row" data-code="${esc(x.code)}" style="padding-left:${d*14}px"><button class="coa-caret" data-coa-toggle="${x.id}" aria-label="ย่อ/ขยาย">${ks.length?(open?'▾':'▸'):'·'}</button><div class="grow"><strong>${esc(x.code)}</strong> ${esc(x.name)}<div class="coa-badges">${b}</div></div><button class="btn secondary" data-coa-edit="${x.id}">แก้ไข</button>${x.isActive?`<button class="btn danger" data-coa-off="${x.id}">ปิด</button>`:`<button class="btn secondary" data-coa-on="${x.id}">เปิด</button>`}</div>`;
  if(open)ks.forEach(k=>walk(k,d+1))};coa.filter(x=>!x.parentId).sort((a,b)=>a.code.localeCompare(b.code)).forEach(r=>walk(r,0));return h||emptyHTML('ไม่พบบัญชี')}
 function mapHTML(){const src=sync(),um=src.filter(s=>!isMapped(s)),mp=src.filter(isMapped);const lab={account:'บัญชี',Income:'หมวดรายรับ',Expense:'หมวดรายจ่าย'};
- const row=(s,m)=>{const t=m?get(links.map[s.rid]):null;return `<div class="settings-row" data-rid="${s.rid}"><div class="grow"><strong>${esc(s.name)}</strong><div class="small">${lab[s.kind]} · ${TYPES[s.type]||''}${t?' → <b>'+esc(t.code)+' '+esc(t.name)+'</b>':''}</div></div><button class="btn ${m?'secondary':'primary'}" data-coa-map="${s.rid}">${m?'เปลี่ยน':'จับคู่'}</button>${m?`<button class="btn danger" data-coa-unmap="${s.rid}">ล้าง</button>`:''}</div>`};
- return `<div class="small" style="margin:4px 0 8px">ยังไม่ได้จับคู่ ${um.length} · จับคู่แล้ว ${mp.length}</div><h3>ยังไม่ได้จับคู่ (Unmapped)</h3>${um.map(s=>row(s,false)).join('')||'<div class="small">จับคู่ครบทุกรายการแล้ว</div>'}<h3 style="margin-top:14px">จับคู่แล้ว</h3>${mp.map(s=>row(s,true)).join('')||'<div class="small">ยังไม่มีรายการ</div>'}`}
+const stBadge=s=>{const st=s.status||MAP_STATUS.Unmapped;const m={Legacy:'hd',Mapped:'ok',Verified:'ok',Unmapped:'warn'};return badge(st,m[st]||'warn')};
+  const filtered=src.filter(s=>{
+    if(ui.mapKind!=='all'&&s.kind!==ui.mapKind)return false;
+    const st=s.status||MAP_STATUS.Unmapped;
+    if(ui.mapFilter==='unmapped'&&isMapped(s))return false;
+    if(ui.mapFilter==='mapped'&&!isMapped(s))return false;
+    if(ui.mapFilter==='verified'&&!isVerified(s))return false;
+    if(ui.mapFilter==='legacy'&&st!==MAP_STATUS.Legacy)return false;
+    if(ui.mapQuery&&!String(s.name).toLowerCase().includes(ui.mapQuery))return false;
+    return true;
+  });
+  const row=s=>{const t=links.map[s.rid]?get(links.map[s.rid]):null;const st=s.status||MAP_STATUS.Unmapped;const isV=isVerified(s);
+  const acts=`<button class="btn ${t?'secondary':'primary'}" data-coa-map="${s.rid}">${t?'เปลี่ยน':'จับคู่'}</button>`+(t?`<button class="btn danger" data-coa-unmap="${s.rid}">ล้าง</button>`:'')+(t&&!isV?`<button class="btn primary" data-coa-verify="${s.rid}">ยืนยัน</button>`:'')+(isV?`<button class="btn secondary" data-coa-unverify="${s.rid}">ยกเลิกยืนยัน</button>`:'');
+  return `<div class="settings-row" data-rid="${s.rid}"><div class="grow"><strong>${esc(s.name)}</strong><div class="small">${lab[s.kind]} · ${TYPES[s.type]||''}${t?' → <b>'+esc(t.code)+' '+esc(t.name)+'</b>':''} ${stBadge(s)}</div></div><div class="rowbuttons">${acts}</div></div>`};
+  return `<div class="small" style="margin:4px 0 8px">ทั้งหมด ${src.length} · จับคู่แล้ว ${src.filter(isMapped).length} · ยืนยันแล้ว ${src.filter(isVerified).length} · ยังไม่ได้จับคู่ ${unmapped().length}</div><div class="map-controls"><button class="btn ${ui.mapFilter==='all'?'active':''}" data-coa-mfilter="all">ทั้งหมด</button><button class="btn ${ui.mapFilter==='unmapped'?'active':''}" data-coa-mfilter="unmapped">ยังไม่จับคู่</button><button class="btn ${ui.mapFilter==='mapped'?'active':''}" data-coa-mfilter="mapped">จับคู่แล้ว</button><button class="btn ${ui.mapFilter==='verified'?'active':''}" data-coa-mfilter="verified">ยืนยันแล้ว</button><button class="btn ${ui.mapFilter==='legacy'?'active':''}" data-coa-mfilter="legacy">Legacy</button></div><div class="map-controls"><button class="btn ${ui.mapKind==='all'?'active':''}" data-coa-mkind="all">ทั้งหมด</button><button class="btn ${ui.mapKind==='account'?'active':''}" data-coa-mkind="account">บัญชี</button><button class="btn ${ui.mapKind==='Income'?'active':''}" data-coa-mkind="Income">categories รายรับ</button><button class="btn ${ui.mapKind==='Expense'?'active':''}" data-coa-mkind="Expense">categories 详情จ่าย</button></div><div style="margin-bottom:8px"><input id="coaMapSearch" type="search" placeholder="ค้นหาชื่อต้นทาง" value="${esc(ui.mapQuery)}" style="width:100%"></div>${filtered.length?filtered.map(row).join(''):'<div class="small">ไม่พบข้อมูลตามตัวกรอง</div>'}`}
 function body(){const b=$$('coaBody');if(b)b.innerHTML=ui.tab==='tree'?treeHTML():mapHTML();const c=$$('coaUnCount');if(c)c.textContent=unmapped().length;}
 window.renderCOA=function(){const p=$$('page-coa');if(!p)return;sync();p.innerHTML=`<div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">CHART OF ACCOUNTS</p><h2>ผังบัญชี</h2></div><button class="btn secondary" data-go="settings">← ย้อนกลับ</button></div>${locked?`<div class="warning-note">${esc(lockMsg)}</div>`:''}<div class="notice" style="margin-bottom:10px">ผังบัญชีใช้เตรียมโครงสร้างและการจับคู่เท่านั้น ยังไม่กระทบการบันทึกรายการ ยอดคงเหลือ และรายงานเดิม</div><div class="actions"><button class="${ui.tab==='tree'?'active':''}" data-coa-tab="tree">ผังบัญชี</button><button class="${ui.tab==='map'?'active':''}" data-coa-tab="map">จับคู่ (<span id="coaUnCount">0</span>)</button></div><section class="card stack" style="margin-top:10px">${ui.tab==='tree'?`<input id="coaSearch" type="search" placeholder="ค้นหารหัสหรือชื่อบัญชี" value="${esc(ui.q)}"><div class="row" style="flex-wrap:wrap;gap:7px"><button class="btn primary" data-coa-add>＋ เพิ่มบัญชี</button><button class="btn secondary" data-coa-card>▭ สร้างบัตรเครดิต</button><button class="btn secondary" data-coa-all="1">ขยายทั้งหมด</button><button class="btn secondary" data-coa-all="0">ย่อทั้งหมด</button></div><label class="small"><input type="checkbox" id="coaHidden" ${ui.hidden?'checked':''}> แสดงบัญชีที่ปิดใช้งานและบัญชีระบบ</label>`:''}<div id="coaBody"></div></section>`;body()};
 function parentOptions(sel,selfId){const ex=selfId?new Set([selfId,...desc(selfId)]):new Set();return coa.filter(x=>x.isHeader&&x.isActive&&!isSpecial(x)&&!ex.has(x.id)).sort((a,b)=>a.code.localeCompare(b.code)).map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.code)} ${esc(x.name)}</option>`).join('')}
@@ -1688,6 +1731,196 @@ document.addEventListener('click',e=>{const q=s=>e.target.closest(s);let b;
 init();try{sync()}catch(e){console.warn('COA sync',e)}
 })();
 }, 0);
+/* ===== Phase 3.1: Journal Engine (isolated; own storage key; no transaction integration) ===== */
+(function(){
+const JOURNAL_KEY='mymoney_journal_entries_v1';
+const STATUS={Draft:'Draft',Posted:'Posted',Reversed:'Reversed',Void:'Void'};
+const SOURCE={Manual:'Manual',Transaction:'Transaction',Transfer:'Transfer',Reversal:'Reversal'};
+let journal={version:1,entries:[],nextNumber:1};
+let jlocked=false,jlockMsg='';
+const uuid=()=>(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)});
+function readJournal(){let raw;try{raw=localStorage.getItem(JOURNAL_KEY)}catch(e){return{err:1}}if(raw===null)return{missing:1};try{return{val:JSON.parse(raw)}}catch(e){return{err:1}}}
+function saveJournal(){if(jlocked)return false;try{localStorage.setItem(JOURNAL_KEY,JSON.stringify(journal));return true}catch(e){return false}}
+function getCOA(){return window.MyMoneyCOA?window.MyMoneyCOA.get():[]}
+function getAccount(id){const coa=getCOA();return coa.find(x=>x.id===id)}
+function canPostAccount(id){return window.MyMoneyCOA?window.MyMoneyCOA.canPost(id):false}
+const toCents=v=>Math.round(Number(v)*100);
+function checkDecimals(v){
+  const s=String(v);
+  const parts=s.split('.');
+  if(parts.length>2)return false;
+  if(parts.length===2&&parts[1].length>2)return false;
+  return true;
+}
+function validateLines(lines){
+  if(!Array.isArray(lines)||lines.length<2)return{ok:false,error:'ต้องมี Journal Lines อย่างน้อย 2  RECORD'};
+  let debit=0,credit=0;
+  for(const l of lines){
+    const d=Number(l.debit)||0,c=Number(l.credit)||0;
+    if(d<0||c<0)return{ok:false,error:'จำนวนเงินต้องไม่เป็นลบ'};
+    if(d>0&&c>0)return{ok:false,error:'แต่ละ RECORD ต้องมี Debit หรือ Credit อย่างใดอย่างหนึ่ง'};
+    if(!checkDecimals(l.debit))return{ok:false,error:'จำนวนเงินต้องมีทศนิยมไม่เกิน 2 ตำแหน่ง'};
+    if(!checkDecimals(l.credit))return{ok:false,error:'จำนวนเงินต้องมีทศนิยมไม่เกิน 2 ตำแหน่ง'};
+    if(!l.accountId)return{ok:false,error:'ต้องระบุบัญชี'};
+    const a=getAccount(l.accountId);
+    if(!a)return{ok:false,error:'ไม่พบบัญชี '+l.accountId};
+    if(!canPostAccount(l.accountId))return{ok:false,error:'บัญชีนี้ไม่สามารถลงบันทึกได้ (Header/Template/ปิดใช้งาน/3500)'};
+    if(a.code==='3500')return{ok:false,error:'ห้ามใช้บัญชี 3500 ในกำหนดปกติ'};
+    debit+=toCents(d);credit+=toCents(c);
+  }
+  if(debit!==credit)return{ok:false,error:'Debit และ Credit ไม่สมดุล (Debit:'+debit/100+' Credit:'+credit/100+')'};
+  return{ok:true,debit:debit/100,credit:credit/100};
+}
+function createDraft(lines,description,sourceType,sourceId){
+  if(jlocked)return{ok:false,error:jlockMsg};
+  const v=validateLines(lines);
+  if(!v.ok)return v;
+  const st=sourceType||'Manual';
+  const sid=sourceId!=null&&String(sourceId).trim()!==''?String(sourceId).trim():null;
+  if(sid){
+    const dup=journal.entries.find(e=>e.sourceType===st&&e.sourceId===sid);
+    if(dup)return{ok:false,error:'พบ Journal Entry ซ้ำจากแหล่งข้อมูลนี้แล้ว ('+st+' #'+sid+') ไม่สามารถสร้างใหม่ได้'};
+  }
+  const now=new Date().toISOString();
+  const entry={id:uuid(),entryNumber:journal.nextNumber++,date:now.slice(0,10),description:description||'',sourceType:st,sourceId:sid,status:'Draft',lines:lines.map(l=>({id:uuid(),accountId:l.accountId,debit:Number(l.debit)||0,credit:Number(l.credit)||0,description:l.description||''})),createdAt:now,updatedAt:now,postedAt:null,reversedEntryId:null};
+  journal.entries.push(entry);saveJournal();return{ok:true,entry};
+}
+function postEntry(id){
+  if(jlocked)return{ok:false,error:jlockMsg};
+  const e=journal.entries.find(x=>x.id===id);
+  if(!e)return{ok:false,error:'ไม่พบ Journal Entry'};
+  if(e.status!=='Draft')return{ok:false,error:'สามารถ Post ได้เฉพาะ Draft เท่านั้น'};
+  const v=validateLines(e.lines);
+  if(!v.ok)return{ok:false,error:v.error};
+  const now=new Date().toISOString();
+  e.status='Posted';e.postedAt=now;e.updatedAt=now;saveJournal();return{ok:true,entry:e};
+}
+function getEntry(id){return journal.entries.find(x=>x.id===id)||null}
+function getEntries(filter){
+  let list=journal.entries.slice();
+  if(filter){if(filter.status)list=list.filter(e=>e.status===filter.status);if(filter.sourceType)list=list.filter(e=>e.sourceType===filter.sourceType)}
+  return list.sort((a,b)=>(b.entryNumber||0)-(a.entryNumber||0));
+}
+function reverseEntry(id){
+  if(jlocked)return{ok:false,error:jlockMsg};
+  const e=journal.entries.find(x=>x.id===id);
+  if(!e)return{ok:false,error:'ไม่พบ Journal Entry'};
+  if(e.status!=='Posted')return{ok:false,error:'สามารถกลับได้เฉพาะ Posted เท่านั้น'};
+  if(e.reversedEntryId)return{ok:false,error:'Entries นี้ถูกกลับแล้ว'};
+  const now=new Date().toISOString();
+  const reversedLines=e.lines.map(l=>({accountId:l.accountId,debit:Number(l.credit)||0,credit:Number(l.debit)||0,description:l.description||''}));
+  const rev={id:uuid(),entryNumber:journal.nextNumber++,date:now.slice(0,10),description:'Reversal of '+e.entryNumber,sourceType:'Reversal',sourceId:e.id,status:'Posted',lines:reversedLines.map(l=>({id:uuid(),accountId:l.accountId,debit:l.debit,credit:l.credit,description:l.description})),createdAt:now,updatedAt:now,postedAt:now,reversedEntryId:null};
+  e.reversedEntryId=rev.id;journal.entries.push(rev);saveJournal();return{ok:true,entry:rev,original:e};
+}
+function voidEntry(id){
+  if(jlocked)return{ok:false,error:jlockMsg};
+  const e=journal.entries.find(x=>x.id===id);
+  if(!e)return{ok:false,error:'ไม่พบ Journal Entry'};
+  if(e.status!=='Draft')return{ok:false,error:'สามารถ Void ได้เฉพาะ Draft เท่านั้น'};
+  e.status='Void';e.updatedAt=new Date().toISOString();saveJournal();return{ok:true,entry:e};
+}
+function initJournal(){const r=readJournal();if(r.missing){journal={version:1,entries:[],nextNumber:1};saveJournal()}else if(r.err||!r.val||!Array.isArray(r.val.entries)){jlocked=true;jlockMsg='ข้อมูล Journal ในเครื่องอ่านไม่ได้ ระบบจะไม่เขียนทับข้อมูลเดิม'}else journal=r.val}
+function stats(){return{total:journal.entries.length,draft:journal.entries.filter(e=>e.status==='Draft').length,posted:journal.entries.filter(e=>e.status==='Posted').length,reversed:journal.entries.filter(e=>e.status==='Reversed').length,void:journal.entries.filter(e=>e.status==='Void').length}};
+function integrity(list){
+  const issues=[];
+  if(!Array.isArray(list))return{ok:false,issues:['ข้อมูล Journal ไม่ใช่ Array'],count:1};
+  const ids=new Set(),nums=new Set(),by=new Map(list.map(e=>[e.id,e]));
+  list.forEach((e,i)=>{
+    if(!e.id)issues.push('Entries ที่ '+i+' ไม่มี ID');
+    else if(ids.has(e.id))issues.push('Entry ID ซ้ำ '+e.id);else ids.add(e.id);
+    if(e.entryNumber!=null){if(nums.has(e.entryNumber))issues.push('Entry Number ซ้ำ '+e.entryNumber);else nums.add(e.entryNumber)}
+    if(!e.status||!['Draft','Posted','Reversed','Void'].includes(e.status))issues.push('Entries '+e.id+' สถานะไม่ถูกต้อง: '+e.status);
+    if(!Array.isArray(e.lines))issues.push('Entries '+e.id+' ไม่มี Lines');
+    else{
+      if(e.lines.length<2)issues.push('Entries '+e.id+' มี Lines น้อยกว่า 2');
+      let debit=0,credit=0;
+      e.lines.forEach((l,li)=>{
+        const d=Number(l.debit)||0,c=Number(l.credit)||0;
+        if(d<0||c<0)issues.push('Entries '+e.id+' line '+li+' จำนวนติดลบ');
+        if(d>0&&c>0)issues.push('Entries '+e.id+' line '+li+' มีทั้ง Debit และ Credit');
+        if(!l.accountId)issues.push('Entries '+e.id+' line '+li+' ไม่ระบุบัญชี');
+        else{const a=getAccount(l.accountId);if(!a)issues.push('Entries '+e.id+' line '+li+' อ้างอิงบัญชีไม่found '+l.accountId);else if(!canPostAccount(l.accountId))issues.push('Entries '+e.id+' line '+li+' บัญชีไม่Postable '+a.code);}
+        debit+=d;credit+=c;
+      });
+      if(Math.abs(debit-credit)>0.01)issues.push('Entries '+e.id+' Debit/Credit ไม่สมดุล D:'+debit+' C:'+credit);
+    }
+    if(e.reversedEntryId&&e.reversedEntryId!==e.id){const rev=by.get(e.reversedEntryId);if(!rev)issues.push('Entries '+e.id+' อ้างอิง Reversal ไม่found');else if(rev.sourceId!==e.id)issues.push('Entries '+e.id+' Reversal sourceId ไม่ตรง')}
+  });
+  return{ok:issues.length===0,issues,count:issues.length};
+}
+window.MyMoneyJournal={createDraft,postEntry,getEntry,getEntries,reverseEntry,voidEntry,validate:validateLines,integrity:()=>integrity(journal.entries),isLocked:()=>jlocked,stats,getAccount,canPostAccount};
+initJournal();
+})();
+/* ===== Phase 3.2.1: Transaction-Journal Integration Layer (isolated; no schema changes; no auto-post) ===== */
+(function(){
+const TXJ_KEY='mymoney_tx_journal_links_v1';
+let txj={version:1,links:[]};
+let txjlocked=false,txjlockMsg='';
+function readTxJ(){let raw;try{raw=localStorage.getItem(TXJ_KEY)}catch(e){return{err:1}}if(raw===null)return{missing:1};try{return{val:JSON.parse(raw)}}catch(e){return{err:1}}}
+function saveTxJ(){if(txjlocked)return false;try{localStorage.setItem(TXJ_KEY,JSON.stringify(txj));return true}catch(e){return false}}
+function initTxJ(){const r=readTxJ();if(r.missing){txj={version:1,links:[]};saveTxJ()}else if(r.err||!r.val||!Array.isArray(r.val.links)){txjlocked=true;txjlockMsg='ข้อมูลเชื่อม Transaction-Journal อ่านไม่ได้ ระบบจะไม่เขียนทับข้อมูลเดิม'}else txj=r.val}
+function findLink(txId,revision){return txj.links.find(l=>l.transactionId===txId&&l.revision===(revision||0))}
+function findLinksByTx(txId){return txj.links.filter(l=>l.transactionId===txId).sort((a,b)=>(b.revision||0)-(a.revision||0))}
+function addLink(txId,journalEntryId,revision,sourceType){if(txjlocked)return{ok:false,error:txjlockMsg};const link={transactionId:txId,journalEntryId,revision:revision||0,sourceType:sourceType||'Transaction',createdAt:new Date().toISOString()};txj.links.push(link);saveTxJ();return{ok:true,link}}
+function getCOA(){return window.MyMoneyCOA?window.MyMoneyCOA.get():[]}
+function getAccount(id){const coa=getCOA();return coa.find(x=>x.id===id)}
+function canPostAccount(id){return window.MyMoneyCOA?window.MyMoneyCOA.canPost(id):false}
+function mapSourceToCOA(kind,name){if(!window.MyMoneyCOA)return null;const src=window.MyMoneyCOA.sources().find(s=>s.kind===kind&&s.name===name);if(!src||!src.rid)return null;const coaId=window.MyMoneyCOA.links().map[src.rid];if(!coaId||!canPostAccount(coaId))return null;return coaId}
+function buildJournalLines(tx){
+  const lines=[];
+  const amt=Number(tx.amount)||0;
+  if(tx.type==='Income'){
+    const acc=mapSourceToCOA('account',tx.account||'');
+    const cat=mapSourceToCOA('Income',tx.category||'');
+    if(!acc||!cat)return{ok:false,error:'ไม่พบ Mapping สำหรับบัญชีหรือcategories รายรับ'};
+    lines.push({accountId:acc,debit:amt,credit:0,description:tx.title||''});
+    lines.push({accountId:cat,debit:0,credit:amt,description:tx.title||''});
+  }else if(tx.type==='Expense'){
+    const acc=mapSourceToCOA('account',tx.account||'');
+    const cat=mapSourceToCOA('Expense',tx.category||'');
+    if(!acc||!cat)return{ok:false,error:'ไม่พบ Mapping สำหรับบัญชีหรือcategories 详情จ่าย'};
+    lines.push({accountId:cat,debit:amt,credit:0,description:tx.title||''});
+    lines.push({accountId:acc,debit:0,credit:amt,description:tx.title||''});
+  }else if(tx.type==='Transfer'){
+    const from=mapSourceToCOA('account',tx.account||'');
+    const to=mapSourceToCOA('account',tx.to||'');
+    if(!from||!to)return{ok:false,error:'ไม่พบ Mapping สำหรับบัญชีต้นทางหรือปลายทาง'};
+    lines.push({accountId:to,debit:amt,credit:0,description:tx.title||('โอนจาก '+tx.account+' ไป '+tx.to)});
+    lines.push({accountId:from,debit:0,credit:amt,description:tx.title||('โอนจาก '+tx.account+' ไป '+tx.to)});
+  }else return{ok:false,error:'ไม่รู้จักประเภท Transaction'};
+  return{ok:true,lines};
+}
+function postTransactionToJournal(txId,revision){
+  if(txjlocked)return{ok:false,error:txjlockMsg};
+  if(!window.MyMoneyJournal)return{ok:false,error:'Journal Engine ไม่พร้อม'};
+  const tx=Array.isArray(tx)?tx.find(t=>String(t.id)===String(txId)):null;
+  if(!tx)return{ok:false,error:'ไม่พบ Transaction'};
+  const dup=findLink(txId,revision||0);
+  if(dup&&dup.journalEntryId)return{ok:false,error:'Transaction นี้มี Journal แล้วใน Revision นี้'};
+  const bl=buildJournalLines(tx);
+  if(!bl.ok)return{ok:false,error:bl.error};
+  const draft=window.MyMoneyJournal.createDraft(bl.lines,tx.title||'','Transaction',txId);
+  if(!draft.ok)return{ok:false,error:draft.error};
+  const posted=window.MyMoneyJournal.postEntry(draft.entry.id);
+  if(!posted.ok)return{ok:false,error:posted.error};
+  const link=addLink(txId,posted.entry.id,revision||0,'Transaction');
+  if(!link.ok)return{ok:false,error:link.error};
+  return{ok:true,entry:posted.entry,link:link.link};
+}
+function reverseTransactionJournal(txId,revision){
+  if(txjlocked)return{ok:false,error:txjlockMsg};
+  if(!window.MyMoneyJournal)return{ok:false,error:'Journal Engine ไม่พร้อม'};
+  const link=findLink(txId,revision||0);
+  if(!link||!link.journalEntryId)return{ok:false,error:'ไม่พบ Journal ของ Transaction นี้'};
+  const rev=window.MyMoneyJournal.reverseEntry(link.journalEntryId);
+  if(!rev.ok)return{ok:false,error:rev.error};
+  return{ok:true,reversal:rev.entry,original:rev.original};
+}
+function getTransactionJournal(txId){return findLinksByTx(txId)}
+function hasJournal(txId,revision){return!!findLink(txId,revision||0)}
+window.MyMoneyTxJournal={postTransactionToJournal,reverseTransactionJournal,getTransactionJournal,hasJournal,buildJournalLines,isLocked:()=>txjlocked,init:initTxJ};
+initTxJ();
+})();
 </script>
 
 
