@@ -947,7 +947,19 @@ body.record-page .brand-copy h1{font-size:20px}
   </section>
 
   <section class="page" id="page-settings">
-    <div class="section" style="margin-top:5px"><div><p class="eyebrow">SETTINGS</p><h2>ตั้งค่า</h2></div></div> <button class="feature-link" data-go="coa" style="width:100%;margin-bottom:10px"><span class="feature-icon">▦</span><strong>ผังบัญชี (Chart of Accounts)</strong><small>จัดการรหัสบัญชีและจับคู่บัญชี/หมวดหมู่เดิม</small></button>
+    <div class="card settings-collapse-card">
+  <button class="settings-collapse-toggle" type="button" id="coaSettingsToggle" aria-expanded="false" aria-controls="coaSettingsPanel">
+    <span class="settings-collapse-symbol" aria-hidden="true">▦</span>
+    <span class="settings-collapse-copy"><strong>ผังบัญชี (Chart of Accounts)</strong><small>จัดการรหัสบัญชีและจับคู่บัญชี/หมวดหมู่เดิม</small></span>
+    <span class="settings-collapse-arrow" aria-hidden="true">⌄</span>
+  </button>
+  <div class="settings-collapse-panel" id="coaSettingsPanel" hidden>
+    <div class="stack">
+      <p class="small">จัดการโครงสร้างผังบัญชี การตั้งค่าบัญชี และการจับคู่บัญชี/หมวดหมู่เดิม</p>
+      <button class="btn primary" data-go="coa" style="width:100%">เปิดหน้าผังบัญชี</button>
+    </div>
+  </div>
+</div>
     <div class="card settings-collapse-card">
       <button class="settings-collapse-toggle" type="button" id="accountsSettingsToggle" aria-expanded="false" aria-controls="accountsSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▤</span><span class="settings-collapse-copy"><strong>บัญชีและยอดตั้งต้น</strong><small>กำหนดประเภทบัญชี: สินทรัพย์ หนี้สิน ทุน รายได้ และค่าใช้จ่าย</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
       <div class="settings-collapse-panel" id="accountsSettingsPanel" hidden><div class="stack"><p class="small">กำหนดประเภทบัญชีให้ถูกต้อง เช่น เงินสด = สินทรัพย์ และบัตรเครดิต = หนี้สิน ระบบจะนำประเภทบัญชีไปใช้สร้างรายการเดบิต–เครดิตอัตโนมัติ</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount">＋ เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div></div>
@@ -1077,6 +1089,7 @@ function currentMonth(){return localDate().slice(0,7)}
 function download(name,content,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 const pageScrollPositions={};
 function navigate(page){
+  console.log('NAVIGATE: called with page =', page);
   const current=document.querySelector('.page.active');
   const currentPage=current?.id?.replace('page-','')||'home';
   if(currentPage)pageScrollPositions[currentPage]=window.scrollY||window.pageYOffset||0;
@@ -1088,7 +1101,7 @@ function navigate(page){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
   if(page==='home')renderHome();
   if(page==='settings')renderSettings();
-  if(page==='coa')renderCOA();
+  if(page==='coa'){console.log('PRE: about to render COA page');renderCOA();console.log('POST: renderCOA completed');}
   if(page==='reports')renderReports();
   if(page==='history')renderHistory();
   if(['planning','budget','bills','debts'].includes(page))renderPlanning();
@@ -1098,7 +1111,7 @@ function navigate(page){
   const targetY=(page==='home'&&isPlanningSubpage)?(pageScrollPositions.home||0):0;
   requestAnimationFrame(()=>window.scrollTo({top:targetY,behavior:'auto'}));
 }
-document.addEventListener('click',e=>{const go=e.target.closest('[data-go]');if(go){e.preventDefault();navigate(go.dataset.go)}});
+document.addEventListener('click',e=>{console.log('EVENT: document received click');const go=e.target.closest('[data-go]');console.log('ANALYSIS: e.target tagName =', e.target.tagName, 'type =', e.target.type);console.log('SEARCH: closest [data-go] =', go);if(go){console.log('BUTTON: go.dataset.go =', go.dataset.go);e.preventDefault();navigate(go.dataset.go)}});
 function fillSelect(id,values,selected){const el=$(id);el.innerHTML=values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(values.includes(selected))el.value=selected}
 function setType(t){type=t;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b.dataset.type===t));$('categoryRow').hidden=t==='Transfer';$('transferRow').hidden=t!=='Transfer';fillSelect('category',catNames(cats[t]));fillSelect('account',accounts.map(a=>a.name));fillSelect('transferFrom',accounts.map(a=>a.name));fillSelect('transferTo',accounts.map(a=>a.name),accounts[1]?.name||accounts[0]?.name);$('save').textContent=t==='Expense'?'บันทึกรายจ่าย':t==='Income'?'บันทึกรายรับ':'บันทึกการโอน';$('formHeading').textContent=editingId?'แก้ไขรายการ':'บันทึกรายการ';const _sb=$('save');_sb.classList.remove('save-expense','save-transfer','save-income');if(t==='Expense')_sb.classList.add('save-expense');else if(t==='Transfer')_sb.classList.add('save-transfer');else _sb.classList.add('save-income')}
 document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>setType(b.dataset.type)));
@@ -1432,7 +1445,7 @@ $('readSlip').addEventListener('click',async()=>{
 function getJournalEntries(){const rows=[];tx.forEach(t=>{const amount=Number(t.amount)||0;if(!(amount>0))return;const pay=accounts.find(a=>a.name===t.account)||{accountType:'Asset',name:t.account||'ไม่ระบุบัญชี'};if(t.type==='Transfer'){const dest=accounts.find(a=>a.name===t.to)||{accountType:'Asset',name:t.to||'ไม่ระบุบัญชี'};rows.push({date:t.date,title:t.title,debit:dest.name,credit:pay.name,amount,sourceId:t.id});return;}const category=t.category|| (t.type==='Income'?'รายได้อื่น ๆ':'ค่าใช้จ่ายอื่น ๆ');if(t.type==='Expense'){rows.push({date:t.date,title:t.title,debit:category,credit:pay.name,amount,sourceId:t.id});}else if(t.type==='Income'){rows.push({date:t.date,title:t.title,debit:pay.name,credit:category,amount,sourceId:t.id});}});return rows;}
 function getJournalTotals(){return getJournalEntries().reduce((a,r)=>{a.debit+=r.amount;a.credit+=r.amount;return a;},{debit:0,credit:0});}
 $('form').addEventListener('submit' ,e=>{e.preventDefault();const amount=Number($('amount').value),title=$('title').value.trim();if(!(amount>0)||!title)return;if(editingId===null){const _d=$("date").value;if(tx.some(t=>t.type===type&&Number(t.amount)===amount&&String(t.date||"")===_d&&String(t.title||"").trim()===title)){if(!confirm("พบรายการที่คล้ายกัน (วันที่/จำนวน/ชื่อรายการ เหมือนกัน) ต้องการบันทึกซ้ำไหมคะ?"))return}}let account,to='';if(type==='Transfer'){account=$('transferFrom').value;to=$('transferTo').value;if(account===to){$('message').textContent='บัญชีต้นทางและปลายทางต้องต่างกัน';return}if(!account||!to){$('message').textContent='กรุณาตั้งค่าบัญชีให้ครบก่อน';return}}else account=$('account').value;if(!accounts.some(a=>a.name===account)){$('message').textContent='บัญชีที่เลือกไม่มีอยู่ในระบบ กรุณาเลือกบัญชีใหม่';return}if(type==='Transfer'&&to&&!accounts.some(a=>a.name===to)){$('message').textContent='บัญชีปลายทางไม่มีอยู่ในระบบ กรุณาเลือกบัญชีใหม่';return}const old=editingId===null?null:tx.find(t=>String(t.id)===String(editingId)),record={id:old?old.id:generateTxId(),type,amount,date:$('date').value,title,note:$('note').value.trim(),category:type==='Transfer'?'โอนเงิน':$('category').value,account,to,createdAt:old?.createdAt||new Date().toISOString()};if(editingId!==null)tx=tx.map(t=>String(t.id)===String(editingId)?record:t);else tx.push(record);const _wasEdit=editingId!==null,_wasTransfer=type==='Transfer';saveAll();resetForm();render();const _saveMsg=_wasEdit?'แก้ไขรายการสำเร็จ':_wasTransfer?'โอนเงินสำเร็จ':'บันทึกเรียบร้อยแล้ว';$('message').textContent=_saveMsg;try{showToast({message:_saveMsg,type:'success'})}catch(e){}navigate('home')});
-$('accountsSettingsToggle').addEventListener('click',()=>{const expanded=$('accountsSettingsToggle').getAttribute('aria-expanded')==='true';$('accountsSettingsToggle').setAttribute('aria-expanded',String(!expanded));$('accountsSettingsPanel').hidden=expanded;});$('categoriesSettingsToggle').addEventListener('click',()=>{const expanded=$('categoriesSettingsToggle').getAttribute('aria-expanded')==='true';$('categoriesSettingsToggle').setAttribute('aria-expanded',String(!expanded));$('categoriesSettingsPanel').hidden=expanded;});['backup','language'].forEach(name=>{const toggle=$(name+'SettingsToggle'),panel=$(name+'SettingsPanel');toggle.addEventListener('click',()=>{const expanded=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!expanded));panel.hidden=expanded;});});
+
 $('historyFilterToggle').addEventListener('click',()=>{const expanded=$('historyFilterToggle').getAttribute('aria-expanded')==='true';$('historyFilterToggle').setAttribute('aria-expanded',String(!expanded));$('historyFilterPanel').hidden=expanded;});$('historyLimit').addEventListener('change',renderHistory);$('search').addEventListener('input',renderHistory);$('filter').addEventListener('change',renderHistory);$('historyMonth').addEventListener('change',()=>{if($('historyMonth').value){$('historyFrom').value='';$('historyTo').value=''}renderHistory()});$('historyFrom').addEventListener('change',()=>{if($('historyFrom').value)$('historyMonth').value='';renderHistory()});$('historyTo').addEventListener('change',()=>{if($('historyTo').value)$('historyMonth').value='';renderHistory()});document.querySelectorAll('[data-date-range]').forEach(btn=>btn.addEventListener('click',()=>{const now=new Date(),fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let from,to=fmt(now);if(btn.dataset.dateRange==='today')from=to;else if(btn.dataset.dateRange==='7days'){const d=new Date(now);d.setDate(d.getDate()-6);from=fmt(d)}else if(btn.dataset.dateRange==='month')from=fmt(new Date(now.getFullYear(),now.getMonth(),1));else{from=fmt(new Date(now.getFullYear(),now.getMonth()-1,1));to=fmt(new Date(now.getFullYear(),now.getMonth(),0))}$('historyMonth').value='';$('historyFrom').value=from;$('historyTo').value=to;$('filter').value='Expense';renderHistory()}));$('clearFilters').addEventListener('click',()=>{$('search').value='';$('filter').value='All';$('historyMonth').value='';$('historyFrom').value='';$('historyTo').value='';renderHistory()});$('reportMonth').addEventListener('change',renderReports);
 function renderSettings(){const _accUsage=accounts.map((a,i)=>({a,i,count:tx.reduce((n,t)=>n+((t.account===a.name||t.to===a.name)?1:0),0)}));_accUsage.sort((x,y)=>y.count-x.count||x.i-y.i);$('accountSettings').innerHTML=_accUsage.map(u=>{const a=u.a,i=u.i;return `<div class="settings-row"><div class="grow"><strong>${esc(a.name)}</strong><div class="small">ประเภทบัญชี: ${ACCOUNT_TYPES[a.accountType]||'สินทรัพย์'} · ยอดตั้งต้น (บาท)</div></div><input type="number" step="0.01" data-opening="${i}" value="${Number(a.opening)||0}" aria-label="ยอดตั้งต้น ${esc(a.name)}"><button class="btn secondary" data-edit-account="${i}" aria-label="แก้ไขบัญชี">แก้ไข</button><button class="btn danger" data-remove-account="${i}" aria-label="ลบบัญชี">ลบ</button></div>`}).join('')||emptyHTML('ยังไม่มีบัญชี');renderCategorySettings()}
 function renderCategorySettings(){const t=$('categoryType').value;const _catList=cats[t]||[];const _catUsage=_catList.map((c,i)=>({c,i,count:tx.reduce((n,x)=>n+((x.type===t&&x.category===catName(c))?1:0),0)}));_catUsage.sort((x,y)=>y.count-x.count||x.i-y.i);$('categorySettings').innerHTML=_catUsage.map(u=>{const c=u.c,i=u.i;return `<div class="settings-row"><div class="grow">${esc(catName(c))}</strong><div class="small">ประเภทบัญชี: ${ACCOUNT_TYPES[catType(c)]||'ค่าใช้จ่าย'}</div></div><button class="btn secondary" data-edit-category="${i}" aria-label="แก้ไขหมวดหมู่">แก้ไข</button><button class="btn danger" data-remove-category="${i}">ลบ</button></div>`}).join('')||emptyHTML('ยังไม่มีหมวดหมู่')}
@@ -1915,6 +1928,44 @@ function reverseTransactionJournal(txId,revision){
   const rev=window.MyMoneyJournal.reverseEntry(link.journalEntryId);
   if(!rev.ok)return{ok:false,error:rev.error};
   return{ok:true,reversal:rev.entry,original:rev.original};
+}
+
+// Initialize Settings Collapse Accordion
+if(!window.__myMoneySettingsCollapseInited){
+  window.__myMoneySettingsCollapseInited=true;
+
+  document.addEventListener('click', function(e){
+    console.log('ACCORDION: EVENT received');
+
+    const toggle=e.target.closest('.settings-collapse-toggle');
+
+    console.log(
+      'ACCORDION: toggle found =',
+      toggle !== null,
+      'id =',
+      toggle?.id
+    );
+
+    if(!toggle)return;
+
+    const panelId=toggle.getAttribute('aria-controls');
+    const panel=document.getElementById(panelId);
+
+    console.log('ACCORDION: panelId =', panelId);
+    console.log('ACCORDION: panel found =', panel !== null);
+    console.log('ACCORDION: expanded before =', toggle.getAttribute('aria-expanded'));
+    console.log('ACCORDION: hidden before =', panel?.hidden);
+
+    if(!panel)return;
+
+    const expanded=toggle.getAttribute('aria-expanded')==='true';
+
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    panel.hidden=expanded;
+
+    console.log('ACCORDION: expanded after =', toggle.getAttribute('aria-expanded'));
+    console.log('ACCORDION: hidden after =', panel.hidden);
+  });
 }
 function getTransactionJournal(txId){return findLinksByTx(txId)}
 function hasJournal(txId,revision){return!!findLink(txId,revision||0)}
