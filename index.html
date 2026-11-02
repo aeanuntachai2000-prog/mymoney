@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="th" style="background:#000000">
 <head>
 <meta charset="utf-8">
@@ -730,6 +730,7 @@ body.record-page .brand-icon{width:34px;height:34px;border-radius:9px}
 .brand-copy .eyebrow{margin:0 0 2px}
 .brand-copy h1{margin:0;font-size:20px;font-weight:600;line-height:1.2}
 body.record-page .brand-copy h1{font-size:20px}
+.coa-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}.coa-row .btn{padding:6px 9px;font-size:12px}.coa-caret{background:none;border:0;color:var(--muted);width:24px;flex-shrink:0;font-size:15px}.coa-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}.pill.coa-ok{background:#064E3B;color:#6EE7B7}.pill.coa-hd{background:#1E293B;color:#93C5FD}.pill.coa-warn{background:#422006;color:#FCD34D}.pill.coa-off{background:#4C0519;color:#FDA4AF}
 </style>
 </head>
 <body style="background:#000000">
@@ -935,7 +936,7 @@ body.record-page .brand-copy h1{font-size:20px}
   </section>
 
   <section class="page" id="page-settings">
-    <div class="section" style="margin-top:5px"><div><p class="eyebrow">SETTINGS</p><h2>ตั้งค่า</h2></div></div>
+    <div class="section" style="margin-top:5px"><div><p class="eyebrow">SETTINGS</p><h2>ตั้งค่า</h2></div></div> <button class="feature-link" data-go="coa" style="width:100%;margin-bottom:10px"><span class="feature-icon">▦</span><strong>ผังบัญชี (Chart of Accounts)</strong><small>จัดการรหัสบัญชีและจับคู่บัญชี/หมวดหมู่เดิม</small></button>
     <div class="card settings-collapse-card">
       <button class="settings-collapse-toggle" type="button" id="accountsSettingsToggle" aria-expanded="false" aria-controls="accountsSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▤</span><span class="settings-collapse-copy"><strong>บัญชีและยอดตั้งต้น</strong><small>กำหนดประเภทบัญชี: สินทรัพย์ หนี้สิน ทุน รายได้ และค่าใช้จ่าย</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
       <div class="settings-collapse-panel" id="accountsSettingsPanel" hidden><div class="stack"><p class="small">กำหนดประเภทบัญชีให้ถูกต้อง เช่น เงินสด = สินทรัพย์ และบัตรเครดิต = หนี้สิน ระบบจะนำประเภทบัญชีไปใช้สร้างรายการเดบิต–เครดิตอัตโนมัติ</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount">＋ เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div></div>
@@ -954,7 +955,8 @@ body.record-page .brand-copy h1{font-size:20px}
     </div>
     <div class="notice" style="margin-top:14px">ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ</div>
   </section>
-  <footer>MyMoney · Personal Finance · v10 Mobile UX</footer>
+  <section class="page" id="page-coa"></section>
+<footer>MyMoney · Personal Finance · v10 Mobile UX</footer>
 </div>
 
 <nav class="bottom-nav" aria-label="เมนูหลัก">
@@ -1075,6 +1077,7 @@ function navigate(page){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.go===page));
   if(page==='home')renderHome();
   if(page==='settings')renderSettings();
+  if(page==='coa')renderCOA();
   if(page==='reports')renderReports();
   if(page==='history')renderHistory();
   if(['planning','budget','bills','debts'].includes(page))renderPlanning();
@@ -1417,11 +1420,11 @@ $('historyFilterToggle').addEventListener('click',()=>{const expanded=$('history
 function renderSettings(){const _accUsage=accounts.map((a,i)=>({a,i,count:tx.reduce((n,t)=>n+((t.account===a.name||t.to===a.name)?1:0),0)}));_accUsage.sort((x,y)=>y.count-x.count||x.i-y.i);$('accountSettings').innerHTML=_accUsage.map(u=>{const a=u.a,i=u.i;return `<div class="settings-row"><div class="grow"><strong>${esc(a.name)}</strong><div class="small">ประเภทบัญชี: ${ACCOUNT_TYPES[a.accountType]||'สินทรัพย์'} · ยอดตั้งต้น (บาท)</div></div><input type="number" step="0.01" data-opening="${i}" value="${Number(a.opening)||0}" aria-label="ยอดตั้งต้น ${esc(a.name)}"><button class="btn secondary" data-edit-account="${i}" aria-label="แก้ไขบัญชี">แก้ไข</button><button class="btn danger" data-remove-account="${i}" aria-label="ลบบัญชี">ลบ</button></div>`}).join('')||emptyHTML('ยังไม่มีบัญชี');renderCategorySettings()}
 function renderCategorySettings(){const t=$('categoryType').value;const _catList=cats[t]||[];const _catUsage=_catList.map((c,i)=>({c,i,count:tx.reduce((n,x)=>n+((x.type===t&&x.category===catName(c))?1:0),0)}));_catUsage.sort((x,y)=>y.count-x.count||x.i-y.i);$('categorySettings').innerHTML=_catUsage.map(u=>{const c=u.c,i=u.i;return `<div class="settings-row"><div class="grow">${esc(catName(c))}</strong><div class="small">ประเภทบัญชี: ${ACCOUNT_TYPES[catType(c)]||'ค่าใช้จ่าย'}</div></div><button class="btn secondary" data-edit-category="${i}" aria-label="แก้ไขหมวดหมู่">แก้ไข</button><button class="btn danger" data-remove-category="${i}">ลบ</button></div>`}).join('')||emptyHTML('ยังไม่มีหมวดหมู่')}
 $('addAccount').addEventListener('click',()=>{const name=prompt('ชื่อบัญชีใหม่ เช่น เงินสด / บัตรเครดิต / สินเชื่อ');if(name===null)return;const clean=name.trim();if(!clean)return;if(accounts.some(a=>a.name.toLowerCase()===clean.toLowerCase())){alert('มีบัญชีชื่อนี้แล้วค่ะ');return}const pick=prompt('ประเภทบัญชี\n1 = สินทรัพย์\n2 = หนี้สิน\n3 = ส่วนของเจ้าของ\n4 = รายได้\n5 = ค่าใช้จ่าย','1');if(pick===null)return;const map={'1':'Asset','2':'Liability','3':'Equity','4':'Income','5':'Expense'},accountType=map[pick.trim()];if(!accountType){alert('กรุณาเลือกประเภท 1–5 ค่ะ');return}accounts.push({name:clean,opening:0,accountType});saveAll();renderSettings();setType(type);render();try{showToast({message:'เพิ่มบัญชีแล้ว',type:'success'})}catch(e){}});
-$('accountSettings').addEventListener('click',e=>{const editBtn=e.target.closest('[data-edit-account]');if(editBtn){const i=Number(editBtn.dataset.editAccount),oldName=accounts[i]?.name;if(!oldName)return;const name=prompt('ชื่อบัญชีใหม่',oldName);if(name===null)return;const clean=name.trim();if(!clean)return;if(clean===oldName){const pick=prompt('ประเภทบัญชี\n1 = สินทรัพย์\n2 = หนี้สิน\n3 = ส่วนของเจ้าของ\n4 = รายได้\n5 = ค่าใช้จ่าย',({'Asset':'1','Liability':'2','Equity':'3','Income':'4','Expense':'5'})[accounts[i].accountType]||'1');if(pick!==null){const map={'1':'Asset','2':'Liability','3':'Equity','4':'Income','5':'Expense'};if(map[pick.trim()])accounts[i].accountType=map[pick.trim()];else alert('ประเภทบัญชีไม่ถูกต้องค่ะ');saveAll();renderSettings();setType(type);render();}return}if(accounts.some((a,idx)=>idx!==i&&a.name.toLowerCase()===clean.toLowerCase())){alert('มีบัญชีชื่อนี้แล้วค่ะ');return}tx.forEach(t=>{if(t.account===oldName)t.account=clean;if(t.to===oldName)t.to=clean});accounts[i].name=clean;saveAll();renderSettings();setType(type);render();$('accountMessage').textContent='แก้ไขบัญชีเรียบร้อยแล้ว';try{showToast({message:'แก้ไขบัญชีเรียบร้อยแล้ว',type:'success'})}catch(e){}return}const b=e.target.closest('[data-remove-account]');if(!b)return;const i=Number(b.dataset.removeAccount),name=accounts[i]?.name;if(!name)return;if(tx.some(t=>t.account===name||t.to===name)){alert('บัญชีนี้มีรายการผูกอยู่ จึงลบไม่ได้ เพื่อป้องกันข้อมูลเดิมเสียหายค่ะ');return}if(!confirm(`ลบบัญชี "${name}" ใช่ไหมคะ?`))return;accounts.splice(i,1);saveAll();renderSettings();setType(type);render();try{showToast({message:'ลบบัญชีแล้ว',type:'success'})}catch(e){};try{showToast({message:'ลบบัญชีแล้ว',type:'success'})}catch(e){}});
+$('accountSettings').addEventListener('click',e=>{const editBtn=e.target.closest('[data-edit-account]');if(editBtn){const i=Number(editBtn.dataset.editAccount),oldName=accounts[i]?.name;if(!oldName)return;const name=prompt('ชื่อบัญชีใหม่',oldName);if(name===null)return;const clean=name.trim();if(!clean)return;if(clean===oldName){const pick=prompt('ประเภทบัญชี\n1 = สินทรัพย์\n2 = หนี้สิน\n3 = ส่วนของเจ้าของ\n4 = รายได้\n5 = ค่าใช้จ่าย',({'Asset':'1','Liability':'2','Equity':'3','Income':'4','Expense':'5'})[accounts[i].accountType]||'1');if(pick!==null){const map={'1':'Asset','2':'Liability','3':'Equity','4':'Income','5':'Expense'};if(map[pick.trim()])accounts[i].accountType=map[pick.trim()];else alert('ประเภทบัญชีไม่ถูกต้องค่ะ');saveAll();renderSettings();setType(type);render();}return}if(accounts.some((a,idx)=>idx!==i&&a.name.toLowerCase()===clean.toLowerCase())){alert('มีบัญชีชื่อนี้แล้วค่ะ');return}tx.forEach(t=>{if(t.account===oldName)t.account=clean;if(t.to===oldName)t.to=clean});try{coaRenameSource('account',oldName,clean)}catch(_){}accounts[i].name=clean;saveAll();renderSettings();setType(type);render();$('accountMessage').textContent='แก้ไขบัญชีเรียบร้อยแล้ว';try{showToast({message:'แก้ไขบัญชีเรียบร้อยแล้ว',type:'success'})}catch(e){}return}const b=e.target.closest('[data-remove-account]');if(!b)return;const i=Number(b.dataset.removeAccount),name=accounts[i]?.name;if(!name)return;if(tx.some(t=>t.account===name||t.to===name)){alert('บัญชีนี้มีรายการผูกอยู่ จึงลบไม่ได้ เพื่อป้องกันข้อมูลเดิมเสียหายค่ะ');return}if(!confirm(`ลบบัญชี "${name}" ใช่ไหมคะ?`))return;accounts.splice(i,1);saveAll();renderSettings();setType(type);render();try{showToast({message:'ลบบัญชีแล้ว',type:'success'})}catch(e){};try{showToast({message:'ลบบัญชีแล้ว',type:'success'})}catch(e){}});
 $('saveAccounts').addEventListener('click',()=>{document.querySelectorAll('[data-opening]').forEach(input=>{const i=Number(input.dataset.opening);if(accounts[i])accounts[i].opening=Number(input.value)||0});saveAll();render();$('accountMessage').textContent='บันทึกบัญชีเรียบร้อยแล้ว';try{showToast({message:'บันทึกบัญชีแล้ว',type:'success'})}catch(e){}});
 $('categoryType').addEventListener('change',renderCategorySettings);
 $('addCategory').addEventListener('click',()=>{const t=$('categoryType').value,name=prompt('ชื่อหมวดหมู่ใหม่');if(name===null)return;const clean=name.trim();if(!clean)return;if(cats[t].some(c=>catName(c).toLowerCase()===clean.toLowerCase())){alert('มีหมวดหมู่นี้แล้วค่ะ');return}const pick=prompt('ประเภทบัญชี\\n1 = สินทรัพย์\\n2 = หนี้สิน\\n3 = ส่วนของเจ้าของ\\n4 = รายได้\\n5 = ค่าใช้จ่าย',t==='Income'?'4':'5');if(pick===null)return;const map={'1':'Asset','2':'Liability','3':'Equity','4':'Income','5':'Expense'},accountType=map[pick.trim()];if(!accountType){alert('กรุณาเลือกประเภท 1–5 ค่ะ');return}cats[t].push({name:clean,accountType});saveAll();renderSettings();setType(type);render();try{showToast({message:'เพิ่มหมวดหมู่แล้ว',type:'success'})}catch(e){};try{showToast({message:'เพิ่มหมวดหมู่แล้ว',type:'success'})}catch(e){}});
-$('categorySettings').addEventListener('click',e=>{const editBtn=e.target.closest('[data-edit-category]');if(editBtn){const t=$('categoryType').value,i=Number(editBtn.dataset.editCategory),oldName=catName(cats[t][i]);if(!oldName)return;const oldType=catType(cats[t][i]);const name=prompt('ชื่อหมวดหมู่ใหม่',oldName);if(name===null)return;const clean=name.trim();if(!clean)return;if(clean===oldName){const pick=prompt('ประเภทบัญชี\\n1 = สินทรัพย์\\n2 = หนี้สิน\\n3 = ส่วนของเจ้าของ\\n4 = รายได้\\n5 = ค่าใช้จ่าย',({'Asset':'1','Liability':'2','Equity':'3','Income':'4','Expense':'5'})[oldType]||'5');if(pick!==null){const map={'1':'Asset','2':'Liability','3':'Equity','4':'Income','5':'Expense'};if(map[pick.trim()])cats[t][i].accountType=map[pick.trim()];else alert('ประเภทบัญชีไม่ถูกต้องค่ะ');saveAll();renderSettings();setType(type);render();}return}if(cats[t].some((c,idx)=>idx!==i&&catName(c).toLowerCase()===clean.toLowerCase())){alert('มีหมวดหมู่นี้แล้วค่ะ');return}cats[t][i]={name:clean,accountType:oldType};tx.forEach(x=>{if(x.type===t&&x.category===oldName)x.category=clean});budgets.forEach(b=>{if(b.category===oldName)b.category=clean});bills.forEach(b=>{if(b.category===oldName)b.category=clean});saveAllData();renderSettings();setType(type);refreshFeatureSelects?.();render();renderPlanning();$('categoryMessage').textContent='แก้ไขหมวดหมู่เรียบร้อยแล้ว';return}const b=e.target.closest('[data-remove-category]');if(!b)return;const t=$('categoryType').value,i=Number(b.dataset.removeCategory),name=catName(cats[t][i]);if(!name)return;if(tx.some(x=>x.type===t&&x.category===name)){alert('หมวดหมู่นี้มีรายการเก่าใช้งานอยู่ จึงลบไม่ได้ค่ะ');return}cats[t].splice(i,1);saveAll();renderSettings();setType(type);render();try{showToast({message:'ลบหมวดหมู่แล้ว',type:'success'})}catch(e){}});
+$('categorySettings').addEventListener('click',e=>{const editBtn=e.target.closest('[data-edit-category]');if(editBtn){const t=$('categoryType').value,i=Number(editBtn.dataset.editCategory),oldName=catName(cats[t][i]);if(!oldName)return;const oldType=catType(cats[t][i]);const name=prompt('ชื่อหมวดหมู่ใหม่',oldName);if(name===null)return;const clean=name.trim();if(!clean)return;if(clean===oldName){const pick=prompt('ประเภทบัญชี\\n1 = สินทรัพย์\\n2 = หนี้สิน\\n3 = ส่วนของเจ้าของ\\n4 = รายได้\\n5 = ค่าใช้จ่าย',({'Asset':'1','Liability':'2','Equity':'3','Income':'4','Expense':'5'})[oldType]||'5');if(pick!==null){const map={'1':'Asset','2':'Liability','3':'Equity','4':'Income','5':'Expense'};if(map[pick.trim()])cats[t][i].accountType=map[pick.trim()];else alert('ประเภทบัญชีไม่ถูกต้องค่ะ');saveAll();renderSettings();setType(type);render();}return}if(cats[t].some((c,idx)=>idx!==i&&catName(c).toLowerCase()===clean.toLowerCase())){alert('มีหมวดหมู่นี้แล้วค่ะ');return}try{coaRenameSource(t,oldName,clean)}catch(_){}cats[t][i]={name:clean,accountType:oldType};tx.forEach(x=>{if(x.type===t&&x.category===oldName)x.category=clean});budgets.forEach(b=>{if(b.category===oldName)b.category=clean});bills.forEach(b=>{if(b.category===oldName)b.category=clean});saveAllData();renderSettings();setType(type);refreshFeatureSelects?.();render();renderPlanning();$('categoryMessage').textContent='แก้ไขหมวดหมู่เรียบร้อยแล้ว';return}const b=e.target.closest('[data-remove-category]');if(!b)return;const t=$('categoryType').value,i=Number(b.dataset.removeCategory),name=catName(cats[t][i]);if(!name)return;if(tx.some(x=>x.type===t&&x.category===name)){alert('หมวดหมู่นี้มีรายการเก่าใช้งานอยู่ จึงลบไม่ได้ค่ะ');return}cats[t].splice(i,1);saveAll();renderSettings();setType(type);render();try{showToast({message:'ลบหมวดหมู่แล้ว',type:'success'})}catch(e){}});
 $('saveCategories').addEventListener('click',()=>{saveAll();render();$('categoryMessage').textContent='บันทึกหมวดหมู่แล้ว';try{showToast({message:'บันทึกหมวดหมู่แล้ว',type:'success'})}catch(e){}});
 function runDataIntegrityCheck(){var issues=[];if(!Array.isArray(tx))issues.push("tx not array");tx.forEach(function(t){if(!t)issues.push("null tx");else{if(!["Income","Expense","Transfer"].includes(t.type))issues.push("bad type "+t.id);if(!Number.isFinite(Number(t.amount))||Number(t.amount)<=0)issues.push("bad amount "+t.id);if(!t.date)issues.push("bad date "+t.id);if(t.type==="Transfer"&&t.account===t.to)issues.push("same account "+t.id);if(t.account&&!accounts.some(function(a){return a.name===t.account}))issues.push("missing account "+t.account);if(t.to&&!accounts.some(function(a){return a.name===t.to}))issues.push("missing to "+t.to);}});if(!Array.isArray(accounts)||!accounts.length)issues.push("no accounts");if(!cats||!Array.isArray(cats.Expense)||!Array.isArray(cats.Income))issues.push("bad categories");accounts.forEach(function(a){if(!ACCOUNT_TYPES[a.accountType])issues.push("bad account type "+a.name)});var jt=getJournalTotals();if(Math.abs(jt.debit-jt.credit)>0.0001)issues.push("journal imbalance "+jt.debit+" vs "+jt.credit);var msg=issues.length?("Found "+issues.length+" issues: "+issues.slice(0,10).join("; ")):"Data integrity OK";alert(msg);}
 function exportJSON(){const data={app:'MyMoney',version:4,exportedAt:new Date().toISOString(),transactions:tx,accounts,categories:cats,budgets,bills,debts,goals};download('MyMoney_backup.json',JSON.stringify(data,null,2),'application/json;charset=utf-8');$('backupMessage').textContent='สร้างไฟล์สำรอง JSON แล้ว';;try{showToast({message:'สร้างไฟล์สำรอง JSON แล้ว',type:'success'})}catch(e){}}
@@ -1524,6 +1527,166 @@ function enhanceSelect(selectId){
 
 
 
+
+/* ===== Phase 2.2: Chart of Accounts & Account Mapping (isolated; own storage keys; no journal) ===== */
+(function(){
+const COA_KEY='mymoney_coa_v1',LINK_KEY='mymoney_coa_links_v1';
+const TYPES={Asset:'สินทรัพย์',Liability:'หนี้สิน',Equity:'ส่วนของเจ้าของ',Income:'รายได้',Expense:'ค่าใช้จ่าย'};
+const DIGIT={1:'Asset',2:'Liability',3:'Equity',4:'Income',5:'Expense'};
+const uuid=()=>(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)});
+const DEFAULTS=`1000|สินทรัพย์||H
+1100|เงินสด|1000|H
+1110|เงินสดในมือ|1100
+1200|เงินฝากธนาคาร|1000|H
+1210|เงินฝากธนาคาร - ออมทรัพย์|1200
+1220|เงินฝากธนาคาร - กระแสรายวัน|1200
+1500|เงินฝากประจำ|1200
+1300|เงินในกระเป๋าอิเล็กทรอนิกส์|1000|H
+1310|e-Wallet|1300
+1400|ลูกหนี้|1000|H
+1410|ลูกหนี้บุคคลอื่น|1400
+1420|ลูกหนี้เงินยืม|1400
+1600|เงินประกันและเงินมัดจำ|1000
+2000|หนี้สิน||H
+2100|เจ้าหนี้บัตรเครดิต|2000|H
+2110|บัตรเครดิต (Template)|2100|T
+2200|เงินกู้ยืมระยะสั้น|2000|H
+2210|สินเชื่อส่วนบุคคล|2200
+2220|หนี้ผ่อนชำระ|2200
+2300|เงินกู้ยืมระยะยาว|2000|H
+2310|เงินกู้ระยะยาว|2300
+2400|เจ้าหนี้อื่น|2000|H
+2410|เจ้าหนี้บุคคลอื่น|2400
+2500|ดอกเบี้ยค้างจ่าย|2000
+3000|ส่วนของเจ้าของ||H
+3100|เงินทุนส่วนตัว|3000
+3200|เงินเพิ่มทุน|3000
+3300|เงินถอนใช้ส่วนตัว|3000
+3400|กำไรสะสม|3000
+3500|บัญชีพักยอดยกมาต้นระบบ|3000|O
+4000|รายได้||H
+4100|รายได้จากงานประจำ|4000|H
+4110|เงินเดือน|4100
+4120|โบนัส|4100
+4200|รายได้เสริม|4000|H
+4210|รายได้จากงานพิเศษ|4200
+4220|รายได้จากการขายของ|4200
+4300|รายได้ทางการเงิน|4000|H
+4310|ดอกเบี้ยรับ|4300
+4400|รายได้อื่น|4000|H
+4410|เงินคืนและรายได้อื่น|4400
+5000|ค่าใช้จ่าย||H
+5100|ค่าอาหาร|5000|H
+5110|อาหารและเครื่องดื่ม|5100
+5120|กาแฟและขนม|5100
+5200|ค่าเดินทาง|5000|H
+5210|น้ำมันเชื้อเพลิง|5200
+5220|ขนส่งสาธารณะ|5200
+5230|ค่าทางด่วนและที่จอดรถ|5200
+5300|ค่าที่พักอาศัย|5000|H
+5310|ค่าเช่าที่พัก|5300
+5320|ค่าน้ำและค่าไฟ|5300
+5330|ค่าอินเทอร์เน็ตและโทรศัพท์|5300
+5400|ค่าใช้จ่ายส่วนตัว|5000|H
+5410|เสื้อผ้าและของใช้|5400
+5420|สุขภาพและความงาม|5400
+5430|ความบันเทิง|5400
+5500|ค่าใช้จ่ายเกี่ยวกับยานพาหนะ|5000|H
+5510|ค่าซ่อมบำรุง|5500
+5520|ประกันภัยและภาษีรถ|5500
+5600|ภาระทางการเงิน|5000|H
+5610|ดอกเบี้ยเงินกู้|5600
+5620|ค่าธรรมเนียมธนาคาร|5600
+5700|ค่าใช้จ่ายอื่น|5000|H
+5710|ค่าใช้จ่ายเบ็ดเตล็ด|5700`;
+let coa=[],links={version:1,registry:[],map:{}},locked=false,lockMsg='';
+const ui={tab:'tree',q:'',open:new Set(),hidden:false,editing:null,mapRid:null};
+const get=id=>coa.find(x=>x.id===id);
+const kids=id=>coa.filter(x=>x.parentId===id);
+const desc=id=>{const o=[];kids(id).forEach(k=>{o.push(k.id,...desc(k.id))});return o};
+const refs=id=>Object.values(links.map).filter(v=>v===id).length;
+const isSpecial=x=>x.special==='template'||x.special==='opening';
+function buildDefaults(){const byCode={};const out=DEFAULTS.split('\n').map(l=>{const[c,n,p,f]=l.split('|');const x={id:uuid(),code:c,name:n,type:DIGIT[c[0]],parentId:null,isHeader:f==='H',isActive:true,allowPosting:!(f==='H'||f==='T')};if(f==='T')x.special='template';if(f==='O')x.special='opening';byCode[c]=x;x._p=p;return x});out.forEach(x=>{x.parentId=x._p?byCode[x._p].id:null;delete x._p});return out}
+function saveCoa(){if(locked)return false;try{localStorage.setItem(COA_KEY,JSON.stringify({version:1,accounts:coa}));return true}catch(e){return false}}
+function saveLinks(){if(locked)return false;try{localStorage.setItem(LINK_KEY,JSON.stringify(links));return true}catch(e){return false}}
+function readKey(k){let raw;try{raw=localStorage.getItem(k)}catch(e){return{err:1}}if(raw===null)return{missing:1};try{return{val:JSON.parse(raw)}}catch(e){return{err:1}}}
+function init(){const r=readKey(COA_KEY);if(r.missing){coa=buildDefaults();saveCoa()}else if(r.err||!r.val||!Array.isArray(r.val.accounts)){locked=true;lockMsg='ข้อมูลผังบัญชีในเครื่องอ่านไม่ได้ ระบบจะไม่เขียนทับข้อมูลเดิม'}else coa=r.val.accounts;
+ const l=readKey(LINK_KEY);if(l.val&&Array.isArray(l.val.registry)&&l.val.map&&typeof l.val.map==='object')links=l.val;else if(!l.missing){locked=true;lockMsg='ข้อมูลการจับคู่ในเครื่องอ่านไม่ได้ ระบบจะไม่เขียนทับข้อมูลเดิม'}
+ if(!locked){const iss=integrity(coa);if(iss.length){locked=true;lockMsg='ผังบัญชีไม่ผ่านการตรวจสอบ: '+iss.slice(0,3).join('; ')}}}
+function integrity(list){const is=[],ids=new Set(),codes=new Set(),by=new Map(list.map(x=>[x.id,x]));
+ list.forEach(x=>{if(ids.has(x.id))is.push('ID ซ้ำ '+x.id);ids.add(x.id);if(codes.has(x.code))is.push('รหัสซ้ำ '+x.code);codes.add(x.code);
+ if(!/^[1-5]\d{3}$/.test(String(x.code)))is.push('รูปแบบรหัสไม่ถูกต้อง '+x.code);else if(DIGIT[String(x.code)[0]]!==x.type)is.push('รหัสไม่ตรงประเภท '+x.code);
+ if(x.isHeader&&x.allowPosting)is.push('Header ห้าม Post '+x.code);
+ if(x.parentId){const p=by.get(x.parentId);if(!p)is.push('ไม่พบบัญชีแม่ '+x.code);else{if(!p.isHeader)is.push('บัญชีแม่ต้องเป็น Header '+x.code);if(p.type!==x.type)is.push('ประเภทไม่ตรงบัญชีแม่ '+x.code)}
+  const seen=new Set([x.id]);let c=by.get(x.parentId);while(c){if(seen.has(c.id)){is.push('Parent Cycle '+x.code);break}seen.add(c.id);c=c.parentId?by.get(c.parentId):null}}});return is}
+function sources(){const o=[];accounts.forEach(a=>o.push({kind:'account',name:a.name,type:a.accountType}));['Income','Expense'].forEach(k=>(cats[k]||[]).forEach(c=>o.push({kind:k,name:catName(c),type:catType(c)})));return o}
+function sync(){const src=sources();if(locked)return src.map(s=>{const e=links.registry.find(r=>r.kind===s.kind&&r.name===s.name);s.rid=e?e.rid:null;return s});
+ const used=new Set();let ch=false;src.forEach(s=>{let e=links.registry.find(r=>r.kind===s.kind&&r.name===s.name&&!used.has(r.rid));if(!e){e={rid:uuid(),kind:s.kind,name:s.name};links.registry.push(e);ch=true}used.add(e.rid);s.rid=e.rid});
+ const keep=links.registry.filter(r=>used.has(r.rid));if(keep.length!==links.registry.length){links.registry=keep;Object.keys(links.map).forEach(k=>{if(!used.has(k))delete links.map[k]});ch=true}
+ if(ch)saveLinks();return src}
+function renameSource(kind,oldN,newN){if(locked)return;sync();const e=links.registry.find(r=>r.kind===kind&&r.name===oldN);if(e){e.name=newN;saveLinks()}}
+const canPost=(id,o)=>{const x=get(id);if(!x||!x.isActive||x.isHeader||!x.allowPosting||x.special==='template')return false;return x.special==='opening'?!!(o&&o.opening):true};
+const canMapTo=id=>{const x=get(id);return !!x&&x.isActive&&!x.isHeader&&x.allowPosting&&!isSpecial(x)};
+function build(o,base){const p=o.parentId?get(o.parentId):null,code=String(o.code||'').trim();const x={id:base?base.id:uuid(),code,name:String(o.name||'').trim(),type:p?p.type:(base?base.type:DIGIT[code[0]]),parentId:o.parentId||null,isHeader:!!o.isHeader,isActive:base?base.isActive:true,allowPosting:o.isHeader?false:o.allowPosting!==false};
+ if(base&&base.special)x.special=base.special;if(o.isCreditCard||(base&&base.isCreditCard))x.isCreditCard=true;return x}
+function check(x,base){if(locked)return lockMsg||'ถูกล็อก';if(!x.name)return 'กรุณากรอกชื่อบัญชี';if(!/^[1-5]\d{3}$/.test(x.code))return 'รหัสต้องเป็นตัวเลข 4 หลัก ขึ้นต้นด้วย 1–5';
+ if(coa.some(y=>y.id===x.id&&y!==base))return 'ID ซ้ำ';if(coa.some(y=>y!==base&&y.code===x.code))return 'รหัสนี้ถูกใช้แล้ว';
+ if(!x.parentId&&!(base&&!base.parentId))return 'ต้องเลือกบัญชีแม่';
+ if(x.parentId&&(!base||base.parentId!==x.parentId)){const p=get(x.parentId);if(!p)return 'ไม่พบบัญชีแม่';if(!p.isHeader)return 'บัญชีแม่ต้องเป็น Header';if(!p.isActive)return 'บัญชีแม่ถูกปิดใช้งาน';if(base&&(x.parentId===base.id||desc(base.id).includes(x.parentId)))return 'ไม่สามารถย้ายไปอยู่ใต้ตัวเองหรือบัญชีลูก (Parent Cycle)'}
+ if(base){if(!base.isHeader&&x.isHeader&&refs(base.id))return 'บัญชีที่ถูกอ้างอิงแล้วเปลี่ยนเป็น Header ไม่ได้';if(base.isHeader&&!x.isHeader&&kids(base.id).length)return 'บัญชีที่มีบัญชีลูกต้องเป็น Header'}
+ if(x.special==='template'&&(x.isHeader||x.allowPosting))return 'Template ห้าม Post';if(x.special==='opening'&&x.isHeader)return 'บัญชีพักยอดยกมาต้องไม่เป็น Header';
+ const next=coa.filter(y=>y!==base).concat([x]);if(base&&x.parentId&&kids(base.id).length&&x.type!==base.type)return 'ไม่สามารถย้ายบัญชีที่มีบัญชีลูกข้ามหมวด';
+ const old=new Set(integrity(coa)),neu=integrity(next).filter(m=>!old.has(m));return neu.length?neu[0]:''}
+function addAccount(o){const x=build(o,null),e=check(x,null);if(e)return{ok:false,error:e};coa.push(x);saveCoa();return{ok:true,item:x}}
+function updateAccount(id,patch){const base=get(id);if(!base)return{ok:false,error:'ไม่พบบัญชี'};const o=Object.assign({name:base.name,code:base.code,parentId:base.parentId,isHeader:base.isHeader,allowPosting:base.allowPosting},patch);
+ if(base.special==='template'){o.isHeader=false;o.allowPosting=false}const x=build(o,base),e=check(x,base);if(e)return{ok:false,error:e};Object.assign(base,x);saveCoa();return{ok:true,item:base}}
+function deactivate(id){const x=get(id);if(!x)return{ok:false,error:'ไม่พบบัญชี'};if(locked)return{ok:false,error:lockMsg};if(isSpecial(x))return{ok:false,error:'บัญชีระบบ/Template ปิดใช้งานไม่ได้'};if(refs(id))return{ok:false,error:'บัญชีนี้ถูกอ้างอิงจากการจับคู่ ปิดใช้งานไม่ได้ (ยกเลิกการจับคู่ก่อน)'};if(kids(id).some(k=>k.isActive))return{ok:false,error:'ต้องปิดใช้งานบัญชีลูกก่อน'};x.isActive=false;saveCoa();return{ok:true}}
+function activate(id){const x=get(id);if(!x)return{ok:false,error:'ไม่พบบัญชี'};if(locked)return{ok:false,error:lockMsg};const p=x.parentId&&get(x.parentId);if(p&&!p.isActive)return{ok:false,error:'ต้องเปิดใช้งานบัญชีแม่ก่อน'};x.isActive=true;saveCoa();return{ok:true}}
+function nextCode(parentId){const p=get(parentId);if(!p)return '';const n=+p.code,step=n%1000===0?100:n%100===0?10:1,max=step===100?900:step===10?90:9;for(let i=step;i<=max;i+=step){const c=String(n+i);if(!coa.some(y=>y.code===c))return c}return ''}
+function addCreditCard(name){const p=coa.find(x=>x.code==='2100');if(!p)return{ok:false,error:'ไม่พบ 2100'};let code='';for(let c=2111;c<=2199&&!code;c++)if(!coa.some(y=>y.code===String(c)))code=String(c);for(let c=2101;c<=2109&&!code;c++)if(!coa.some(y=>y.code===String(c)))code=String(c);if(!code)return{ok:false,error:'รหัสในช่วง 2100 เต็ม'};return addAccount({name,code,parentId:p.id,isHeader:false,allowPosting:true,isCreditCard:true})}
+function setLink(rid,coaId){if(locked)return{ok:false,error:lockMsg};const s=sync().find(z=>z.rid===rid);if(!s)return{ok:false,error:'ไม่พบรายการต้นทางที่ยืนยันตัวตนได้'};const x=get(coaId);if(!x||!canMapTo(coaId))return{ok:false,error:'จับคู่กับบัญชีนี้ไม่ได้ (Header/ปิดใช้งาน/Template/บัญชีพัก/ไม่อนุญาต Post)'};if(x.type!==s.type)return{ok:false,error:'ประเภทบัญชีไม่ตรงกัน (ต้องเป็น '+(TYPES[s.type]||s.type)+')'};links.map[rid]=coaId;saveLinks();return{ok:true}}
+function clearLink(rid){if(locked)return{ok:false,error:lockMsg};delete links.map[rid];saveLinks();return{ok:true}}
+const isMapped=s=>!!(s.rid&&links.map[s.rid]&&canMapTo(links.map[s.rid]));
+const unmapped=()=>sync().filter(s=>!isMapped(s));
+window.MyMoneyCOA={get:()=>coa,links:()=>links,validate:(o,id)=>check(build(o,id?get(id):null),id?get(id):null),addAccount,updateAccount,deactivate,activate,addCreditCard,setLink,clearLink,canPost,canMapTo,unmapped,sources:sync,integrity:()=>integrity(coa),isLocked:()=>locked,nextCode};
+window.coaRenameSource=renameSource;
+/* ---------- UI ---------- */
+const $$=id=>document.getElementById(id);
+const badge=(t,c)=>`<span class="pill coa-${c}">${t}</span>`;
+function visible(x,q){if(!ui.hidden&&(!x.isActive||x.special==='opening'))return false;if(!q)return true;return(x.code+' '+x.name).toLowerCase().includes(q)||desc(x.id).some(d=>{const y=get(d);return(ui.hidden||(y.isActive&&y.special!=='opening'))&&(y.code+' '+y.name).toLowerCase().includes(q)})}
+function treeHTML(){const q=ui.q.trim().toLowerCase();let h='';const walk=(x,d)=>{if(!visible(x,q))return;const ks=kids(x.id).filter(k=>visible(k,q)),open=q?true:ui.open.has(x.id);
+ const b=(x.isHeader?badge('Header','hd'):x.special==='template'?badge('Template','warn'):x.special==='opening'?badge('บัญชีระบบ','warn'):badge('Postable','ok'))+(x.isActive?'':badge('ปิดใช้งาน','off'))+(x.isCreditCard?badge('บัตรเครดิต','hd'):'');
+ h+=`<div class="coa-row" data-code="${esc(x.code)}" style="padding-left:${d*14}px"><button class="coa-caret" data-coa-toggle="${x.id}" aria-label="ย่อ/ขยาย">${ks.length?(open?'▾':'▸'):'·'}</button><div class="grow"><strong>${esc(x.code)}</strong> ${esc(x.name)}<div class="coa-badges">${b}</div></div><button class="btn secondary" data-coa-edit="${x.id}">แก้ไข</button>${x.isActive?`<button class="btn danger" data-coa-off="${x.id}">ปิด</button>`:`<button class="btn secondary" data-coa-on="${x.id}">เปิด</button>`}</div>`;
+ if(open)ks.forEach(k=>walk(k,d+1))};coa.filter(x=>!x.parentId).sort((a,b)=>a.code.localeCompare(b.code)).forEach(r=>walk(r,0));return h||emptyHTML('ไม่พบบัญชี')}
+function mapHTML(){const src=sync(),um=src.filter(s=>!isMapped(s)),mp=src.filter(isMapped);const lab={account:'บัญชี',Income:'หมวดรายรับ',Expense:'หมวดรายจ่าย'};
+ const row=(s,m)=>{const t=m?get(links.map[s.rid]):null;return `<div class="settings-row" data-rid="${s.rid}"><div class="grow"><strong>${esc(s.name)}</strong><div class="small">${lab[s.kind]} · ${TYPES[s.type]||''}${t?' → <b>'+esc(t.code)+' '+esc(t.name)+'</b>':''}</div></div><button class="btn ${m?'secondary':'primary'}" data-coa-map="${s.rid}">${m?'เปลี่ยน':'จับคู่'}</button>${m?`<button class="btn danger" data-coa-unmap="${s.rid}">ล้าง</button>`:''}</div>`};
+ return `<div class="small" style="margin:4px 0 8px">ยังไม่ได้จับคู่ ${um.length} · จับคู่แล้ว ${mp.length}</div><h3>ยังไม่ได้จับคู่ (Unmapped)</h3>${um.map(s=>row(s,false)).join('')||'<div class="small">จับคู่ครบทุกรายการแล้ว</div>'}<h3 style="margin-top:14px">จับคู่แล้ว</h3>${mp.map(s=>row(s,true)).join('')||'<div class="small">ยังไม่มีรายการ</div>'}`}
+function body(){const b=$$('coaBody');if(b)b.innerHTML=ui.tab==='tree'?treeHTML():mapHTML();const c=$$('coaUnCount');if(c)c.textContent=unmapped().length;}
+window.renderCOA=function(){const p=$$('page-coa');if(!p)return;sync();p.innerHTML=`<div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">CHART OF ACCOUNTS</p><h2>ผังบัญชี</h2></div><button class="btn secondary" data-go="settings">← ย้อนกลับ</button></div>${locked?`<div class="warning-note">${esc(lockMsg)}</div>`:''}<div class="notice" style="margin-bottom:10px">ผังบัญชีใช้เตรียมโครงสร้างและการจับคู่เท่านั้น ยังไม่กระทบการบันทึกรายการ ยอดคงเหลือ และรายงานเดิม</div><div class="actions"><button class="${ui.tab==='tree'?'active':''}" data-coa-tab="tree">ผังบัญชี</button><button class="${ui.tab==='map'?'active':''}" data-coa-tab="map">จับคู่ (<span id="coaUnCount">0</span>)</button></div><section class="card stack" style="margin-top:10px">${ui.tab==='tree'?`<input id="coaSearch" type="search" placeholder="ค้นหารหัสหรือชื่อบัญชี" value="${esc(ui.q)}"><div class="row" style="flex-wrap:wrap;gap:7px"><button class="btn primary" data-coa-add>＋ เพิ่มบัญชี</button><button class="btn secondary" data-coa-card>▭ สร้างบัตรเครดิต</button><button class="btn secondary" data-coa-all="1">ขยายทั้งหมด</button><button class="btn secondary" data-coa-all="0">ย่อทั้งหมด</button></div><label class="small"><input type="checkbox" id="coaHidden" ${ui.hidden?'checked':''}> แสดงบัญชีที่ปิดใช้งานและบัญชีระบบ</label>`:''}<div id="coaBody"></div></section>`;body()};
+function parentOptions(sel,selfId){const ex=selfId?new Set([selfId,...desc(selfId)]):new Set();return coa.filter(x=>x.isHeader&&x.isActive&&!isSpecial(x)&&!ex.has(x.id)).sort((a,b)=>a.code.localeCompare(b.code)).map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.code)} ${esc(x.name)}</option>`).join('')}
+function openForm(id){ui.editing=id||null;const x=id?get(id):null,root=x&&!x.parentId,sp=x&&isSpecial(x);const dp=x?x.parentId:(coa.find(y=>y.code==='1100')||{}).id;
+ openBottomSheet({title:x?'แก้ไขบัญชี':'เพิ่มบัญชี',content:`<div class="stack"><div><label for="coaF_name">ชื่อบัญชี</label><input id="coaF_name" maxlength="80" value="${x?esc(x.name):''}"></div><div class="grid"><div><label for="coaF_code">รหัส (4 หลัก)</label><input id="coaF_code" inputmode="numeric" maxlength="4" value="${x?esc(x.code):esc(nextCode(dp))}"></div><div><label for="coaF_parent">บัญชีแม่</label><select id="coaF_parent" ${root?'disabled':''}>${root?'<option>— หมวดหลัก —</option>':parentOptions(dp,id)}</select></div></div><label class="small"><input type="checkbox" id="coaF_header" ${x&&x.isHeader?'checked':''} ${sp?'disabled':''}> เป็นบัญชีแม่ (Header) — ไม่สามารถบันทึกรายการได้</label><label class="small"><input type="checkbox" id="coaF_post" ${!x||x.allowPosting?'checked':''} ${sp?'disabled':''}> อนุญาตให้บันทึกรายการ (Postable)</label><p class="message" id="coaF_err" style="color:var(--red)"></p></div>`,footer:'<button class="btn primary" data-coa-save>บันทึก</button>'})}
+function toast(m,t){try{showToast({message:m,type:t||'success'})}catch(e){}}
+function sheetErr(m){const e=$$('coaF_err');if(e)e.textContent=m}
+document.addEventListener('input',e=>{if(e.target.id==='coaSearch'){ui.q=e.target.value;body()}if(e.target.id==='coaF_code')e.target.dataset.t='1'});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='coaHidden'){ui.hidden=t.checked;body()}if(t.id==='coaF_parent'&&!ui.editing){const c=$$('coaF_code');if(c&&!c.dataset.t)c.value=nextCode(t.value)}if(t.id==='coaF_header'){const p=$$('coaF_post');if(t.checked){p.checked=false;p.disabled=true}else p.disabled=false}});
+document.addEventListener('click',e=>{const q=s=>e.target.closest(s);let b;
+ if(b=q('[data-coa-tab]')){ui.tab=b.dataset.coaTab;renderCOA();return}
+ if(b=q('[data-coa-toggle]')){const id=b.dataset.coaToggle;ui.open.has(id)?ui.open.delete(id):ui.open.add(id);body();return}
+ if(b=q('[data-coa-all]')){ui.open=b.dataset.coaAll==='1'?new Set(coa.filter(x=>x.isHeader).map(x=>x.id)):new Set();body();return}
+ if(q('[data-coa-add]')){openForm(null);return}
+ if(b=q('[data-coa-edit]')){openForm(b.dataset.coaEdit);return}
+ if(q('[data-coa-card]')){openBottomSheet({title:'สร้างบัญชีบัตรเครดิต',content:'<div class="stack"><div><label for="coaCC_name">ชื่อบัตรเครดิต</label><input id="coaCC_name" maxlength="80" placeholder="เช่น บัตร KTC"></div><p class="small">จะสร้างเป็นบัญชีลูกโดยตรงของ 2100 เจ้าหนี้บัตรเครดิต และกำหนดรหัสให้อัตโนมัติ</p><p class="message" id="coaF_err" style="color:var(--red)"></p></div>',footer:'<button class="btn primary" data-coa-cc-save>สร้างบัญชี</button>'});return}
+ if(q('[data-coa-cc-save]')){const r=addCreditCard($$('coaCC_name').value.trim());if(!r.ok){sheetErr(r.error);return}closeBottomSheet();ui.open.add(r.item.parentId);renderCOA();toast('สร้างบัญชีบัตรเครดิตแล้ว');return}
+ if(q('[data-coa-save]')){const o={name:$$('coaF_name').value,code:$$('coaF_code').value,isHeader:$$('coaF_header').checked,allowPosting:$$('coaF_post').checked};const x=ui.editing?get(ui.editing):null;o.parentId=x&&!x.parentId?null:$$('coaF_parent').value;const r=x?updateAccount(x.id,o):addAccount(o);if(!r.ok){sheetErr(r.error);return}closeBottomSheet();if(r.item.parentId)ui.open.add(r.item.parentId);renderCOA();toast(x?'บันทึกการแก้ไขแล้ว':'เพิ่มบัญชีแล้ว');return}
+ if(b=q('[data-coa-off]')){const r=deactivate(b.dataset.coaOff);r.ok?(renderCOA(),toast('ปิดใช้งานบัญชีแล้ว')):toast(r.error,'error');return}
+ if(b=q('[data-coa-on]')){const r=activate(b.dataset.coaOn);r.ok?(renderCOA(),toast('เปิดใช้งานบัญชีแล้ว')):toast(r.error,'error');return}
+ if(b=q('[data-coa-map]')){const s=sync().find(z=>z.rid===b.dataset.coaMap);if(!s)return;ui.mapRid=s.rid;const cur=links.map[s.rid];const opts=coa.filter(x=>canMapTo(x.id)&&x.type===s.type).sort((a,c)=>a.code.localeCompare(c.code)).map(x=>`<option value="${x.id}" ${x.id===cur?'selected':''}>${esc(x.code)} ${esc(x.name)}</option>`).join('');openBottomSheet({title:'จับคู่บัญชี',content:`<div class="stack"><p><strong>${esc(s.name)}</strong><br><span class="small">${TYPES[s.type]||''}</span></p><div><label for="coaM_sel">เลือกบัญชีในผังบัญชี</label><select id="coaM_sel">${opts||'<option value="">ไม่มีบัญชีที่จับคู่ได้</option>'}</select></div><p class="small">เลือกได้เฉพาะบัญชีที่เปิดใช้งาน อนุญาต Post และประเภทตรงกัน</p><p class="message" id="coaF_err" style="color:var(--red)"></p></div>`,footer:'<button class="btn primary" data-coa-map-ok>บันทึกการจับคู่</button>'});return}
+ if(q('[data-coa-map-ok]')){const r=setLink(ui.mapRid,$$('coaM_sel').value);if(!r.ok){sheetErr(r.error);return}closeBottomSheet();renderCOA();toast('จับคู่แล้ว');return}
+ if(b=q('[data-coa-unmap]')){clearLink(b.dataset.coaUnmap);renderCOA();toast('ยกเลิกการจับคู่แล้ว');return}
+});
+init();try{sync()}catch(e){console.warn('COA sync',e)}
+})();
 }, 0);
 </script>
 
