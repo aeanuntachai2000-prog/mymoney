@@ -794,6 +794,8 @@ html[data-theme="light"] #journalListMount .jrnl-table.jrnl-grouped,html.light #
 #journalListMount .jrnl-table.jrnl-grouped tbody tr.jrnl-gstart>td{border-top:1.5px solid var(--jrnl-gdiv)!important}
 #journalListMount .jrnl-table.jrnl-grouped tbody tr:hover,#journalListMount .jrnl-table.jrnl-grouped tbody tr:hover>td{background-color:var(--jrnl-hover)!important}
 #journalListMount .jrnl-table.jrnl-grouped .jrnl-date{vertical-align:top;padding-top:12px;font-weight:600;white-space:nowrap}
+/* Credit lines indentation in table */
+#journalListMount .jrnl-table.jrnl-grouped td.jrnl-acct.credit-line { padding-left: 28px; color: var(--muted); }
 @media (max-width:640px){#journalListMount .jrnl-table{min-width:760px;font-size:12px}#journalListMount .jrnl-table th,#journalListMount .jrnl-table td{padding:8px 10px}#journalListMount .jrnl-col-acct{width:12em}}
 
 #page-journal .coa-card,#page-gl .coa-card{background:transparent!important;border:none!important;box-shadow:none!important;border-radius:0!important;padding:0!important}
@@ -829,103 +831,154 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
 #journalListMount .jrnl-table tbody td{color:#CBD5E1}
 #journalListMount .jrnl-table tbody td .jrnl-debit,#journalListMount .jrnl-table tbody td .jrnl-credit,#journalListMount .jrnl-table tbody td.jrnl-debit,#journalListMount .jrnl-table tbody td.jrnl-credit{color:#F1F5F9;font-weight:600}
 
-/* Journal Mobile Card Layout */
+/* ===== Journal Minimal Report Layout ===== */
+
+/* Desktop: clean report table */
+#page-journal .jrnl-table.jrnl-grouped tbody tr {
+  border-bottom: 1px solid rgba(148,163,184,.1);
+}
+#page-journal .jrnl-table.jrnl-grouped tbody tr:last-child {
+  border-bottom: 2px solid rgba(148,163,184,.25);
+}
+
+/* Mobile: minimal report layout (no cards) */
 @media (max-width: 768px) {
   #journalListMount .jrnl-scroll { display: none; }
-  #journalListMount .jrnl-cards { display: flex; flex-direction: column; gap: 8px; }
+  #journalListMount .jrnl-cards { display: block; }
   #journalListMount .jrnl-card {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 12px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid rgba(148,163,184,.12);
   }
+  #journalListMount .jrnl-card:last-of-type { border-bottom: none; }
   #journalListMount .jrnl-card-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr minmax(80px, 1fr) minmax(80px, 1fr);
     gap: 8px;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-  }
-  #journalListMount .jrnl-card-date {
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--ink);
-    white-space: nowrap;
-  }
-  #journalListMount .jrnl-card-no {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: monospace;
-  }
-  #journalListMount .jrnl-card-status {
+    margin-bottom: 4px;
+    padding: 6px 0 4px;
+    border-bottom: 2px solid rgba(148,163,184,.25);
     font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--panel2);
-    color: var(--muted);
-  }
-  #journalListMount .jrnl-card-desc-main {
-    font-size: 13px;
-    color: var(--ink);
-    margin-bottom: 6px;
-    line-height: 1.4;
-  }
-  #journalListMount .jrnl-card-totals {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 8px;
-    font-size: 13px;
     font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .05em;
   }
-  #journalListMount .jrnl-card-total-debit { color: var(--red); }
-  #journalListMount .jrnl-card-total-credit { color: var(--green); }
+  #journalListMount .jrnl-card-date { order: 1; }
+  #journalListMount .jrnl-card-no { order: 2; text-align: right; font-family: monospace; }
+  #journalListMount .jrnl-card-status { order: 3; text-align: right; font-size: 10px; padding: 2px 6px; background: transparent; }
+  #journalListMount .jrnl-card-desc-main { display: none; }
+  #journalListMount .jrnl-card-totals { display: none; }
   #journalListMount .jrnl-card-lines {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr minmax(80px, 1fr) minmax(80px, 1fr);
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    border-top: none;
+    padding-top: 0;
   }
   #journalListMount .jrnl-card-line {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 8px;
-    padding: 6px 0;
-    font-size: 12px;
-    border-bottom: 1px solid var(--border);
+    display: contents;
   }
-  #journalListMount .jrnl-card-line:last-child { border-bottom: none; }
   #journalListMount .jrnl-card-acct {
-    color: var(--muted);
+    grid-column: 1;
+    color: var(--ink);
     font-size: 11px;
+    font-weight: 500;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(148,163,184,.08);
   }
   #journalListMount .jrnl-card-desc {
-    color: var(--ink);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    display: none;
   }
   #journalListMount .jrnl-card-amounts {
-    display: flex;
-    gap: 12px;
+    display: contents;
+  }
+  #journalListMount .jrnl-card-debit,
+  #journalListMount .jrnl-card-credit {
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(148,163,184,.08);
     text-align: right;
+    white-space: nowrap;
   }
-  #journalListMount .jrnl-card-debit { color: var(--red); }
-  #journalListMount .jrnl-card-credit { color: var(--green); }
-  #journalListMount .jrnl-card-toggle {
-    width: 100%;
-    background: transparent;
-    border: 1px solid var(--line);
-    border-radius: 8px;
+  #journalListMount .jrnl-card-debit { color: var(--red); grid-column: 2; }
+  #journalListMount .jrnl-card-credit { color: var(--green); grid-column: 3; }
+  /* Credit line: indent account name */
+  #journalListMount .jrnl-card-line:has(.jrnl-card-credit:not(:empty)) .jrnl-card-acct {
+    padding-left: 16px;
     color: var(--muted);
-    padding: 8px;
-    font-size: 12px;
-    font-weight: 500;
   }
-  #journalListMount .jrnl-card-toggle:hover {
-    background: var(--panel2);
-    color: var(--ink);
-  }
+  #journalListMount .jrnl-card-toggle { display: none; }
 }
+
+/* Small phones */
+@media (max-width: 360px) {
+  #journalListMount .jrnl-card-head {
+    grid-template-columns: 1fr minmax(70px, 1fr) minmax(70px, 1fr);
+    gap: 6px;
+    font-size: 9px;
+    padding: 4px 0 3px;
+  }
+  #journalListMount .jrnl-card-lines {
+    grid-template-columns: 1fr minmax(70px, 1fr) minmax(70px, 1fr);
+    gap: 6px;
+    font-size: 10px;
+  }
+  #journalListMount .jrnl-card-acct { font-size: 10px; }
+  #journalListMount .jrnl-card-debit,
+  #journalListMount .jrnl-card-credit { font-size: 10px; }
+}
+
+/* Medium phones */
+@media (min-width: 361px) and (max-width: 430px) {
+  #journalListMount .jrnl-card-head {
+    grid-template-columns: 1fr minmax(85px, 1fr) minmax(85px, 1fr);
+    gap: 10px;
+    font-size: 10px;
+  }
+  #journalListMount .jrnl-card-lines {
+    grid-template-columns: 1fr minmax(85px, 1fr) minmax(85px, 1fr);
+    gap: 10px;
+    font-size: 11px;
+  }
+  #journalListMount .jrnl-card-acct { font-size: 11px; }
+}
+
+/* Large phones */
+@media (min-width: 431px) and (max-width: 480px) {
+  #journalListMount .jrnl-card-head {
+    grid-template-columns: 1fr minmax(95px, 1fr) minmax(95px, 1fr);
+    gap: 12px;
+    font-size: 11px;
+  }
+  #journalListMount .jrnl-card-lines {
+    grid-template-columns: 1fr minmax(95px, 1fr) minmax(95px, 1fr);
+    gap: 12px;
+    font-size: 12px;
+  }
+  #journalListMount .jrnl-card-acct { font-size: 12px; }
+}
+
+/* Small tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+  #journalListMount .jrnl-card-head {
+    grid-template-columns: 1fr minmax(100px, 1fr) minmax(100px, 1fr);
+    gap: 16px;
+    font-size: 11px;
+  }
+  #journalListMount .jrnl-card-lines {
+    grid-template-columns: 1fr minmax(100px, 1fr) minmax(100px, 1fr);
+    gap: 16px;
+    font-size: 13px;
+  }
+  #journalListMount .jrnl-card-acct { font-size: 13px; }
+}
+
 @media (min-width: 769px) {
   #journalListMount .jrnl-cards { display: none; }
   #journalListMount .jrnl-scroll { display: block; }
@@ -951,46 +1004,136 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
 /* Trial Balance Mobile Card Layout */
 @media (max-width: 768px) {
   #page-tb .tb-scroll { display: none; }
-  #page-tb .tb-cards { display: flex; flex-direction: column; gap: 8px; }
+  #page-tb .tb-cards { display: block; }
   #page-tb .tb-card {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 12px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid rgba(148,163,184,.12);
   }
-  #page-tb .tb-card-head {
-    margin-bottom: 6px;
-  }
+  #page-tb .tb-card:last-of-type { border-bottom: none; }
+  #page-tb .tb-card-head { margin-bottom: 4px; }
   #page-tb .tb-card-acct {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 6px;
+    margin-bottom: 2px;
+    min-width: 0;
   }
   #page-tb .tb-card-code {
-    font-size: 12px;
+    font-size: 10px;
     color: var(--muted);
     font-family: monospace;
-    background: var(--panel2);
-    padding: 2px 6px;
-    border-radius: 4px;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
   #page-tb .tb-card-name {
-    font-weight: 600;
-    font-size: 13px;
+    font-weight: 500;
+    font-size: 12px;
     color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
   }
   #page-tb .tb-card-amounts {
-    display: flex;
-    gap: 12px;
-    font-size: 13px;
-    font-weight: 600;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr minmax(80px, 1fr) minmax(80px, 1fr);
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    align-items: center;
+    font-variant-numeric: tabular-nums;
   }
-  #page-tb .tb-card-debit { color: var(--red); }
-  #page-tb .tb-card-credit { color: var(--green); }
-  #page-tb .tb-card-balance { color: var(--ink); }
+  #page-tb .tb-card-debit { color: var(--red); text-align: right; white-space: nowrap; }
+  #page-tb .tb-card-credit { color: var(--green); text-align: right; white-space: nowrap; }
+  #page-tb .tb-card-balance { display: none; }
+  /* Header row for mobile cards */
+  #page-tb .tb-cards::before {
+    content: 'รหัส / ชื่อบัญชี';
+    display: grid;
+    grid-template-columns: 1fr minmax(80px, 1fr) minmax(80px, 1fr);
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    padding: 6px 0 4px;
+    border-bottom: 2px solid rgba(148,163,184,.25);
+    margin-bottom: 4px;
+  }
 }
+
+/* Small phones (320-360px) - tighter layout */
+@media (max-width: 360px) {
+  #page-tb .tb-card-acct { gap: 4px; }
+  #page-tb .tb-card-code { font-size: 9px; }
+  #page-tb .tb-card-name { font-size: 11px; }
+  #page-tb .tb-card-amounts {
+    grid-template-columns: 1fr minmax(70px, 1fr) minmax(70px, 1fr);
+    gap: 6px;
+    font-size: 10px;
+  }
+  #page-tb .tb-cards::before {
+    grid-template-columns: 1fr minmax(70px, 1fr) minmax(70px, 1fr);
+    gap: 6px;
+    font-size: 9px;
+    padding: 4px 0 3px;
+  }
+}
+
+/* Medium phones (361-430px) - standard layout */
+@media (min-width: 361px) and (max-width: 430px) {
+  #page-tb .tb-card-amounts {
+    grid-template-columns: 1fr minmax(85px, 1fr) minmax(85px, 1fr);
+    gap: 10px;
+    font-size: 11px;
+  }
+  #page-tb .tb-cards::before {
+    grid-template-columns: 1fr minmax(85px, 1fr) minmax(85px, 1fr);
+    gap: 10px;
+    font-size: 10px;
+  }
+}
+
+/* Large phones (431-480px) - more space for names */
+@media (min-width: 431px) and (max-width: 480px) {
+  #page-tb .tb-card-code { font-size: 10px; }
+  #page-tb .tb-card-name { font-size: 13px; }
+  #page-tb .tb-card-amounts {
+    grid-template-columns: 1fr minmax(95px, 1fr) minmax(95px, 1fr);
+    gap: 12px;
+    font-size: 12px;
+  }
+  #page-tb .tb-cards::before {
+    grid-template-columns: 1fr minmax(95px, 1fr) minmax(95px, 1fr);
+    gap: 12px;
+    font-size: 11px;
+  }
+}
+
+/* Small tablets (481-768px) - relaxed layout */
+@media (min-width: 481px) and (max-width: 768px) {
+  #page-tb .tb-card-code { font-size: 11px; }
+  #page-tb .tb-card-name { font-size: 13px; }
+  #page-tb .tb-card-amounts {
+    grid-template-columns: 1fr minmax(100px, 1fr) minmax(100px, 1fr);
+    gap: 16px;
+    font-size: 13px;
+  }
+  #page-tb .tb-cards::before {
+    grid-template-columns: 1fr minmax(100px, 1fr) minmax(100px, 1fr);
+    gap: 16px;
+    font-size: 11px;
+  }
+}
+
 @media (min-width: 769px) {
   #page-tb .tb-cards { display: none; }
   #page-tb .tb-scroll { display: block; }
@@ -1325,7 +1468,7 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
 <div class="settings-collapse-panel" id="accountingMigrationPanel" style="display:none" hidden aria-hidden="true"><div class="stack"><h3>Accounting Migration</h3><button class="btn secondary" id="startDryRunBtn">Start Dry-run</button><button class="btn secondary" id="refreshMigrationDraftsBtn">Refresh Migration Drafts</button><button class="btn secondary" id="checkMigrationIntegrityBtn">Check Migration Integrity</button><div class="card stack" style="margin-top:8px"><h3>Journal Actions</h3><label for="postTxId">Transaction ID</label><input id="postTxId" placeholder="Transaction ID"><label for="postRevision">Revision</label><input id="postRevision" type="number" value="0"><button class="btn secondary" id="postJournalBtn">Post Journal</button><label for="reverseTxId">Reverse Transaction ID</label><input id="reverseTxId" placeholder="Transaction ID"><label for="reverseRevision">Revision</label><input id="reverseRevision" type="number" value="0"><button class="btn secondary" id="reverseJournalBtn">Reverse Journal (Transaction)</button><label for="reverseEntryId">Reverse Entry ID</label><input id="reverseEntryId" placeholder="Journal Entry ID"><button class="btn secondary" id="reverseEntryBtn">Reverse Journal Entry</button><p class="message" id="journalActionMessage"></p></div><div class="coa-toolbar"><div class="coa-card"><strong>Total Transactions</strong><div id="migTotal">0</div></div><div class="coa-card"><strong>Ready</strong><div id="migReady">0</div></div><div class="coa-card"><strong>Failed</strong><div id="migFailed">0</div></div><div class="coa-card"><strong>Needs Review</strong><div id="migNeeds">0</div></div><div class="coa-card"><strong>Already Journalized</strong><div id="migAlready">0</div></div></div><div class="coa-toolbar"><div class="coa-card"><strong>Total Debit</strong><div id="migDebit">0</div></div><div class="coa-card"><strong>Total Credit</strong><div id="migCredit">0</div></div><div class="coa-card"><strong>Difference</strong><div id="migDiff">0</div></div></div><table class="mig-table"><thead><tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Debit</th><th>Credit</th><th>Status</th><th>Validation Message</th></tr></thead><tbody id="migTableBody"></tbody></table><div class="coa-card"><strong>Preview Journal</strong><div id="migPreview"></div></div><div class="coa-card"><strong>Migration Drafts</strong><div id="migDraftList"></div></div>
   </section>
   <section class="page" id="page-settings">
-    <div class="card settings-collapse-card">
+    <div class="card settings-collapse-card" hidden>
   <button class="settings-collapse-toggle" type="button" id="coaSettingsToggle" aria-expanded="false" aria-controls="coaSettingsPanel">
     <span class="settings-collapse-symbol" aria-hidden="true">▦</span>
     <span class="settings-collapse-copy"><strong>ผังบัญชี (Chart of Accounts)</strong></span>
@@ -1338,7 +1481,7 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
       <button class="settings-collapse-toggle" type="button" id="accountsSettingsToggle" aria-expanded="false" aria-controls="accountsSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▤</span><span class="settings-collapse-copy"><strong>บัญชีและยอดตั้งต้น</strong><small>กำหนดประเภทบัญชี: สินทรัพย์ หนี้สิน ทุน รายได้ และค่าใช้จ่าย</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
       <div class="settings-collapse-panel" id="accountsSettingsPanel" hidden><div class="stack"><p class="small">กำหนดประเภทบัญชีให้ถูกต้อง เช่น เงินสด = สินทรัพย์ และบัตรเครดิต = หนี้สิน ระบบจะนำประเภทบัญชีไปใช้สร้างรายการเดบิต–เครดิตอัตโนมัติ</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount">＋ เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div></div>
     </div>
-    <div class="card settings-collapse-card">
+    <div class="card settings-collapse-card" hidden>
       <button class="settings-collapse-toggle" type="button" id="categoriesSettingsToggle" aria-expanded="false" aria-controls="categoriesSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▦</span><span class="settings-collapse-copy"><strong>หมวดหมู่และรายการ</strong><small>จัดการหมวดหมู่รายรับและรายจ่าย</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
       <div class="settings-collapse-panel" id="categoriesSettingsPanel" hidden><div class="stack"><div><label for="categoryType">ประเภทหมวดหมู่</label><select id="categoryType"><option value="Expense">รายจ่าย</option><option value="Income">รายรับ</option></select></div><div id="categorySettings"></div><button class="btn secondary" id="addCategory">＋ เพิ่มหมวดหมู่</button><button class="btn primary" id="saveCategories">บันทึกหมวดหมู่</button><p class="message" id="categoryMessage"></p></div></div>
     </div>
