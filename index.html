@@ -1,5 +1,5 @@
 ﻿<!doctype html>
-<html lang="th" style="background:#000000">
+<html lang="th" style="background:var(--bg-app)">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" sizes="32x32" href="mymoney-favicon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="mymoney-icon.png">
 <link rel="apple-touch-startup-image" href="splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
@@ -30,43 +30,279 @@
 <title>MyMoney</title>
 <style>
 :root{
-  color-scheme:dark;
-  --bg:#101318;--surface:#1A2028;--card:#1A2028;--panel:#1A2028;--panel2:#222A35;
-  --ink:#F1F5F9;--muted:#94A3B8;--line:#2A3441;--border:#2A3441;
-  --emerald:#10B981;--emerald-deep:#059669;--green:#10B981;
-  --gold:#10B981;--champagne:#10B981;
-  --red:#FF6B7A;--danger:#FF6B7A;
-  --field:#141922;--shadow:0 18px 40px #00000066;
-  --radius:16px;--radius-sm:12px;
-  --g:#10B981;--gd:#2A3441;
+  /* =================================
+     FINANCIAL CONTROL SYSTEM — Design System
+     ================================= */
+  
+  /* --- Brand Colors --- */
+  --brand-midnight: #080D13;
+  --brand-panel-navy: #101923;
+  --brand-elevated: #17232D;
+  --brand-cyan: #52B8D5;
+  --brand-terminal-green: #54D6B5;
+  --brand-champagne: #D6BB78;
+  --brand-expense: #E7B78A;
+
+  /* --- Background & Surface --- */
+  --bg-app: #080D13;
+  --bg-panel: #101923;
+  --bg-card: #101923;
+  --bg-card-hover: #17232D;
+  --bg-elevated: #17232D;
+  --bg-input: #0D141D;
+  --bg-overlay: rgba(0, 0, 0, 0.8);
+
+  /* --- Text --- */
+  --text-primary: #D9E7F1;
+  --text-secondary: #91A5B5;
+  --text-muted: #6B7F90;
+  --text-disabled: #6B7F90;
+  --text-on-cyan: #080D13;
+  --text-on-green: #080D13;
+
+  /* --- Cyan (Technical) --- */
+  --cyan-primary: #52B8D5;
+  --cyan-highlight: #7DD3ED;
+  --cyan-dark: #3A9BCB;
+  --cyan-subtle: #1E3A4A;
+  --cyan-border: rgba(82, 184, 213, 0.28);
+  --cyan-hover: #7DD3ED;
+
+  /* --- Terminal Green --- */
+  --green-primary: #54D6B5;
+  --green-dark: #3AB895;
+  --green-surface: #144E3D;
+  --green-light: #86EFCC;
+
+  /* --- Champagne Gold (Limited Brand) --- */
+  --gold-primary: #D6BB78;
+  --gold-highlight: #E9D7A5;
+  --gold-dark: #A88C4F;
+  --gold-subtle: #514326;
+  --gold-border: rgba(214, 187, 120, 0.28);
+  --gold-hover: #E9D7A5;
+
+  /* --- Expense Accent --- */
+  --expense-primary: #E7B78A;
+  --expense-dark: #C9966A;
+
+  /* --- Semantic Colors --- */
+  --color-income: #54D6B5;
+  --color-expense: #E7B78A;
+  --color-warning: #D6BB78;
+  --color-info: #52B8D5;
+  --color-success: #54D6B5;
+  --color-danger: #E78A8A;
+
+  --surface-income: rgba(84, 214, 181, 0.12);
+  --surface-expense: rgba(231, 183, 138, 0.12);
+  --surface-warning: rgba(214, 187, 120, 0.12);
+  --surface-info: rgba(82, 184, 213, 0.12);
+
+  /* --- Border & Divider --- */
+  --border-default: rgba(217, 231, 241, 0.14);
+  --border-subtle: rgba(217, 231, 241, 0.08);
+  --border-strong: rgba(217, 231, 241, 0.24);
+  --border-focus: #52B8D5;
+  --border-cyan: rgba(82, 184, 213, 0.3);
+
+  /* --- Buttons --- */
+  --btn-primary-bg: #52B8D5;
+  --btn-primary-text: #080D13;
+  --btn-primary-hover: #7DD3ED;
+
+  --btn-secondary-bg: #17232D;
+  --btn-secondary-text: #D9E7F1;
+  --btn-secondary-hover: #1E2D3A;
+
+  --btn-ghost-bg: transparent;
+  --btn-ghost-text: #91A5B5;
+  --btn-ghost-hover: #17232D;
+
+  /* --- Navigation --- */
+  --nav-bg: #080D13;
+  --nav-text: #91A5B5;
+  --nav-active: #52B8D5;
+  --nav-active-bg: rgba(82, 184, 213, 0.10);
+  --nav-hover-bg: rgba(217, 231, 241, 0.05);
+
+  /* --- Form Controls --- */
+  --input-bg: #0D141D;
+  --input-text: #D9E7F1;
+  --input-placeholder: #6B7F90;
+  --input-border: rgba(217, 231, 241, 0.14);
+  --input-focus-border: #52B8D5;
+  --input-focus-ring: rgba(82, 184, 213, 0.16);
+
+  /* --- Table & Journal --- */
+  --table-header-bg: #101923;
+  --table-row-bg: #0D141D;
+  --table-row-hover: #17232D;
+  --table-divider: rgba(217, 231, 241, 0.14);
+  --table-text: #D9E7F1;
+  --table-muted: #91A5B5;
+
+  /* --- Charts --- */
+  --chart-primary: #52B8D5;
+  --chart-secondary: #54D6B5;
+  --chart-tertiary: #D6BB78;
+  --chart-income: #54D6B5;
+  --chart-expense: #E7B78A;
+  --chart-grid: rgba(145, 165, 181, 0.12);
+  --chart-label: #91A5B5;
+
+  /* --- Modal / Toast / Dropdown --- */
+  --modal-bg: #101923;
+  --modal-border: rgba(217, 231, 241, 0.14);
+  --dropdown-bg: #17232D;
+  --dropdown-hover: #1E2D3A;
+
+  --toast-success-bg: #144E3D;
+  --toast-error-bg: #3A2020;
+  --toast-warning-bg: #514326;
+  --toast-info-bg: #1E3A4A;
+
+  /* --- Shadow --- */
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 24px 60px rgba(0, 0, 0, 0.6);
+  --shadow-cyan: 0 0 24px rgba(82, 184, 213, 0.15);
+
+  /* --- Radius --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* --- Transitions --- */
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+
+  /* --- Spacing Scale --- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  /* --- Typography Scale --- */
+  --text-xs: 10px;
+  --text-sm: 11px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 15px;
+  --text-xl: 16px;
+  --text-2xl: 18px;
+  --text-3xl: 21px;
+  --text-4xl: clamp(26px, 6vw, 34px);
+  --text-5xl: clamp(30px, 7vw, 40px);
+
+  /* --- Typography Tokens (Financial Control System) --- */
+  --font-family-base: "Inter", "IBM Plex Sans Thai", -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+  --font-family-thai: "IBM Plex Sans Thai", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+  --font-family-mono: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+
+  /* Semantic typography tokens */
+  --text-page-title: clamp(24px, 5vw, 28px);
+  --text-section-heading: 18px;
+  --text-card-heading: 15px;
+  --text-body: 14px;
+  --text-table: 14px;
+  --text-label: 13px;
+  --text-meta: 12px;
+  --text-button: 14px;
+  --text-financial-main: clamp(26px, 6vw, 34px);
+  --text-financial-secondary: clamp(18px, 4vw, 22px);
+
+  /* --- Icon System --- */
+  --icon-size-xs: 14px;
+  --icon-size-sm: 16px;
+  --icon-size-md: 18px;
+  --icon-size-lg: 20px;
+  --icon-size-xl: 22px;
+  --icon-size-2xl: 24px;
+  --icon-stroke-width: 1.8;
+  --icon-stroke-width-bold: 2.2;
+
+  /* --- Legacy Aliases (for backward compatibility with JS) --- */
+  --bg: var(--bg-app);
+  --surface: var(--bg-card);
+  --card: var(--bg-card);
+  --panel: var(--bg-card);
+  --panel2: var(--bg-elevated);
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --line: var(--border-default);
+  --border: var(--border-default);
+  --emerald: var(--green-primary);
+  --emerald-deep: var(--green-dark);
+  --green: var(--color-income);
+  --gold: var(--gold-primary);
+  --champagne: var(--gold-highlight);
+  --red: var(--color-expense);
+  --danger: var(--color-danger);
+  --field: var(--input-bg);
+  --shadow: var(--shadow-card);
+  --radius: var(--radius-lg);
+  --radius-sm: var(--radius-md);
+  --g: var(--green-primary);
+  --gd: var(--border-default);
 }
 *{box-sizing:border-box}
 html,body{-webkit-text-size-adjust:100%;touch-action:pan-x pan-y}
 [hidden]{display:none!important}
-html{background:#101318!important;height:100%;overscroll-behavior:none}body{margin:0;background:#101318!important;color:var(--ink);font:15px "Inter","Noto Sans Thai",-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;font-variant-numeric:tabular-nums;min-height:100%;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+html{background:var(--bg-app)!important;height:100%;overscroll-behavior:none}
+body{margin:0;background:var(--bg-app)!important;color:var(--text-primary);font:var(--text-md) var(--font-family-base);font-variant-numeric:tabular-nums;min-height:100%;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.app{max-width:680px;margin:auto;padding:14px 12px calc(84px + env(safe-area-inset-bottom));overscroll-behavior:contain}
-.top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;margin:0 -12px 12px;padding:10px 12px;background:rgba(16,19,24,.96);backdrop-filter:saturate(120%) blur(6px);-webkit-backdrop-filter:saturate(120%) blur(6px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:16px;min-width:0}.brand-icon{width:48px;height:48px;border-radius:14px;object-fit:cover;flex-shrink:0;border:1px solid #10B981;box-shadow:0 0 18px #10B98133}.brand-copy{min-width:0}
-.eyebrow{font-size:9.5px;letter-spacing:1.2px;color:var(--muted);font-weight:600;margin:0 0 3px}
-h1{font-size:21px;margin:0;font-weight:600}h2{font-size:16px;margin:0;font-weight:600}h3{font-size:14px;margin:0;font-weight:600}
-.small{font-size:11px;color:var(--muted)}
-.btn{border:1px solid transparent;border-radius:10px;padding:8px 12px;font-weight:500;transition:background .15s,border-color .15s}
-.primary{background:linear-gradient(135deg,#10B981,#059669);color:#052E24;border-color:#10B981;box-shadow:0 8px 22px #10B98133}
-.secondary{background:var(--panel2);border-color:var(--line);color:var(--ink)}
-.danger{background:#2A1418;color:#FF6B7A;border-color:#5A2530}
-.balance{background:linear-gradient(135deg,#1E293B,#1A2028);color:var(--ink);padding:16px;border:1px solid #2A3441;border-radius:18px;box-shadow:0 14px 32px #00000066}
-.balance small{color:#94A3B8}
-.big{font-size:clamp(26px,7vw,34px);font-weight:600;margin:6px 0 12px;overflow-wrap:anywhere}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid #ffffff20;padding-top:10px}
-.stats div{display:grid;gap:4px}.stats strong{font-size:15px}
-.inc{color:var(--green)}.exp{color:var(--red)}.balance .inc{color:#10B981}.balance .exp{color:#FF6B7A}
-.section{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:16px 3px 8px}
-.card{background:linear-gradient(180deg,#1A2028,#141922);border:1px solid #2A3441;border-radius:14px;padding:12px;box-shadow:0 8px 20px #00000044}
-.stack{display:grid;gap:8px}
-label{display:block;color:#94A3B8;font-size:11px;font-weight:500;margin:3px 0 4px}
-input,select{display:block;width:100%;min-width:0;max-width:100%;border:1px solid #2A3441;background:#141922;border-radius:10px;padding:8px 10px;color:#F1F5F9;font-size:14px}
-input:focus,select:focus{outline:2px solid #10B981;outline-offset:1px}
+.app{max-width:680px;margin:auto;padding:var(--space-md) var(--space-md) calc(84px + env(safe-area-inset-bottom));overscroll-behavior:contain}
+.top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;margin:0 calc(-1 * var(--space-md)) var(--space-md);padding:var(--space-sm) var(--space-md);background:rgba(8,10,9,.96);backdrop-filter:saturate(120%) blur(6px);-webkit-backdrop-filter:saturate(120%) blur(6px);border-bottom:1px solid var(--border-default)}
+.brand{display:flex;align-items:center;gap:var(--space-lg);min-width:0}
+.brand-icon{width:48px;height:48px;border-radius:var(--radius-lg);object-fit:cover;flex-shrink:0}
+.brand-copy{min-width:0}
+.eyebrow{font-size:var(--text-xs);letter-spacing:1.2px;color:var(--text-muted);font-weight:600;margin:0 0 3px}
+h1{font-size:var(--text-page-title);margin:0;font-weight:600}
+h2{font-size:var(--text-section-heading);margin:0;font-weight:600}
+h3{font-size:var(--text-card-heading);margin:0;font-weight:600}
+.small{font-size:var(--text-sm);color:var(--text-muted)}
+.btn{border:1px solid transparent;border-radius:var(--radius-md);padding:var(--space-sm) var(--space-md);font-size:var(--text-button);font-weight:500;transition:background var(--transition-fast),border-color var(--transition-fast),transform var(--transition-fast)}
+.primary{background:var(--btn-primary-bg);color:var(--btn-primary-text);border-color:var(--gold-primary);box-shadow:var(--shadow-gold)}
+.primary:hover{background:var(--btn-primary-hover)}
+.secondary{background:var(--btn-secondary-bg);border-color:var(--border-default);color:var(--btn-secondary-text)}
+.secondary:hover{background:var(--btn-secondary-hover)}
+.danger{background:var(--surface-expense);color:var(--color-expense);border-color:var(--color-expense)}
+.balance{background:var(--bg-card);color:var(--text-primary);padding:var(--space-lg);border:1px solid var(--border-default);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);position:relative;overflow:hidden}
+.balance small{color:var(--text-secondary)}
+.big{font-size:var(--text-financial-main);font-weight:600;margin:var(--space-sm) 0 var(--space-lg);overflow-wrap:anywhere}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);border-top:1px solid var(--border-subtle);padding-top:var(--space-sm)}
+.stats div{display:grid;gap:var(--space-xs)}
+.stats strong{font-size:var(--text-body);font-weight:600}
+.inc{color:var(--color-income)}
+.exp{color:var(--color-expense)}
+.balance .inc{color:var(--color-income)}
+.balance .exp{color:var(--color-expense)}
+.section{display:flex;align-items:center;justify-content:space-between;gap:var(--space-sm);margin:var(--space-lg) var(--space-xs) var(--space-sm)}
+.card{background:var(--bg-card);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:var(--space-md);box-shadow:var(--shadow-card);transition:background var(--transition-normal),transform var(--transition-fast),box-shadow var(--transition-fast)}
+.card:hover{background:var(--bg-card-hover);transform:translateY(-1px);box-shadow:var(--shadow-card-hover)}
+.stack{display:grid;gap:var(--space-sm)}
+label{display:block;color:var(--text-secondary);font-size:var(--text-label);font-weight:500;margin:var(--space-xs) 0 var(--space-xs)}
+input,select{display:block;width:100%;min-width:0;max-width:100%;border:1px solid var(--input-border);background:var(--input-bg);border-radius:var(--radius-md);padding:var(--space-sm) var(--space-sm);color:var(--input-text);font-size:var(--text-body)}
+input:focus,select:focus{outline:none;border-color:var(--input-focus-border);box-shadow:0 0 0 3px var(--input-focus-ring)}
 input[type="date"],input[type="month"]{display:inline-block;font-variant-numeric:tabular-nums;box-sizing:border-box;min-width:0;max-width:100%;overflow:hidden;-webkit-appearance:none;appearance:none;white-space:nowrap;text-align:center;height:44px;min-height:44px;line-height:44px;padding:0 9px;font-size:13px;vertical-align:middle}
 /* iOS Safari (incl. iPhone 16e) renders date/month inputs with collapsed inner
    height so the value sticks to the top of the field. Force the inner value box
@@ -88,12 +324,12 @@ input[type="date"]::-webkit-inner-spin-button,input[type="month"]::-webkit-inner
 .item{display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px}
 .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:#2F3A46;color:#E2E8F0;flex-shrink:0}
 .details{flex:1;min-width:0}.title{font-weight:500;overflow-wrap:anywhere}
-.meta{font-size:11px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere;line-height:1.5}
+.meta{font-size:var(--text-meta);color:var(--text-muted);margin-top:4px;overflow-wrap:anywhere;line-height:1.5}
 .right{text-align:right;flex-shrink:0;font-weight:600;overflow-wrap:anywhere;max-width:45%}
 .rowbuttons{display:flex;gap:7px;justify-content:flex-end;margin-top:5px}
-.rowbuttons button{border:0;background:none;color:var(--muted);font-size:11px;padding:3px}
-.empty{text-align:center;background:var(--panel);padding:24px;border-radius:15px;color:var(--muted);font-size:13px}
-.notice{background:#1E2630;padding:12px;border:1px solid var(--line);border-radius:13px;color:#CBD5E1;font-size:11px;line-height:1.6}
+.rowbuttons button{border:0;background:none;color:var(--text-muted);font-size:var(--text-meta);padding:3px}
+.empty{text-align:center;background:var(--panel);padding:24px;border-radius:15px;color:var(--text-muted);font-size:var(--text-body)}
+.notice{background:#1E2630;padding:12px;border:1px solid var(--line);border-radius:13px;color:#CBD5E1;font-size:var(--text-sm);line-height:1.6}
 .summaryline{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
 .summaryline:last-child{border-bottom:0}
 .progress{height:7px;background:#334155;border-radius:20px;overflow:hidden;margin-top:7px}
@@ -106,10 +342,10 @@ input[type="date"]::-webkit-inner-spin-button,input[type="month"]::-webkit-inner
 .settings-row button{flex-shrink:0}
 .bottom-nav{position:fixed;z-index:20;bottom:0;left:0;right:0;background:#1A2028ee;backdrop-filter:blur(18px);border-top:1px solid #2A3441;padding:8px 5px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr)}
 .nav-btn{border:0;background:transparent;color:#94A3B8;font-size:10px;font-weight:500;display:grid;justify-items:center;gap:4px;padding:5px 0}
-.nav-btn .symbol{font-size:21px;line-height:1.1}
+.nav-btn .icon-nav{flex-shrink:0;width:var(--icon-size-lg);height:var(--icon-size-lg);stroke-width:var(--icon-stroke-width)}
 .nav-btn.active{color:#10B981}
 /* Keep the Record tab plus icon white with a transparent background. */
-.nav-btn[data-go="record"] .symbol{color:#FFFFFF;background:transparent;border:0;box-shadow:none}
+.nav-btn[data-go="record"] .icon-nav{color:#FFFFFF;background:transparent;border:0;box-shadow:none}
 
 /* Record Dropdown */
 .record-dropdown{position:fixed;z-index:30;bottom:calc(84px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);pointer-events:none}
@@ -121,7 +357,22 @@ input[type="date"]::-webkit-inner-spin-button,input[type="month"]::-webkit-inner
 .record-dropdown-item{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:0;background:transparent;color:var(--ink);font-size:14px;font-weight:500;text-align:left}
 .record-dropdown-item:hover,.record-dropdown-item:focus{background:#243244;outline:none}
 .record-dropdown-item:not(:last-child){border-bottom:1px solid #2A3441}
-.record-dropdown-icon{font-size:20px;flex-shrink:0}
+.record-dropdown-icon{flex-shrink:0;width:var(--icon-size-lg);height:var(--icon-size-lg);stroke-width:var(--icon-stroke-width)}
+
+/* Icon System CSS */
+.icon-inline{display:inline-flex;flex-shrink:0;width:var(--icon-size-sm);height:var(--icon-size-sm);stroke-width:var(--icon-stroke-width);vertical-align:middle}
+.icon-sidebar{flex-shrink:0;width:var(--icon-size-lg);height:var(--icon-size-lg);stroke-width:var(--icon-stroke-width)}
+.feature-icon{flex-shrink:0;width:var(--icon-size-xl);height:var(--icon-size-xl);stroke-width:var(--icon-stroke-width)}
+.slip-toggle-icon{flex-shrink:0;width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#2F3A46;stroke-width:var(--icon-stroke-width);color:var(--text-secondary)}
+.slip-toggle-arrow{color:var(--muted);stroke-width:var(--icon-stroke-width);transition:transform .18s}
+.slip-toggle[aria-expanded="true"] .slip-toggle-arrow{transform:rotate(180deg)}
+.settings-collapse-symbol{flex-shrink:0;width:20px;height:20px;stroke-width:var(--icon-stroke-width)}
+.settings-collapse-arrow{color:var(--muted);stroke-width:var(--icon-stroke-width);transition:transform .18s}
+.settings-collapse-toggle[aria-expanded="true"] .settings-collapse-arrow{transform:rotate(180deg)}
+.history-filter-symbol{flex-shrink:0;width:18px;height:18px;stroke-width:var(--icon-stroke-width)}
+.history-filter-arrow{flex-shrink:0;width:16px;height:16px;stroke-width:var(--icon-stroke-width);transition:transform .18s}
+.history-filter-toggle[aria-expanded="true"] .history-filter-arrow{transform:rotate(180deg)}
+.ico-icon{flex-shrink:0;width:20px;height:20px;stroke-width:var(--icon-stroke-width)}
 
 .message{font-size:12px;color:var(--green);min-height:16px;margin:0}
 .slip-card{margin-bottom:12px;padding:0;overflow:hidden}.slip-toggle{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:transparent;color:var(--ink);padding:15px;min-width:0}.slip-toggle-icon{width:42px;height:42px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#2F3A46;font-size:21px}.slip-toggle-copy{flex:1;min-width:0}.slip-toggle-copy strong{display:block;font-size:14px}.slip-toggle-copy small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:4px}.slip-toggle-arrow{color:var(--muted);font-size:18px;transition:transform .18s}.slip-toggle[aria-expanded="true"] .slip-toggle-arrow{transform:rotate(180deg)}.slip-panel{padding:0 15px 15px}.slip-preview{display:block;width:100%;max-height:260px;object-fit:contain;border-radius:12px;background:#141922;border:1px solid var(--line);margin-top:10px}.slip-progress{height:6px;border-radius:20px;background:#334155;overflow:hidden;margin:8px 0}.slip-progress span{display:block;height:100%;width:0;background:#CBD5E1;transition:width .2s}.slip-raw{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;background:#141922;border:1px solid var(--line);border-radius:10px;padding:10px;max-height:150px;overflow:auto;color:#CBD5E1}
@@ -133,7 +384,7 @@ footer{text-align:center;color:#94A3B8;font-size:11px;padding:24px 0 0}
 .daily-chart-header h2{margin:4px 0}
 .daily-chart-eyebrow{font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:600}
 .daily-chart-subtitle{font-size:12px;color:var(--muted);margin:5px 0 0;line-height:1.5}
-.daily-chart-icon{font-size:25px;color:#CBD5E1}
+.daily-chart-icon{flex-shrink:0;width:25px;height:25px;stroke-width:var(--icon-stroke-width);color:#CBD5E1}
 .daily-chart-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:18px}
 .daily-chart-tabs{display:flex;gap:4px;padding:4px;background:#141922;border:1px solid var(--line);border-radius:12px}
 .daily-chart-tab{border:0;border-radius:9px;padding:9px 13px;background:transparent;color:#94A3B8;font-size:13px;font-weight:500;white-space:nowrap}
@@ -489,7 +740,7 @@ body.record-page .app{padding-top:12px;padding-bottom:60px}
 #page-record .eyebrow{margin:0 0 2px}
 #page-record .slip-card{margin-bottom:6px}
 #page-record .slip-toggle{padding:8px 10px;gap:8px}
-#page-record .slip-toggle-icon{width:32px;height:32px;font-size:17px;border-radius:10px}
+#page-record .slip-toggle-icon{width:32px;height:32px;border-radius:10px}
 #page-record .slip-toggle-copy strong{font-size:13px}
 #page-record .slip-toggle-copy small{font-size:10px;margin-top:2px;line-height:1.25}
 #page-record .slip-toggle-arrow{font-size:16px}
@@ -522,7 +773,7 @@ h1{font-size:23px}
 .stack{gap:8px}
 .feature-grid{gap:8px;margin-top:8px}
 .feature-link{gap:5px;padding:12px;border-radius:13px}
-.feature-link .feature-icon{font-size:20px}
+.feature-link .feature-icon{width:20px;height:20px}
 .feature-item{padding:11px;margin-bottom:8px;border-radius:13px}
 .feature-stats{gap:8px}
 .feature-stat{padding:10px;border-radius:11px}
@@ -611,11 +862,11 @@ input,select{padding:7px 9px;border-radius:9px;font-size:13px}
 .bottom-nav{padding:5px 3px calc(5px + env(safe-area-inset-bottom))}
 .nav-btn{font-size:9px;font-weight:500;gap:2px;padding:3px 0}
 .slip-toggle{padding:8px;gap:8px}
-.slip-toggle-icon{width:30px;height:30px;border-radius:8px;font-size:15px}
+.slip-toggle-icon{width:30px;height:30px;border-radius:8px}
 .settings-collapse-toggle{padding:8px;gap:8px}
-.settings-collapse-symbol{width:28px;height:28px;border-radius:8px;font-size:14px}
+.settings-collapse-symbol{width:28px;height:28px;border-radius:8px}
 .history-filter-toggle{padding:8px;gap:8px}
-.history-filter-symbol{width:28px;height:28px;border-radius:8px;font-size:14px}
+.history-filter-symbol{width:28px;height:28px;border-radius:8px}
 .item{padding:8px;gap:7px;border-radius:10px}
 .ico{width:34px;height:34px;border-radius:9px;font-size:18px}
 .feature-item{padding:8px;border-radius:10px;margin-bottom:7px}
@@ -1216,6 +1467,588 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
   #page-gl .gl-cards { display: none; }
   #page-gl .gl-table-scroll { display: block; }
 }
+
+/* ============================================================
+   FINANCIAL CONTROL SYSTEM — UI OVERRIDES
+   Applied after base styles to reskin without breaking layout
+   ============================================================ */
+
+/* --- Background & App Shell --- */
+html { background: var(--bg-app) !important; }
+body { background: var(--bg-app) !important; color: var(--text-primary); }
+.app { background: transparent; }
+
+/* --- Top Bar / Header --- */
+.top {
+  background: rgba(8, 13, 19, 0.96) !important;
+  backdrop-filter: saturate(120%) blur(6px);
+  -webkit-backdrop-filter: saturate(120%) blur(6px);
+  border-bottom: 1px solid var(--border-default) !important;
+}
+.brand-icon {
+  border: 1px solid var(--gold-primary) !important;
+  box-shadow: 0 0 18px rgba(214, 187, 120, 0.2) !important;
+}
+
+/* --- Buttons --- */
+.btn.primary {
+  background: var(--btn-primary-bg) !important;
+  color: var(--btn-primary-text) !important;
+  border-color: var(--gold-primary) !important;
+  box-shadow: 0 0 24px rgba(82, 184, 213, 0.15) !important;
+}
+.btn.primary:hover { background: var(--btn-primary-hover) !important; }
+.btn.secondary {
+  background: var(--btn-secondary-bg) !important;
+  border-color: var(--border-default) !important;
+  color: var(--btn-secondary-text) !important;
+}
+.btn.secondary:hover { background: var(--btn-secondary-hover) !important; }
+.btn.danger {
+  background: var(--surface-expense) !important;
+  color: var(--color-expense) !important;
+  border-color: var(--color-expense) !important;
+}
+
+/* --- Balance Card --- */
+.balance {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+.balance small { color: var(--text-secondary) !important; }
+.balance .inc { color: var(--color-income) !important; }
+.balance .exp { color: var(--color-expense) !important; }
+.big { color: var(--text-primary) !important; }
+
+/* --- Stats --- */
+.stats { border-top: 1px solid var(--border-subtle) !important; }
+.stats strong { color: var(--text-primary) !important; }
+.inc { color: var(--color-income) !important; }
+.exp { color: var(--color-expense) !important; }
+
+/* --- Cards --- */
+.card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+.card:hover {
+  background: var(--bg-card-hover) !important;
+  box-shadow: var(--shadow-card-hover) !important;
+}
+
+/* --- Form Controls --- */
+input, select {
+  border: 1px solid var(--input-border) !important;
+  background: var(--input-bg) !important;
+  color: var(--input-text) !important;
+}
+input:focus, select:focus {
+  border-color: var(--input-focus-border) !important;
+  box-shadow: 0 0 0 3px var(--input-focus-ring) !important;
+  outline: none !important;
+}
+input::placeholder, select::placeholder { color: var(--input-placeholder) !important; }
+
+/* --- Actions Grid (Record Type Buttons) --- */
+.actions button {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+.actions button.active,
+.actions button:active {
+  border-color: var(--gold-primary) !important;
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+}
+
+/* --- List Items --- */
+.item {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+}
+.ico {
+  background: var(--bg-elevated) !important;
+  color: var(--text-secondary) !important;
+}
+.details .title { color: var(--text-primary) !important; }
+.meta { color: var(--text-muted) !important; }
+.right { color: var(--text-primary) !important; }
+.rowbuttons button { color: var(--text-muted) !important; }
+.rowbuttons button:hover { color: var(--text-primary) !important; }
+
+/* --- Empty State --- */
+.empty {
+  background: var(--bg-card) !important;
+  color: var(--text-muted) !important;
+}
+
+/* --- Notice / Info --- */
+.notice {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* --- Summary Lines --- */
+.summaryline { border-bottom: 1px solid var(--border-default) !important; }
+.summaryline:last-child { border-bottom: none !important; }
+
+/* --- Progress Bars --- */
+.progress { background: var(--bg-elevated) !important; }
+.progress span { background: var(--gold-primary) !important; }
+
+/* --- Pills / Badges --- */
+.pill {
+  background: var(--bg-elevated) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* --- Settings Rows --- */
+.settings-row { border-bottom: 1px solid var(--border-default) !important; }
+.settings-row:last-child { border-bottom: none !important; }
+
+/* --- Bottom Navigation --- */
+.bottom-nav {
+  background: rgba(8, 13, 19, 0.95) !important;
+  backdrop-filter: blur(18px) !important;
+  border-top: 1px solid var(--border-default) !important;
+}
+.nav-btn { color: var(--nav-text) !important; }
+.nav-btn.active { color: var(--nav-active) !important; }
+
+/* --- Record Dropdown --- */
+.record-dropdown-panel {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+  box-shadow: var(--shadow-modal) !important;
+}
+.record-dropdown-item {
+  color: var(--text-primary) !important;
+}
+.record-dropdown-item:hover,
+.record-dropdown-item:focus {
+  background: var(--bg-elevated) !important;
+}
+.record-dropdown-item:not(:last-child) {
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+/* --- Slip Card / OCR --- */
+.slip-toggle-icon {
+  background: var(--bg-elevated) !important;
+  color: var(--text-secondary) !important;
+}
+.slip-toggle-copy strong { color: var(--text-primary) !important; }
+.slip-toggle-copy small { color: var(--text-muted) !important; }
+.slip-toggle-arrow { color: var(--text-muted) !important; }
+.slip-preview {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-default) !important;
+}
+.slip-progress { background: var(--bg-elevated) !important; }
+.slip-progress span { background: var(--gold-primary) !important; }
+.slip-raw {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* --- Message --- */
+.message { color: var(--color-success) !important; }
+
+/* --- Daily Chart --- */
+.daily-chart-tabs {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-default) !important;
+}
+.daily-chart-tab { color: var(--text-secondary) !important; }
+.daily-chart-tab.active[data-chart-type="Expense"] {
+  background: var(--surface-expense) !important;
+  color: var(--color-expense) !important;
+}
+.daily-chart-tab.active[data-chart-type="Income"] {
+  background: var(--surface-income) !important;
+  color: var(--color-income) !important;
+}
+.daily-chart-range label { color: var(--text-muted) !important; }
+.daily-chart-range input {
+  border: 1px solid var(--input-border) !important;
+  background: var(--input-bg) !important;
+  color: var(--input-text) !important;
+}
+.daily-chart-preset {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+.daily-chart-preset.active {
+  border-color: var(--color-income) !important;
+  color: var(--color-income) !important;
+  background: var(--surface-income) !important;
+}
+.daily-chart-total span { color: var(--text-secondary) !important; }
+.daily-chart-total strong { color: var(--color-expense) !important; }
+.daily-chart-bars { border-bottom: 1px solid var(--border-default) !important; }
+.daily-chart-bar.expense { background: var(--color-expense) !important; }
+.daily-chart-bar.income { background: var(--color-income) !important; }
+.daily-chart-axis span { color: var(--text-muted) !important; }
+.daily-chart-selected {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+.daily-chart-selected strong { color: var(--text-primary) !important; }
+.daily-chart-detail-item { border-top: 1px solid var(--border-default) !important; }
+.daily-chart-detail-name { color: var(--text-primary) !important; }
+.daily-chart-detail-meta { color: var(--text-muted) !important; }
+.daily-chart-detail-amount { color: var(--text-primary) !important; }
+
+/* --- Reports --- */
+.report-section-title h2 { color: var(--text-primary) !important; }
+.report-subtitle { color: var(--text-secondary) !important; }
+.trend-legend { color: var(--text-muted) !important; }
+.legend-dot.income { background: var(--color-income) !important; }
+.legend-dot.expense { background: var(--color-expense) !important; }
+.trend-bar-track { background: var(--bg-elevated) !important; }
+.trend-bar-fill.income { background: var(--color-income) !important; }
+.trend-bar-fill.expense { background: var(--color-expense) !important; }
+.trend-value { color: var(--text-secondary) !important; }
+.report-donut { background: conic-gradient(var(--bg-elevated) 0deg 360deg) !important; }
+.report-donut::after {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+}
+.report-donut-center strong { color: var(--text-primary) !important; }
+.report-donut-center span { color: var(--text-muted) !important; }
+.report-legend-name { color: var(--text-secondary) !important; }
+.report-legend-value { color: var(--text-primary) !important; }
+.report-compare-item {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+}
+.report-compare-item span { color: var(--text-secondary) !important; }
+.report-compare-item strong { color: var(--text-primary) !important; }
+.report-change.good { color: var(--color-income) !important; }
+.report-change.bad { color: var(--color-expense) !important; }
+.report-empty { color: var(--text-muted) !important; }
+
+/* --- Feature Grid / Links --- */
+.feature-link {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-primary) !important;
+}
+.feature-link strong { color: var(--text-primary) !important; }
+.feature-link small { color: var(--text-muted) !important; }
+.feature-item {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+}
+.feature-item strong { color: var(--text-primary) !important; }
+.feature-meta { color: var(--text-muted) !important; }
+.feature-stat {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+}
+.feature-stat span { color: var(--text-muted) !important; }
+.feature-stat strong { color: var(--text-primary) !important; }
+.feature-progress { background: var(--bg-elevated) !important; }
+.feature-progress span { background: var(--color-income) !important; }
+.feature-progress.over span { background: var(--color-expense) !important; }
+.status-paid { color: var(--color-income) !important; }
+.status-due { color: var(--color-warning) !important; }
+
+/* --- Forecast Card --- */
+.forecast-card .feature-stat strong { color: var(--text-primary) !important; }
+
+/* --- Warning Note --- */
+.warning-note {
+  border-color: var(--gold-border) !important;
+  background: var(--gold-subtle) !important;
+  color: var(--gold-highlight) !important;
+}
+
+/* --- Collapsible Sections (Settings) --- */
+.settings-collapse-card,
+.history-filter-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+}
+.settings-collapse-toggle,
+.history-filter-toggle {
+  color: var(--text-primary) !important;
+}
+.settings-collapse-symbol,
+.history-filter-symbol {
+  background: var(--bg-elevated) !important;
+  color: var(--text-secondary) !important;
+}
+.settings-collapse-copy strong,
+.history-filter-copy strong { color: var(--text-primary) !important; }
+.settings-collapse-copy small,
+.history-filter-copy small { color: var(--text-muted) !important; }
+.settings-collapse-arrow,
+.history-filter-arrow { color: var(--text-muted) !important; }
+.settings-collapse-panel,
+.history-filter-panel { background: transparent !important; }
+
+/* --- History Filter Fields --- */
+#page-history .grid { gap: var(--space-sm) !important; }
+#page-history #filter,
+#page-history #historyMonth,
+#page-history #historyFrom,
+#page-history #historyTo {
+  border: 1px solid var(--input-border) !important;
+  background: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* --- Journal / GL Tables --- */
+#journalListMount .jrnl-table thead th {
+  background: rgba(16, 25, 35, 0.98) !important;
+  border-bottom: 2px solid var(--border-strong) !important;
+  color: var(--text-primary) !important;
+}
+#journalListMount .jrnl-table tbody td {
+  border-bottom: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+#journalListMount .jrnl-table tbody td .jrnl-debit,
+#journalListMount .jrnl-table tbody td .jrnl-credit,
+#journalListMount .jrnl-table tbody td.jrnl-debit,
+#journalListMount .jrnl-table tbody td.jrnl-credit {
+  color: var(--text-primary) !important;
+}
+
+/* Journal grouped row colors */
+#journalListMount .jrnl-table.jrnl-grouped {
+  --jrnl-ga: var(--bg-elevated) !important;
+  --jrnl-gb: var(--bg-card) !important;
+  --jrnl-gdiv: var(--border-strong) !important;
+  --jrnl-hover: var(--nav-hover-bg) !important;
+}
+#journalListMount .jrnl-table.jrnl-grouped tbody tr.jrnl-g0,
+#journalListMount .jrnl-table.jrnl-grouped tbody tr.jrnl-g0>td {
+  background-color: var(--jrnl-ga) !important;
+}
+#journalListMount .jrnl-table.jrnl-grouped tbody tr.jrnl-g1,
+#journalListMount .jrnl-table.jrnl-grouped tbody tr.jrnl-g1>td {
+  background-color: var(--jrnl-gb) !important;
+}
+#journalListMount .jrnl-table.jrnl-grouped tbody tr.jrnl-gstart>td {
+  border-top: 1.5px solid var(--jrnl-gdiv) !important;
+}
+#journalListMount .jrnl-table.jrnl-grouped tbody tr:hover,
+#journalListMount .jrnl-table.jrnl-grouped tbody tr:hover>td {
+  background-color: var(--jrnl-hover) !important;
+}
+#journalListMount .jrnl-table.jrnl-grouped .jrnl-date { color: var(--text-primary) !important; }
+#journalListMount .jrnl-table.jrnl-grouped td.jrnl-acct.credit-line { color: var(--text-muted) !important; }
+
+/* Journal mobile cards */
+#journalListMount .jrnl-card-head {
+  border-bottom: 2px solid var(--border-strong) !important;
+  color: var(--text-muted) !important;
+}
+#journalListMount .jrnl-card-no,
+#journalListMount .jrnl-card-status { color: var(--text-primary) !important; }
+#journalListMount .jrnl-card-acct { color: var(--text-primary) !important; }
+#journalListMount .jrnl-card-debit { color: var(--color-expense) !important; }
+#journalListMount .jrnl-card-credit { color: var(--color-income) !important; }
+#journalListMount .jrnl-card-line:has(.jrnl-card-credit:not(:empty)) .jrnl-card-acct {
+  color: var(--text-muted) !important;
+}
+
+/* TB page */
+#page-tb .tb-table thead th {
+  background: rgba(16, 25, 35, 0.98) !important;
+  border-bottom: 2px solid var(--border-strong) !important;
+  color: var(--text-primary) !important;
+}
+#page-tb .tb-table tbody td {
+  border-bottom: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+#page-tb .tb-table tbody tr:hover td {
+  background: var(--nav-hover-bg) !important;
+}
+#page-tb .tb-td-balance { color: var(--text-primary) !important; }
+#page-tb .tb-empty { color: var(--text-muted) !important; }
+#page-tb .tb-table tfoot tr { border-top: 1px solid var(--border-default) !important; }
+#page-tb .tb-table tfoot td { color: var(--text-primary) !important; }
+
+/* TB mobile cards */
+#page-tb .tb-cards::before {
+  border-bottom: 2px solid var(--border-strong) !important;
+  color: var(--text-muted) !important;
+}
+#page-tb .tb-card-code { color: var(--text-muted) !important; }
+#page-tb .tb-card-name { color: var(--text-primary) !important; }
+#page-tb .tb-card-debit { color: var(--color-expense) !important; }
+#page-tb .tb-card-credit { color: var(--color-income) !important; }
+
+/* GL page */
+#page-gl .gl-ledger-table th,
+#page-gl .gl-ledger-table td {
+  border-bottom: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+#page-gl .gl-ledger-table th { color: var(--text-primary) !important; }
+
+/* GL mobile cards */
+#page-gl .gl-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
+}
+#page-gl .gl-card-date { color: var(--text-primary) !important; }
+#page-gl .gl-card-ref { color: var(--text-muted) !important; }
+#page-gl .gl-card-total-debit { color: var(--color-expense) !important; }
+#page-gl .gl-card-total-credit { color: var(--color-income) !important; }
+#page-gl .gl-card-line { border-bottom: 1px solid var(--border-subtle) !important; }
+#page-gl .gl-card-line:last-child { border-bottom: none !important; }
+#page-gl .gl-opening-card {
+  background: var(--bg-elevated) !important;
+  border: 1px dashed var(--border-default) !important;
+}
+#page-gl .gl-opening-card .gl-card-ref { color: var(--color-income) !important; }
+#page-gl .gl-opening-card .gl-card-bal { color: var(--color-income) !important; }
+#page-gl .gl-card-desc { color: var(--text-primary) !important; }
+#page-gl .gl-card-debit { color: var(--color-expense) !important; }
+#page-gl .gl-card-credit { color: var(--color-income) !important; }
+#page-gl .gl-card-bal { color: var(--text-primary) !important; }
+
+/* --- Interactive UI: Toast --- */
+.toast {
+  background: linear-gradient(180deg, var(--bg-elevated), var(--bg-card)) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-modal) !important;
+}
+.toast.success { border-color: var(--color-income) !important; }
+.toast.error { border-color: var(--color-danger) !important; }
+.toast.warning { border-color: var(--color-warning) !important; }
+.toast.info { border-color: var(--cyan-primary) !important; }
+
+/* --- Interactive UI: Popup --- */
+.popup-backdrop { background: var(--bg-overlay) !important; }
+.popup {
+  background: var(--modal-bg) !important;
+  border: 1px solid var(--modal-border) !important;
+  box-shadow: var(--shadow-modal) !important;
+}
+.popup-icon.success { background: var(--surface-income) !important; color: var(--color-income) !important; }
+.popup-icon.error { background: var(--surface-expense) !important; color: var(--color-danger) !important; }
+.popup-icon.warning { background: var(--surface-warning) !important; color: var(--color-warning) !important; }
+.popup-icon.info { background: var(--surface-info) !important; color: var(--cyan-primary) !important; }
+.popup-title { color: var(--text-primary) !important; }
+.popup-message { color: var(--text-secondary) !important; }
+
+/* --- Interactive UI: Bottom Sheet --- */
+.bottom-sheet-backdrop { background: var(--bg-overlay) !important; }
+.bottom-sheet {
+  background: var(--modal-bg) !important;
+  border-top: 1px solid var(--modal-border) !important;
+  box-shadow: var(--shadow-modal) !important;
+}
+.bottom-sheet-handle { background: var(--border-default) !important; }
+.bottom-sheet-title { color: var(--text-primary) !important; }
+
+/* --- Dropdown --- */
+.dropdown-trigger {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--input-text) !important;
+}
+.dropdown-trigger .chev { color: var(--text-muted) !important; }
+.dropdown-panel {
+  background: var(--dropdown-bg) !important;
+  border: 1px solid var(--modal-border) !important;
+  box-shadow: var(--shadow-modal) !important;
+}
+.dropdown-item { color: var(--text-primary) !important; }
+.dropdown-item:hover { background: var(--dropdown-hover) !important; }
+.dropdown-item.active { color: var(--cyan-primary) !important; }
+.dropdown-item .check { color: var(--cyan-primary) !important; }
+.dropdown-search input {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--input-text) !important;
+}
+
+/* --- Animations / Transitions --- */
+.btn { transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast) !important; }
+.card, .feature-item, .item, .feature-link { transition: transform var(--transition-normal), box-shadow var(--transition-normal) !important; }
+@media (hover: hover) {
+  .card:hover, .feature-item:hover, .item:hover, .feature-link:hover { transform: translateY(-1px) !important; }
+}
+
+/* --- Skeleton Loaders --- */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-elevated) 0%, var(--bg-card-hover) 50%, var(--bg-elevated) 100%) !important;
+  background-size: 200% 100% !important;
+}
+
+/* --- Select Dropdown (dd-wrap) --- */
+.dd-trigger {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--input-text) !important;
+}
+.dd-trigger .chev { color: var(--text-muted) !important; }
+.dd-panel {
+  background: var(--dropdown-bg) !important;
+  border: 1px solid var(--modal-border) !important;
+}
+.dd-panel .dd-item { color: var(--text-primary) !important; }
+.dd-panel .dd-item:hover, .dd-panel .dd-item.sel { background: var(--dropdown-hover) !important; }
+.dd-panel .dd-empty { color: var(--text-muted) !important; }
+.dd-search {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--input-text) !important;
+}
+
+/* --- Save Button Variants --- */
+.btn.save.save-expense {
+  background: linear-gradient(135deg, var(--color-danger), var(--expense-dark)) !important;
+  color: #FFF !important;
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 8px 22px rgba(231, 138, 138, 0.2) !important;
+}
+.btn.save.save-transfer {
+  background: linear-gradient(135deg, var(--cyan-primary), var(--gold-dark)) !important;
+  color: var(--text-on-cyan) !important;
+  border-color: var(--cyan-primary) !important;
+  box-shadow: 0 8px 22px rgba(82, 184, 213, 0.2) !important;
+}
+.btn.save.save-income {
+  background: linear-gradient(135deg, var(--color-income), var(--green-dark)) !important;
+  color: var(--text-on-green) !important;
+  border-color: var(--color-income) !important;
+  box-shadow: 0 8px 22px rgba(84, 214, 181, 0.2) !important;
+}
+
+/* --- Footer --- */
+footer { color: var(--text-muted) !important; }
+
+/* --- Responsive Overrides --- */
+@media (max-width: 480px) {
+  .app { padding: var(--space-sm) var(--space-sm) calc(80px + env(safe-area-inset-bottom)) !important; }
+  .balance { padding: var(--space-md) !important; border-radius: var(--radius-lg) !important; }
+  .card { padding: var(--space-sm) !important; border-radius: var(--radius-md) !important; }
+  .btn { padding: var(--space-xs) var(--space-sm) !important; }
+  .nav-btn .symbol { font-size: 18px !important; }
+}
+
+@media (max-width: 350px) {
+  .app { padding-left: 8px !important; padding-right: 8px !important; }
+  .section { gap: 6px !important; }
+}
+
 </style>
 
 <style id="dashboardErpCss">
@@ -1230,7 +2063,7 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
 <style id="reportsErpCss">
 #page-reports .section{margin:12px 0 10px}
 #page-reports .card{padding:12px 14px;border-radius:12px;margin:10px 0}
-#page-reports h3{margin:8px 0 6px;font-size:15px;color:#34d399}
+#page-reports h3{margin:8px 0 6px;font-size:15px;color:var(--cyan-primary)}
 #page-reports table{font-size:12px}
 #page-reports th,#page-reports td{padding:7px 8px}
 #page-reports .summaryline{padding:6px 0}
@@ -1240,13 +2073,56 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
 <style id="coaErpCss">
 #page-coa .section{margin:12px 0 10px}
 #page-coa .card{padding:12px 14px;border-radius:12px;margin:10px 0}
-#page-coa h3{margin:8px 0 6px;font-size:15px;color:#34d399}
+#page-coa h3{margin:8px 0 6px;font-size:15px;color:var(--cyan-primary)}
 #page-coa table{font-size:12px}
 #page-coa th,#page-coa td{padding:7px 8px}
 #page-coa input,#page-coa select,#page-coa button{font-size:12px}
 </style>
 <style id="reportTabsCss">.report-section{display:none}.report-section.active{display:block}</style><style id="reportTabsCssFix">.report-tabs{flex-wrap:wrap !important;gap:8px !important;align-items:center !important}.report-tabs button{white-space:nowrap !important;min-width:fit-content !important}</style><style id="glVisFix">.report-tabs button{display:inline-flex !important;visibility:visible !important;opacity:1 !important;pointer-events:auto !important}</style><style id="tabWidthFix">.report-tabs button{width:auto !important;flex:0 0 auto !important;min-width:max-content !important;flex-shrink:0 !important}</style><style id="tabWidthFix2">.report-tabs{width:100% !important;min-width:100% !important}.report-tabs button{flex:1 1 auto !important;min-width:0 !important}</style></head>
-<body style="background:#000000">
+<body style="background:var(--bg-app)">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;" aria-hidden="true">
+<symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+<symbol id="icon-bar-chart-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
+<symbol id="icon-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+<symbol id="icon-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></symbol>
+<symbol id="icon-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+<symbol id="icon-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></symbol>
+<symbol id="icon-pie-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></symbol>
+<symbol id="icon-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+<symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+<symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+<symbol id="icon-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+<symbol id="icon-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></symbol>
+<symbol id="icon-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+<symbol id="icon-file-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M11 14h6a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-6"/></symbol>
+<symbol id="icon-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+<symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+<symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+<symbol id="icon-scanner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/><path d="M7 16h10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="20"/></symbol>
+<symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+<symbol id="icon-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></symbol>
+<symbol id="icon-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+<symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="icon-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+<symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+<symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+<symbol id="icon-upload-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="16" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/><polyline points="16 16 12 12 8 16"/></symbol>
+<symbol id="icon-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+<symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+<symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+<symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+<symbol id="icon-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+<symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+<symbol id="icon-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/></symbol>
+<symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+<symbol id="icon-arrow-down-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="17 17 7 17 7 7"/></symbol>
+<symbol id="icon-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></symbol>
+<symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+<symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+<symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="icon-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+<symbol id="icon-chevrons-up-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 13 12 8 17 13"/><polyline points="7 11 12 16 17 11"/></symbol>
+</svg>
 <div id="splashScreen" role="status" aria-live="polite" aria-label="MyMoney loading">
   <div class="splash-inner">
     <div class="splash-logo-wrap">
@@ -1264,7 +2140,7 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
 <div class="app">
   <header class="top">
     <div class="brand"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney"><div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div></div>
-    <button class="btn secondary" id="headerBackup" title="สำรองข้อมูล">⇧ สำรอง</button>
+    <button class="btn secondary" id="headerBackup" title="สำรองข้อมูล"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-upload-cloud"></use></svg> สำรอง</button>
   </header>
 
   <section class="page active" id="page-home">
@@ -1276,7 +2152,7 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
       </div>
     </section>
 <section class="card daily-chart-card">
-      <div class="daily-chart-header"><div><div class="daily-chart-eyebrow">DAILY OVERVIEW</div><h2 style="margin-top:5px">กระแสเงินรายวัน</h2><p class="daily-chart-subtitle">ดูรายรับหรือรายจ่ายแยกตามวันที่</p></div><span class="daily-chart-icon" aria-hidden="true">▥</span></div>
+      <div class="daily-chart-header"><div><div class="daily-chart-eyebrow">DAILY OVERVIEW</div><h2 style="margin-top:5px">กระแสเงินรายวัน</h2><p class="daily-chart-subtitle">ดูรายรับหรือรายจ่ายแยกตามวันที่</p></div><svg class="daily-chart-icon" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-bar-chart-2"></use></svg></div>
       <div class="daily-chart-controls">
         <div class="daily-chart-tabs" role="group" aria-label="ประเภทกราฟ">
           <button type="button" class="daily-chart-tab active" data-chart-type="Expense">รายจ่าย</button>
@@ -1311,10 +2187,10 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
     
     <div class="section"><div><p class="eyebrow">MY FINANCIAL PLAN</p><h2>วางแผนการเงิน</h2></div><span class="pill" id="homePlanMonth"></span></div>
     <div class="feature-grid">
-      <button class="feature-link" data-go="budget"><span class="feature-icon">▤</span><strong>งบประมาณ</strong><small id="homeBudgetPreview">ตั้งงบรายเดือน</small></button>
-      <button class="feature-link" data-go="bills"><span class="feature-icon">◷</span><strong>บิลประจำ</strong><small id="homeBillsPreview">ติดตามวันครบกำหนด</small></button>
-      <button class="feature-link" data-go="debts"><span class="feature-icon">↘</span><strong>ติดตามหนี้</strong><small id="homeDebtPreview">ดูยอดหนี้คงเหลือ</small></button>
-      <button class="feature-link" data-go="goals"><span class="feature-icon">◎</span><strong>เป้าหมายการออม</strong><small id="homeGoalsPreview">ตั้งเป้าหมายแรก</small></button>
+      <button class="feature-link" data-go="budget"><svg class="feature-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-layout-dashboard"></use></svg><strong>งบประมาณ</strong><small id="homeBudgetPreview">ตั้งงบรายเดือน</small></button>
+      <button class="feature-link" data-go="bills"><svg class="feature-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-calendar"></use></svg><strong>บิลประจำ</strong><small id="homeBillsPreview">ติดตามวันครบกำหนด</small></button>
+      <button class="feature-link" data-go="debts"><svg class="feature-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-credit-card"></use></svg><strong>ติดตามหนี้</strong><small id="homeDebtPreview">ดูยอดหนี้คงเหลือ</small></button>
+      <button class="feature-link" data-go="goals"><svg class="feature-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-target"></use></svg><strong>เป้าหมายการออม</strong><small id="homeGoalsPreview">ตั้งเป้าหมายแรก</small></button>
     </div>
     <div class="section"><div><p class="eyebrow">MONTHLY BUDGET</p><h2>งบประมาณเดือนนี้</h2></div><button class="btn secondary" data-go="budget">จัดการ</button></div>
     <div class="card" id="homeBudgetList"></div>
@@ -1327,12 +2203,12 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
   </section>
 
   <section class="page" id="page-history">
-    <div class="section" style="margin-top:5px"><div><p class="eyebrow">TRANSACTIONS</p><h2>ประวัติรายการ</h2></div><button class="btn primary" data-go="record">＋ เพิ่ม</button></div>
+    <div class="section" style="margin-top:5px"><div><p class="eyebrow">TRANSACTIONS</p><h2>ประวัติรายการ</h2></div><button class="btn primary" data-go="record"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> เพิ่ม</button></div>
     <section class="card history-filter-card">
       <button class="history-filter-toggle" type="button" id="historyFilterToggle" aria-expanded="false" aria-controls="historyFilterPanel">
-        <span class="history-filter-symbol">☷</span>
+        <svg class="history-filter-symbol" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-filter"></use></svg>
         <span class="history-filter-copy"><strong>ตัวกรองและค้นหา</strong><small>ค้นหาชื่อรายการ ประเภท และช่วงวันที่</small></span>
-        <span class="history-filter-arrow" aria-hidden="true">⌄</span>
+        <svg class="history-filter-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg>
       </button>
       <div id="historyFilterPanel" class="stack history-filter-panel" hidden>
         <div><label for="search">ค้นหาชื่อรายการ / หมายเหตุ</label><input id="search" placeholder="พิมพ์คำค้นหา"></div>
@@ -1361,23 +2237,23 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
     <div class="section" style="margin-top:5px"><div><p class="eyebrow">QUICK ADD</p><h2 id="formHeading">บันทึกรายการ</h2></div></div>
     <section class="card slip-card">
       <button class="slip-toggle" type="button" id="slipToggle" aria-expanded="false" aria-controls="slipPanel">
-        <span class="slip-toggle-icon" aria-hidden="true">▧</span>
+        <svg class="slip-toggle-icon" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-scanner"></use></svg>
         <span class="slip-toggle-copy"><strong>อ่านข้อมูลจากสลิป</strong><small>แตะเพื่อเลือกรูปสลิปและช่วยกรอกข้อมูลอัตโนมัติ</small></span>
-        <span class="slip-toggle-arrow" aria-hidden="true">⌄</span>
+        <svg class="slip-toggle-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg>
       </button>
       <div id="slipPanel" class="slip-panel stack" hidden>
         <p class="small" style="margin:0">เลือกรูปสลิปจาก Photos หรือ Files ระบบจะอ่านข้อความบนรูปและช่วยกรอกข้อมูลให้</p>
         <input id="slipFile" type="file" accept="image/*" hidden>
-        <button class="btn secondary" type="button" id="chooseSlip">▧ เลือกรูปสลิป</button>
+        <button class="btn secondary" type="button" id="chooseSlip"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-upload-cloud"></use></svg> เลือกรูปสลิป</button>
         <img id="slipPreview" class="slip-preview" alt="ตัวอย่างสลิปที่เลือก" hidden>
-        <button class="btn secondary" type="button" id="cancelSlip" hidden>✕ ยกเลิกการแนบไฟล์</button>
+        <button class="btn secondary" type="button" id="cancelSlip" hidden><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-x"></use></svg> ยกเลิกการแนบไฟล์</button>
         <button class="btn primary" type="button" id="readSlip" disabled>อ่านสลิปและเติมข้อมูล</button>
         <div id="slipProgressWrap" hidden><div class="slip-progress"><span id="slipProgressBar"></span></div><p class="small" id="slipStatus" aria-live="polite">กำลังเตรียมระบบอ่านสลิป…</p></div>
         <details><summary class="small">ข้อความที่ระบบอ่านได้ (ตรวจสอบได้)</summary><div class="slip-raw" id="slipRaw">ยังไม่มีข้อความ</div></details>
         <p class="small">ประมวลผลรูปในเบราว์เซอร์ รูปสลิปไม่ถูกส่งไปยังเซิร์ฟเวอร์ OCR โดยโค้ดนี้ แต่ระบบต้องดาวน์โหลดตัวอ่านและชุดภาษาเมื่อใช้ครั้งแรก ยอดเงินและวันที่อาจอ่านผิด กรุณาตรวจสอบก่อนบันทึก</p>
       </div>
     </section>
-    <div class="actions"><button class="active" data-type="Expense">− รายจ่าย</button><button data-type="Income">＋ รายรับ</button><button data-type="Transfer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle"><path d="M16 3l4 4-4 4"/><path d="M20 7H4"/><path d="M8 21l-4-4 4-4"/><path d="M4 17h16"/></svg> โอนเงิน</button><button type="button" id="recordModeManual" data-mode="Manual">✎ บันทึกแบบแมนนวล</button></div>
+    <div class="actions"><button class="active" data-type="Expense"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-trending-down"></use></svg> รายจ่าย</button><button data-type="Income"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-trending-up"></use></svg> รายรับ</button><button data-type="Transfer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle"><path d="M16 3l4 4-4 4"/><path d="M20 7H4"/><path d="M8 21l-4-4 4-4"/><path d="M4 17h16"/></svg> โอนเงิน</button><button type="button" id="recordModeManual" data-mode="Manual"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-file-edit"></use></svg> บันทึกแบบแมนนวล</button></div>
     <section class="card">
       <form id="form" class="stack tx-form">
         <div class="tx-grid tx-grid-2" id="txDateDocRow"><div><label for="date">วันที่ *</label><input id="date" type="date" required></div><div><label for="docNo">เลขที่เอกสาร</label><input id="docNo" type="text" maxlength="80" placeholder="ไม่บังคับ (กรอกเอง)"></div></div>
@@ -1431,7 +2307,7 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
     <div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">RECURRING BILLS</p><h2>บิลประจำ</h2></div><button class="btn secondary" type="button" data-go="home" aria-label="กลับไปหน้าภาพรวม">← ย้อนกลับ</button></div>
     <div class="card stack feature-card">
       <h3>บิลและรายการประจำ</h3><p class="small">บันทึกค่าเช่า ค่างวด หรือบิลรายเดือน แล้วทำเครื่องหมายว่าจ่ายแล้วในแต่ละเดือน</p>
-      <form id="billForm" class="feature-form"><div><label for="billName">ชื่อบิล *</label><input id="billName" maxlength="80" placeholder="เช่น ค่าเช่าห้อง" required></div><div class="grid"><div><label for="billAmount">จำนวนเงิน (บาท) *</label><input id="billAmount" type="number" min="0.01" step="0.01" required placeholder="0.00"></div><div><label for="billDay">วันครบกำหนด (1–31)</label><input id="billDay" type="number" min="1" max="31" value="1" required></div></div><div class="grid"><div><label for="billCategory">หมวดหมู่</label><select id="billCategory"></select></div><div><label for="billAccount">บัญชีที่จ่าย</label><select id="billAccount"></select></div></div><button class="btn primary" type="submit">＋ เพิ่มบิลประจำ</button><p class="message" id="billMessage" role="status"></p></form>
+      <form id="billForm" class="feature-form"><div><label for="billName">ชื่อบิล *</label><input id="billName" maxlength="80" placeholder="เช่น ค่าเช่าห้อง" required></div><div class="grid"><div><label for="billAmount">จำนวนเงิน (บาท) *</label><input id="billAmount" type="number" min="0.01" step="0.01" required placeholder="0.00"></div><div><label for="billDay">วันครบกำหนด (1–31)</label><input id="billDay" type="number" min="1" max="31" value="1" required></div></div><div class="grid"><div><label for="billCategory">หมวดหมู่</label><select id="billCategory"></select></div><div><label for="billAccount">บัญชีที่จ่าย</label><select id="billAccount"></select></div></div><button class="btn primary" type="submit"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> เพิ่มบิลประจำ</button><p class="message" id="billMessage" role="status"></p></form>
       <div id="billList"></div>
     </div>
   </section>
@@ -1441,14 +2317,14 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
     <div class="card stack feature-card">
       <h3>ติดตามหนี้</h3><p class="small">บันทึกยอดหนี้คงเหลือ ดอกเบี้ยต่อปี และยอดชำระขั้นต่ำ เพื่อดูภาพรวมภาระหนี้</p>
       <div class="feature-stats"><div class="feature-stat"><span>หนี้คงเหลือรวม</span><strong class="exp" id="debtTotal">฿0.00</strong></div><div class="feature-stat"><span>ยอดชำระขั้นต่ำ/เดือน</span><strong id="debtMinimum">฿0.00</strong></div></div>
-      <form id="debtForm" class="feature-form"><div><label for="debtName">ชื่อหนี้ *</label><input id="debtName" maxlength="80" placeholder="เช่น สินเชื่อส่วนบุคคล" required></div><div class="grid"><div><label for="debtBalance">ยอดหนี้คงเหลือ *</label><input id="debtBalance" type="number" min="0.01" step="0.01" required></div><div><label for="debtRate">ดอกเบี้ยต่อปี (%)</label><input id="debtRate" type="number" min="0" max="100" step="0.01" value="0"></div></div><div><label for="debtMinimumInput">ยอดชำระขั้นต่ำต่อเดือน</label><input id="debtMinimumInput" type="number" min="0" step="0.01" value="0"></div><button class="btn primary" type="submit">＋ เพิ่มหนี้</button><p class="message" id="debtMessage" role="status"></p></form>
+      <form id="debtForm" class="feature-form"><div><label for="debtName">ชื่อหนี้ *</label><input id="debtName" maxlength="80" placeholder="เช่น สินเชื่อส่วนบุคคล" required></div><div class="grid"><div><label for="debtBalance">ยอดหนี้คงเหลือ *</label><input id="debtBalance" type="number" min="0.01" step="0.01" required></div><div><label for="debtRate">ดอกเบี้ยต่อปี (%)</label><input id="debtRate" type="number" min="0" max="100" step="0.01" value="0"></div></div><div><label for="debtMinimumInput">ยอดชำระขั้นต่ำต่อเดือน</label><input id="debtMinimumInput" type="number" min="0" step="0.01" value="0"></div><button class="btn primary" type="submit"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> เพิ่มหนี้</button><p class="message" id="debtMessage" role="status"></p></form>
       <div id="debtList"></div><div class="notice">การคำนวณเป็นภาพรวมเบื้องต้น ไม่ใช่ยอดปิดบัญชีจากเจ้าหนี้จริง ดอกเบี้ยและค่าธรรมเนียมจริงอาจต่างกัน</div>
     </div>
   </section>
   <section class="page" id="page-goals">
     <div class="section" style="margin-top:5px;align-items:flex-start"><div><p class="eyebrow">SAVING GOALS</p><h2>เป้าหมายการออม</h2></div><button class="btn secondary" type="button" data-go="home" aria-label="กลับไปหน้าภาพรวม">← ย้อนกลับ</button></div>
     <div class="card stack feature-card"><div class="feature-stats"><div class="feature-stat"><span>เป้าหมายทั้งหมด</span><strong id="goalsTotalTarget">฿0.00</strong></div><div class="feature-stat"><span>ออมแล้ว</span><strong class="inc" id="goalsTotalSaved">฿0.00</strong></div></div>
-      <form id="goalForm" class="feature-form"><div><label for="goalName">ชื่อเป้าหมาย *</label><input id="goalName" maxlength="80" placeholder="เช่น เงินฉุกเฉิน" required></div><div class="grid"><div><label for="goalTarget">ยอดเป้าหมาย (บาท) *</label><input id="goalTarget" type="number" min="0.01" step="0.01" required></div><div><label for="goalSaved">เงินที่มีแล้ว (บาท)</label><input id="goalSaved" type="number" min="0" step="0.01" value="0"></div></div><div><label for="goalDate">วันที่ต้องการให้ถึงเป้าหมาย (ไม่บังคับ)</label><input id="goalDate" type="date"></div><button class="btn primary" type="submit">＋ เพิ่มเป้าหมาย</button><p class="message" id="goalMessage" role="status"></p></form>
+      <form id="goalForm" class="feature-form"><div><label for="goalName">ชื่อเป้าหมาย *</label><input id="goalName" maxlength="80" placeholder="เช่น เงินฉุกเฉิน" required></div><div class="grid"><div><label for="goalTarget">ยอดเป้าหมาย (บาท) *</label><input id="goalTarget" type="number" min="0.01" step="0.01" required></div><div><label for="goalSaved">เงินที่มีแล้ว (บาท)</label><input id="goalSaved" type="number" min="0" step="0.01" value="0"></div></div><div><label for="goalDate">วันที่ต้องการให้ถึงเป้าหมาย (ไม่บังคับ)</label><input id="goalDate" type="date"></div><button class="btn primary" type="submit"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> เพิ่มเป้าหมาย</button><p class="message" id="goalMessage" role="status"></p></form>
     </div>
     <div class="section"><h3>เป้าหมายของฉัน</h3></div><div id="goalList"></div>
     <div class="notice">ยอดเงินในเป้าหมายเป็นตัวติดตามแยกต่างหาก ไม่ได้หักเงินจากบัญชีใน MyMoney อัตโนมัติ เพื่อป้องกันยอดเงินซ้ำกันค่ะ</div>
@@ -1470,27 +2346,27 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
   <section class="page" id="page-settings">
     <div class="card settings-collapse-card" hidden>
   <button class="settings-collapse-toggle" type="button" id="coaSettingsToggle" aria-expanded="false" aria-controls="coaSettingsPanel">
-    <span class="settings-collapse-symbol" aria-hidden="true">▦</span>
+    <svg class="settings-collapse-symbol" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-git-branch"></use></svg>
     <span class="settings-collapse-copy"><strong>ผังบัญชี (Chart of Accounts)</strong></span>
-    <span class="settings-collapse-arrow" aria-hidden="true">⌄</span>
+    <svg class="settings-collapse-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg>
   </button>
   <div class="settings-collapse-panel" id="coaSettingsPanel" hidden>
   </div>
 </div>
     <div class="card settings-collapse-card">
-      <button class="settings-collapse-toggle" type="button" id="accountsSettingsToggle" aria-expanded="false" aria-controls="accountsSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▤</span><span class="settings-collapse-copy"><strong>บัญชีและยอดตั้งต้น</strong><small>กำหนดประเภทบัญชี: สินทรัพย์ หนี้สิน ทุน รายได้ และค่าใช้จ่าย</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
-      <div class="settings-collapse-panel" id="accountsSettingsPanel" hidden><div class="stack"><p class="small">กำหนดประเภทบัญชีให้ถูกต้อง เช่น เงินสด = สินทรัพย์ และบัตรเครดิต = หนี้สิน ระบบจะนำประเภทบัญชีไปใช้สร้างรายการเดบิต–เครดิตอัตโนมัติ</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount">＋ เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div></div>
+      <button class="settings-collapse-toggle" type="button" id="accountsSettingsToggle" aria-expanded="false" aria-controls="accountsSettingsPanel"><svg class="settings-collapse-symbol" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-wallet"></use></svg><span class="settings-collapse-copy"><strong>บัญชีและยอดตั้งต้น</strong><small>กำหนดประเภทบัญชี: สินทรัพย์ หนี้สิน ทุน รายได้ และค่าใช้จ่าย</small></span><svg class="settings-collapse-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></button>
+      <div class="settings-collapse-panel" id="accountsSettingsPanel" hidden><div class="stack"><p class="small">กำหนดประเภทบัญชีให้ถูกต้อง เช่น เงินสด = สินทรัพย์ และบัตรเครดิต = หนี้สิน ระบบจะนำประเภทบัญชีไปใช้สร้างรายการเดบิต–เครดิตอัตโนมัติ</p><div id="accountSettings"></div><button class="btn secondary" id="addAccount"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> เพิ่มบัญชี</button><button class="btn primary" id="saveAccounts">บันทึกบัญชีและยอดตั้งต้น</button><p class="message" id="accountMessage"></p></div></div>
     </div>
     <div class="card settings-collapse-card" hidden>
-      <button class="settings-collapse-toggle" type="button" id="categoriesSettingsToggle" aria-expanded="false" aria-controls="categoriesSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">▦</span><span class="settings-collapse-copy"><strong>หมวดหมู่และรายการ</strong><small>จัดการหมวดหมู่รายรับและรายจ่าย</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
-      <div class="settings-collapse-panel" id="categoriesSettingsPanel" hidden><div class="stack"><div><label for="categoryType">ประเภทหมวดหมู่</label><select id="categoryType"><option value="Expense">รายจ่าย</option><option value="Income">รายรับ</option></select></div><div id="categorySettings"></div><button class="btn secondary" id="addCategory">＋ เพิ่มหมวดหมู่</button><button class="btn primary" id="saveCategories">บันทึกหมวดหมู่</button><p class="message" id="categoryMessage"></p></div></div>
+      <button class="settings-collapse-toggle" type="button" id="categoriesSettingsToggle" aria-expanded="false" aria-controls="categoriesSettingsPanel"><svg class="settings-collapse-symbol" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-book-open"></use></svg><span class="settings-collapse-copy"><strong>หมวดหมู่และรายการ</strong><small>จัดการหมวดหมู่รายรับและรายจ่าย</small></span><svg class="settings-collapse-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></button>
+      <div class="settings-collapse-panel" id="categoriesSettingsPanel" hidden><div class="stack"><div><label for="categoryType">ประเภทหมวดหมู่</label><select id="categoryType"><option value="Expense">รายจ่าย</option><option value="Income">รายรับ</option></select></div><div id="categorySettings"></div><button class="btn secondary" id="addCategory"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> เพิ่มหมวดหมู่</button><button class="btn primary" id="saveCategories">บันทึกหมวดหมู่</button><p class="message" id="categoryMessage"></p></div></div>
     </div>
     <div class="card settings-collapse-card">
-      <button class="settings-collapse-toggle" type="button" id="languageSettingsToggle" aria-expanded="false" aria-controls="languageSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">文</span><span class="settings-collapse-copy"><strong>ภาษา / Language</strong><small>เลือกภาษาไทยหรือภาษาอังกฤษ</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <button class="settings-collapse-toggle" type="button" id="languageSettingsToggle" aria-expanded="false" aria-controls="languageSettingsPanel"><svg class="settings-collapse-symbol" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-globe"></use></svg><span class="settings-collapse-copy"><strong>ภาษา / Language</strong><small>เลือกภาษาไทยหรือภาษาอังกฤษ</small></span><svg class="settings-collapse-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></button>
       <div class="settings-collapse-panel" id="languageSettingsPanel" hidden><div class="stack"><div class="settings-row"><div class="grow"><strong>Language</strong><div class="small">Thai / English</div></div><button class="btn secondary" id="langTh">ไทย</button><button class="btn secondary" id="langEn">English</button></div><p class="small">เปลี่ยนภาษาของแอพทั้งหมด</p></div></div>
     </div>
     <div class="card settings-collapse-card">
-      <button class="settings-collapse-toggle" type="button" id="backupSettingsToggle" aria-expanded="false" aria-controls="backupSettingsPanel"><span class="settings-collapse-symbol" aria-hidden="true">⇧</span><span class="settings-collapse-copy"><strong>สำรองและกู้คืนข้อมูล</strong><small>ส่งออกข้อมูลสำรอง หรือนำเข้าข้อมูลที่เคยบันทึกไว้</small></span><span class="settings-collapse-arrow" aria-hidden="true">⌄</span></button>
+      <button class="settings-collapse-toggle" type="button" id="backupSettingsToggle" aria-expanded="false" aria-controls="backupSettingsPanel"><svg class="settings-collapse-symbol" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-upload-cloud"></use></svg><span class="settings-collapse-copy"><strong>สำรองและกู้คืนข้อมูล</strong><small>ส่งออกข้อมูลสำรอง หรือนำเข้าข้อมูลที่เคยบันทึกไว้</small></span><svg class="settings-collapse-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></button>
       <div class="settings-collapse-panel" id="backupSettingsPanel" hidden><div class="stack"><p class="small">แนะนำให้สำรองข้อมูลก่อนแก้ไขแอปหรือเปลี่ยนอุปกรณ์</p><button class="btn secondary" id="exportJson">ดาวน์โหลดข้อมูลสำรอง JSON</button><button class="btn secondary" id="exportCsv">ส่งออกรายการ CSV</button><button class="btn secondary" id="restoreAutoBackup">กู้คืนข้อมูลสำรองอัตโนมัติ</button><button class="btn secondary" id="runIntegrityCheck">ตรวจสอบความถูกต้องของข้อมูล</button><p class="small">ระบบเก็บข้อมูลชุดก่อนหน้าล่าสุดไว้ในเบราว์เซอร์นี้เพื่อช่วยกู้คืนเมื่อเกิดข้อผิดพลาด</p><label for="importFile">นำเข้าข้อมูลสำรอง JSON</label><input id="importFile" type="file" accept=".json,application/json"><p class="small">การนำเข้า JSON จะแทนที่รายการและการตั้งค่าปัจจุบัน ควรส่งออกข้อมูลเดิมเก็บไว้ก่อน</p><p class="message" id="backupMessage"></p></div></div>
     </div>
     <div class="notice" style="margin-top:14px">ข้อมูลยังเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้ ไม่ได้ซิงก์ข้ามอุปกรณ์โดยอัตโนมัติ</div>
@@ -1524,16 +2400,16 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
 </div>
 
 <nav class="bottom-nav" aria-label="เมนูหลัก">
-  <button class="nav-btn active" data-go="home"><span class="symbol">⌂</span>ภาพรวม</button><button class="nav-btn" data-go="reports"><span class="symbol">📊</span>วิเคราะห์</button><button class="nav-btn" id="navRecordBtn" type="button"><span class="symbol">＋</span>บันทึก</button><button class="nav-btn" data-go="history"><span class="symbol">☷</span>ประวัติ</button><button class="nav-btn" data-go="settings"><span class="symbol">⚙</span>ตั้งค่า</button>
+  <button class="nav-btn active" data-go="home"><svg class="icon-nav" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-home"></use></svg>ภาพรวม</button><button class="nav-btn" data-go="reports"><svg class="icon-nav" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-bar-chart-2"></use></svg>วิเคราะห์</button><button class="nav-btn" id="navRecordBtn" type="button"><svg class="icon-nav" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-plus"></use></svg>บันทึก</button><button class="nav-btn" data-go="history"><svg class="icon-nav" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-layout-dashboard"></use></svg>ประวัติ</button><button class="nav-btn" data-go="settings"><svg class="icon-nav" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-settings"></use></svg>ตั้งค่า</button>
 </nav>
 
 <!-- Record Type Dropdown -->
 <div class="record-dropdown" id="recordDropdown" role="menu" aria-label="เลือกประเภทการบันทึก" hidden>
   <div class="record-dropdown-backdrop" id="recordDropdownBackdrop" aria-hidden="true"></div>
   <div class="record-dropdown-panel" role="menu">
-    <button class="record-dropdown-item" role="menuitem" onclick="if(window.openRecordType)openRecordType('Income');else{navigate('record');setType('Income')}closeDropdown()"><span class="record-dropdown-icon">📈</span><span>รายได้</span></button>
-    <button class="record-dropdown-item" role="menuitem" onclick="if(window.openRecordType)openRecordType('Expense');else{navigate('record');setType('Expense')}closeDropdown()"><span class="record-dropdown-icon">📉</span><span>ค่าใช้จ่าย</span></button>
-    <button class="record-dropdown-item" role="menuitem" onclick="if(window.openRecordType)openRecordType('Transfer');else{navigate('record');setType('Transfer')}closeDropdown()"><span class="record-dropdown-icon">🔁</span><span>โอนเงิน</span></button>
+    <button class="record-dropdown-item" role="menuitem" onclick="if(window.openRecordType)openRecordType('Income');else{navigate('record');setType('Income')}closeDropdown()"><svg class="record-dropdown-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-trending-up"></use></svg><span>รายได้</span></button>
+    <button class="record-dropdown-item" role="menuitem" onclick="if(window.openRecordType)openRecordType('Expense');else{navigate('record');setType('Expense')}closeDropdown()"><svg class="record-dropdown-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-trending-down"></use></svg><span>ค่าใช้จ่าย</span></button>
+    <button class="record-dropdown-item" role="menuitem" onclick="if(window.openRecordType)openRecordType('Transfer');else{navigate('record');setType('Transfer')}closeDropdown()"><svg class="record-dropdown-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-repeat"></use></svg><span>โอนเงิน</span></button>
   </div>
 </div>
 
@@ -1887,7 +2763,7 @@ window.setType=setType; window.setRecordMode=setRecordMode; window._applyTxType=
 function accountBalances(){const out={};accounts.forEach(a=>out[a.name]=Number(a.opening)||0);getJournalEntries().forEach(r=>{const amount=Number(r.amount)||0;if(accounts.some(a=>a.name===r.debit)){const t=accountTypeOfName(r.debit);if(t==='Asset'||t==='Expense')out[r.debit]=(out[r.debit]||0)+amount;else out[r.debit]=(out[r.debit]||0)-amount}if(accounts.some(a=>a.name===r.credit)){const t=accountTypeOfName(r.credit);if(t==='Asset'||t==='Expense')out[r.credit]=(out[r.credit]||0)-amount;else out[r.credit]=(out[r.credit]||0)+amount}});return out}
 function monthlyTotals(month){let income=0,expense=0,count=0;tx.forEach(t=>{if(String(t.date||'').startsWith(month)){count++;if(t.type==='Income')income+=Number(t.amount)||0;if(t.type==='Expense')expense+=Number(t.amount)||0}});return{income,expense,count,net:income-expense}}
 function sortedTx(arr=tx){return[...arr].sort((a,b)=>String(b.date).localeCompare(String(a.date))||(Number(b.id)||0)-(Number(a.id)||0))}
-function transactionHTML(t){const income=t.type==='Income',expense=t.type==='Expense',sign=income?'+':expense?'−':'',color=income?'var(--green)':expense?'var(--red)':'#93C5FD',icon=income?'＋':expense?'−':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:middle"><path d="M16 3l4 4-4 4"/><path d="M20 7H4"/><path d="M8 21l-4-4 4-4"/><path d="M4 17h16"/></svg>',label=income?'รายรับ':expense?'รายจ่าย':'โอนเงิน',meta=t.type==='Transfer'?`${esc(t.account||'')} → ${esc(t.to||'')}`:`${esc(t.category||'ไม่ระบุหมวดหมู่')} · ${esc(t.account||'')}`;return `<article class="item"><div class="ico">${icon}</div><div class="details"><div class="title">${esc(t.title||label)}</div><div class="meta">${label} · ${meta}<br>${esc(formatDateDisplay(t.date||''))}${t.note?' · '+esc(t.note):''}</div></div><div class="right" style="color:${color}">${sign}${money(t.amount)}<div class="rowbuttons"><button data-edit="${esc(t.id)}">แก้ไข</button><button data-del="${esc(t.id)}">ลบ</button></div></div></article>`}
+function transactionHTML(t){const income=t.type==='Income',expense=t.type==='Expense',sign=income?'+':expense?'−':'',color=income?'var(--green)':expense?'var(--red)':'#93C5FD',icon=income?'<svg class="ico-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-trending-up"></use></svg>':expense?'<svg class="ico-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-trending-down"></use></svg>':'<svg class="ico-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-repeat"></use></svg>',label=income?'รายรับ':expense?'รายจ่าย':'โอนเงิน',meta=t.type==='Transfer'?`${esc(t.account||'')} → ${esc(t.to||'')}`:`${esc(t.category||'ไม่ระบุหมวดหมู่')} · ${esc(t.account||'')}`;return `<article class="item"><div class="ico">${icon}</div><div class="details"><div class="title">${esc(t.title||label)}</div><div class="meta">${label} · ${meta}<br>${esc(formatDateDisplay(t.date||''))}${t.note?' · '+esc(t.note):''}</div></div><div class="right" style="color:${color}">${sign}${money(t.amount)}<div class="rowbuttons"><button data-edit="${esc(t.id)}">แก้ไข</button><button data-del="${esc(t.id)}">ลบ</button></div></div></article>`}
 function emptyHTML(msg='ยังไม่มีรายการ'){return `<div class="empty">${msg}</div>`}
 
 /* Daily cash flow chart with selectable date range */
@@ -1977,7 +2853,7 @@ function renderAccountingReports(){const _arTargets=['accountingReports','accoun
  // ================= 1. TRIAL BALANCE =================
 if(!(el&&el.id==='accountingReportsTb'))html+='<div class="report-tabs" style="display:flex;gap:8px;margin:8px 0"><button class="btn secondary" onclick="window.showReportTab(&quot;tb&quot;)">งบทดลอง</button><button class="btn secondary" onclick="window.showReportTab(&quot;gl&quot;)">แยกประเภท</button><button class="btn secondary" onclick="window.showReportTab(&quot;is&quot;)">งบกำไรขาดทุน</button><button class="btn secondary" onclick="window.showReportTab(&quot;bs&quot;)">งบดุล</button></div>';html+='<div class="report-section" data-report="tb"><h3>งบทดลอง (Trial Balance)</h3>';
   html+=`<div class="grid" style="margin:8px 0"><div><label for="tbFrom">ตั้งแต่วันที่</label><input type="date" id="tbFrom" value="${esc(tbFrom)}"></div><div><label for="tbTo">ถึงวันที่</label><input type="date" id="tbTo" value="${esc(tbTo)}"></div></div>`;
-  html+=`<div class="dd-wrap" id="tbDD"><div class="dd-trigger" id="tbTrigger" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-controls="tbPanel"><span id="tbLabel">${tbQuery?esc(accountLabelOfName(tbQuery)):'ค้นหาชื่อบัญชี...'}</span><span class="chev">▾</span></div><div class="dd-panel" id="tbPanel" style="display:none"><input class="dd-search" id="tbDDSearch" type="text" placeholder="พิมพ์ค้นหา..."><div id="tbDDList"></div></div></div>`;
+  html+=`<div class="dd-wrap" id="tbDD"><div class="dd-trigger" id="tbTrigger" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-controls="tbPanel"><span id="tbLabel">${tbQuery?esc(accountLabelOfName(tbQuery)):'ค้นหาชื่อบัญชี...'}</span><span class="chev"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></span></div><div class="dd-panel" id="tbPanel" style="display:none"><input class="dd-search" id="tbDDSearch" type="text" placeholder="พิมพ์ค้นหา..."><div id="tbDDList"></div></div></div>`;
 
  const effTbFrom=tbFrom<=tbTo?tbFrom:tbTo,effTbTo=tbFrom<=tbTo?tbTo:tbFrom;
  const tbPeriodEntries=entries.filter(r=>String(r.date||'')>=effTbFrom && String(r.date||'')<=effTbTo);
@@ -2022,14 +2898,14 @@ const _fmtNum=function(v){return Number(v||0).toLocaleString('th-TH',{minimumFra
     html+=`<tr><td class="tb-td-code">${esc(String(_code||''))}</td><td class="tb-td-name"><strong>${esc(row.name)}</strong></td><td class="tb-td-num">${_fmtNum(row.debit)}</td><td class="tb-td-num">${_fmtNum(row.credit)}</td><td class="tb-td-num tb-td-balance"><strong>${_fmtNum(row.balance)}</strong></td></tr>`;
    });
   }
-  html+=`</tbody><tfoot><tr><td></td><td>${esc(tbFooterLabel)}</td><td class="tb-td-num inc">${_fmtNum(tbFooterDebit)}</td><td class="tb-td-num exp">${_fmtNum(tbFooterCredit)}</td><td class="tb-td-num">${Math.abs(tbFooterDebit-tbFooterCredit)<0.0001?'<span class="pill" style="background:#064E3B;color:#6EE7B7">สมดุล ✓</span>':'<span class="pill" style="background:#4C0519;color:#FDA4AF">ไม่สมดุล ✕</span>'}</td></tr></tfoot></table></div><div class="tb-cards">${tbCards}</div></section>`;
+  html+=`</tbody><tfoot><tr><td></td><td>${esc(tbFooterLabel)}</td><td class="tb-td-num inc">${_fmtNum(tbFooterDebit)}</td><td class="tb-td-num exp">${_fmtNum(tbFooterCredit)}</td><td class="tb-td-num">${Math.abs(tbFooterDebit-tbFooterCredit)<0.0001?'<span class="pill" style="background:#064E3B;color:#6EE7B7">สมดุล <svg class="icon-inline" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-check"></use></svg></span>':'<span class="pill" style="background:#4C0519;color:#FDA4AF">ไม่สมดุล <svg class="icon-inline" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-x"></use></svg></span>'}</td></tr></tfoot></table></div><div class="tb-cards">${tbCards}</div></section>`;
  html+=`<div class="summaryline" style="margin-top:8px"><span>รวมเดบิตงบทดลอง (ทั้งงวด)</span><strong>${money(tbd)}</strong></div>`;
  html+=`<div class="summaryline" style="margin-top:8px"><span>รวมเครดิตงบทดลอง (ทั้งงวด)</span><strong>${money(tbc)}</strong></div>`;
 
  // ================= 2. GENERAL LEDGER =================
 html+='</div>';html+='<div class="report-section" data-report="gl"><h3 style="margin-top:16px">บัญชีแยกประเภท (General Ledger)</h3>';
   html+=`<div class="grid" style="margin:8px 0"><div><label for="glFrom">ตั้งแต่วันที่</label><input type="date" id="glFrom" value="${esc(glFrom)}"></div><div><label for="glTo">ถึงวันที่</label><input type="date" id="glTo" value="${esc(glTo)}"></div></div>`;
-  html+=`<div class="dd-wrap" id="glDD"><div class="dd-trigger" id="glTrigger" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-controls="glPanel"><span id="glLabel">${glSelected?esc(accountLabelOfName(glSelected)):'เลือกบัญชีเพื่อดูแยกประเภท...'}</span><span class="chev">▾</span></div><div class="dd-panel" id="glPanel" style="display:none"><input class="dd-search" id="glDDSearch" type="text" placeholder="พิมพ์ค้นหาชื่อบัญชี..."><div id="glDDList"></div></div></div>`;
+  html+=`<div class="dd-wrap" id="glDD"><div class="dd-trigger" id="glTrigger" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-controls="glPanel"><span id="glLabel">${glSelected?esc(accountLabelOfName(glSelected)):'เลือกบัญชีเพื่อดูแยกประเภท...'}</span><span class="chev"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></span></div><div class="dd-panel" id="glPanel" style="display:none"><input class="dd-search" id="glDDSearch" type="text" placeholder="พิมพ์ค้นหาชื่อบัญชี..."><div id="glDDList"></div></div></div>`;
 
  const qGl=(glQuery||'').trim().toLowerCase();
  const availableGlAccounts=allAccountNames.filter(n=>!qGl||n.toLowerCase().includes(qGl));
@@ -2052,7 +2928,7 @@ html+='</div>';html+='<div class="report-section" data-report="gl"><h3 style="ma
 
   let runningBal=glOpening,periodDebitTotal=0,periodCreditTotal=0;
   html+=`<div style="margin:8px 0;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px">`;
-  html+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px"><div><strong style="font-size:15px">${esc(glSelected)}</strong><div class="small" style="color:var(--muted)">ประเภทบัญชี: ${esc(ACCOUNT_TYPES[t]||'')} · ช่วงวันที่ ${esc(formatDateDisplay(effGlFrom))} ถึง ${esc(formatDateDisplay(effGlTo))}</div></div><button id="glReset" class="btn secondary" type="button" style="font-size:11px;padding:4px 8px">✕ ปิด</button></div>`;
+  html+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px"><div><strong style="font-size:15px">${esc(glSelected)}</strong><div class="small" style="color:var(--muted)">ประเภทบัญชี: ${esc(ACCOUNT_TYPES[t]||'')} · ช่วงวันที่ ${esc(formatDateDisplay(effGlFrom))} ถึง ${esc(formatDateDisplay(effGlTo))}</div></div><button id="glReset" class="btn secondary" type="button" style="font-size:11px;padding:4px 8px"><svg class="icon-inline" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-x"></use></svg> ปิด</button></div>`;
   html+=`<div class="small" style="margin-bottom:8px;padding:6px 8px;background:#141922;border-radius:8px;border:1px solid var(--line)">ยอดยกมา ณ ก่อนวันที่ ${esc(formatDateDisplay(effGlFrom))}: <strong>${money(glOpening)}</strong></div>`;
 
   html+=`<div style="overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch"><table style="width:100%;min-width:440px;font-size:11px;border-collapse:collapse;white-space:nowrap"><thead><tr style="border-bottom:1px solid var(--line);color:var(--muted)"><th style="padding:6px 8px;text-align:left">วันที่</th><th style="padding:6px 8px;text-align:left">รายการ</th><th style="padding:6px 8px;text-align:right">เดบิต</th><th style="padding:6px 8px;text-align:right">เครดิต</th><th style="padding:6px 8px;text-align:right">ยอดคงเหลือ</th></tr></thead><tbody>`;
@@ -2129,8 +3005,8 @@ function monthPaid(bill,month){return Array.isArray(bill.paidMonths)&&bill.paidM
 function renderHomePlan(){const month=currentMonth();$('homePlanMonth').textContent=monthLabel(month);const monthBudgets=budgets.filter(b=>b.month===month);const spent=tx.filter(t=>t.type==='Expense'&&String(t.date||'').startsWith(month)).reduce((s,t)=>s+(Number(t.amount)||0),0);const totalBudget=monthBudgets.reduce((s,b)=>s+(Number(b.limit)||0),0);$('homeBudgetPreview').textContent=monthBudgets.length?`${money(spent)} ใช้จากงบ ${money(totalBudget)}`:'ตั้งงบรายเดือน';$('homeBudgetList').innerHTML=monthBudgets.length?monthBudgets.slice(0,4).map(b=>{const used=monthExpenseByCategory(month,b.category),limit=Number(b.limit)||0,pct=limit>0?used/limit*100:0;return `<div style="padding:9px 0"><div class="summaryline" style="padding:0;border:0"><span>${esc(b.category)}</span><strong class="${pct>100?'exp':''}">${money(used)} / ${money(limit)}</strong></div><div class="feature-progress ${pct>100?'over':''}"><span style="width:${Math.min(100,Math.max(0,pct))}%;background:${pct>100?'var(--red)':'var(--green)'}"></span></div><div class="feature-meta">${pct>100?`เกินงบ ${money(used-limit)}`:`เหลืองบ ${money(Math.max(0,limit-used))}`}</div></div>`}).join(''):emptyHTML('ยังไม่ได้ตั้งงบเดือนนี้ค่ะ');const dueBills=bills.filter(b=>!monthPaid(b,month)).sort((a,b)=>(Number(a.day)||1)-(Number(b.day)||1));$('homeBillsPreview').textContent=bills.length?`${dueBills.length} บิลยังไม่ทำเครื่องหมายว่าจ่ายแล้ว`:'เพิ่มบิลที่จ่ายประจำ';$('homeBillsList').innerHTML=dueBills.length?dueBills.slice(0,3).map(b=>`<div class="summaryline"><span>${esc(b.name)}<div class="feature-meta">ครบกำหนดวันที่ ${Number(b.day)||1}</div></span><strong>${money(b.amount)}</strong></div>`).join(''):emptyHTML(bills.length?'ทำเครื่องหมายบิลเดือนนี้ครบแล้ว':'ยังไม่มีบิลประจำ');const debtTotal=debts.reduce((s,d)=>s+(Number(d.balance)||0),0);$('homeDebtPreview').textContent=debts.length?`${debts.length} รายการ · ${money(debtTotal)}`:'เพิ่มรายการหนี้';$('homeGoalsPreview').textContent=goals.length?`${goals.filter(g=>Number(g.saved)>=Number(g.target)).length}/${goals.length} เป้าหมายสำเร็จ`:'ตั้งเป้าหมายแรก';$('homeGoalsList').innerHTML=goals.length?goals.slice(0,3).map(g=>{const target=Number(g.target)||0,saved=Number(g.saved)||0,pct=target>0?saved/target*100:0;return `<div style="padding:9px 0"><div class="summaryline" style="padding:0;border:0"><span>${esc(g.name)}</span><strong>${Math.min(100,pct).toFixed(0)}%</strong></div><div class="feature-progress"><span style="width:${Math.min(100,Math.max(0,pct))}%"></span></div><div class="feature-meta">${money(saved)} / ${money(target)}</div></div>`}).join(''):emptyHTML('เพิ่มเป้าหมายการออมเพื่อเริ่มติดตามค่ะ')}
 function refreshFeatureSelects(){if($('budgetCategory'))fillSelect('budgetCategory',catNames(cats.Expense));if($('billCategory'))fillSelect('billCategory',catNames(cats.Expense));if($('billAccount'))fillSelect('billAccount',accounts.map(a=>a.name))}
 function renderPlanning(){if(!$('budgetMonth'))return;if(!$('budgetMonth').value)$('budgetMonth').value=currentMonth();refreshFeatureSelects();const month=planMonth();const list=budgets.filter(b=>b.month===month).sort((a,b)=>String(a.category).localeCompare(String(b.category),'th'));$('budgetList').innerHTML=list.length?list.map(b=>{const used=monthExpenseByCategory(month,b.category),limit=Number(b.limit)||0,pct=limit>0?used/limit*100:0;return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(b.category)}</strong><div class="feature-meta">ใช้ไป ${money(used)} จาก ${money(limit)}</div></div><strong class="${pct>100?'exp':'inc'}">${pct.toFixed(0)}%</strong></div><div class="feature-progress ${pct>100?'over':''}"><span style="width:${Math.min(100,Math.max(0,pct))}%"></span></div><div class="feature-meta">${pct>100?`เกินงบ ${money(used-limit)}`:`คงเหลือ ${money(Math.max(0,limit-used))}`}</div><div class="feature-actions"><button class="btn secondary" data-budget-edit="${esc(b.id)}">แก้ไขงบ</button><button class="btn danger" data-budget-del="${esc(b.id)}">ลบ</button></div></div>`}).join(''):emptyHTML('ยังไม่มีงบประมาณในเดือนนี้');$('billList').innerHTML=bills.length?bills.slice().sort((a,b)=>(Number(a.day)||1)-(Number(b.day)||1)).map(b=>{const paid=monthPaid(b,month);return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(b.name)}</strong><div class="feature-meta">ครบกำหนดวันที่ ${Number(b.day)||1} · ${esc(b.category||'ไม่ระบุหมวดหมู่')} · ${esc(b.account||'ไม่ระบุบัญชี')}</div></div><div style="text-align:right"><strong>${money(b.amount)}</strong><div class="feature-meta ${paid?'status-paid':'status-due'}">${paid?'จ่ายแล้ว':'ยังไม่จ่าย'}</div></div></div><div class="feature-actions"><button class="btn ${paid?'secondary':'primary'}" data-bill-toggle="${esc(b.id)}">${paid?'ยกเลิกสถานะจ่าย':'ทำเครื่องหมายว่าจ่ายแล้ว'}</button><button class="btn danger" data-bill-del="${esc(b.id)}">ลบบิล</button></div></div>`}).join(''):emptyHTML('ยังไม่มีบิลประจำ');renderDebts();renderHomePlan()}
-function renderDebts(){const total=debts.reduce((s,d)=>s+(Number(d.balance)||0),0),minimum=debts.reduce((s,d)=>s+(Number(d.minimum)||0),0);$('debtTotal').textContent=money(total);$('debtMinimum').textContent=money(minimum);$('debtList').innerHTML=debts.length?debts.map(d=>{const payments=Array.isArray(d.payments)?d.payments.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||Number(b.id||0)-Number(a.id||0)):[],paidTotal=payments.reduce((s,p)=>s+(Number(p.amount)||0),0);return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(d.name)}</strong><div class="feature-meta">ดอกเบี้ย ${Number(d.rate)||0}% ต่อปี · ขั้นต่ำ ${money(d.minimum||0)}/เดือน</div></div><strong class="exp">${money(d.balance)}</strong></div><div class="feature-actions"><button class="btn primary" data-debt-pay="${esc(d.id)}">＋ บันทึกชำระหนี้</button><button class="btn secondary" data-debt-edit="${esc(d.id)}">แก้ไขยอด</button><button class="btn danger" data-debt-del="${esc(d.id)}">ลบ</button></div><details class="debt-payment-history" style="margin-top:10px"><summary style="cursor:pointer;font-weight:600;padding:7px 0">ประวัติการชำระ (${payments.length} ครั้ง) · ชำระสะสม ${money(paidTotal)}</summary>${payments.length?`<div style="display:grid;gap:8px;padding-top:8px">${payments.map(p=>`<div class="summaryline" style="align-items:flex-start"><span>${esc(formatDateDisplay(p.date||'ไม่ระบุวันที่'))}<div class="feature-meta">ยอดคงเหลือหลังชำระ ${money(p.balanceAfter??d.balance)}</div></span><strong class="inc">−${money(p.amount)}</strong></div>`).join('')}</div>`:`<p class="small">ยังไม่มีประวัติการชำระหนี้ค่ะ</p>`}</details></div>`}).join(''):emptyHTML('ยังไม่มีรายการหนี้ค่ะ')}
-function renderGoals(){const totalTarget=goals.reduce((s,g)=>s+(Number(g.target)||0),0),totalSaved=goals.reduce((s,g)=>s+(Number(g.saved)||0),0);$('goalsTotalTarget').textContent=money(totalTarget);$('goalsTotalSaved').textContent=money(totalSaved);$('goalList').innerHTML=goals.length?goals.map(g=>{const target=Number(g.target)||0,saved=Number(g.saved)||0,pct=target>0?saved/target*100:0,remain=Math.max(0,target-saved);return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(g.name)}</strong><div class="feature-meta">${g.date?'เป้าหมายวันที่ '+esc(formatDateDisplay(g.date)):'ยังไม่ได้กำหนดวันที่'}</div></div><strong class="${saved>=target?'inc':''}">${Math.min(100,pct).toFixed(1)}%</strong></div><div class="feature-progress"><span style="width:${Math.min(100,Math.max(0,pct))}%"></span></div><div class="feature-meta">ออมแล้ว ${money(saved)} / ${money(target)} · ${saved>=target?'ถึงเป้าหมายแล้ว':`เหลืออีก ${money(remain)}`}</div><div class="feature-actions"><button class="btn primary" data-goal-add="${esc(g.id)}">＋ เพิ่มเงินออม</button><button class="btn secondary" data-goal-edit="${esc(g.id)}">แก้ไข</button><button class="btn danger" data-goal-del="${esc(g.id)}">ลบ</button></div></div>`}).join(''):emptyHTML('ยังไม่มีเป้าหมายการออมค่ะ')}
+function renderDebts(){const total=debts.reduce((s,d)=>s+(Number(d.balance)||0),0),minimum=debts.reduce((s,d)=>s+(Number(d.minimum)||0),0);$('debtTotal').textContent=money(total);$('debtMinimum').textContent=money(minimum);$('debtList').innerHTML=debts.length?debts.map(d=>{const payments=Array.isArray(d.payments)?d.payments.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||Number(b.id||0)-Number(a.id||0)):[],paidTotal=payments.reduce((s,p)=>s+(Number(p.amount)||0),0);return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(d.name)}</strong><div class="feature-meta">ดอกเบี้ย ${Number(d.rate)||0}% ต่อปี · ขั้นต่ำ ${money(d.minimum||0)}/เดือน</div></div><strong class="exp">${money(d.balance)}</strong></div><div class="feature-actions"><button class="btn primary" data-debt-pay="${esc(d.id)}"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> บันทึกชำระหนี้</button><button class="btn secondary" data-debt-edit="${esc(d.id)}">แก้ไขยอด</button><button class="btn danger" data-debt-del="${esc(d.id)}">ลบ</button></div><details class="debt-payment-history" style="margin-top:10px"><summary style="cursor:pointer;font-weight:600;padding:7px 0">ประวัติการชำระ (${payments.length} ครั้ง) · ชำระสะสม ${money(paidTotal)}</summary>${payments.length?`<div style="display:grid;gap:8px;padding-top:8px">${payments.map(p=>`<div class="summaryline" style="align-items:flex-start"><span>${esc(formatDateDisplay(p.date||'ไม่ระบุวันที่'))}<div class="feature-meta">ยอดคงเหลือหลังชำระ ${money(p.balanceAfter??d.balance)}</div></span><strong class="inc">−${money(p.amount)}</strong></div>`).join('')}</div>`:`<p class="small">ยังไม่มีประวัติการชำระหนี้ค่ะ</p>`}</details></div>`}).join(''):emptyHTML('ยังไม่มีรายการหนี้ค่ะ')}
+function renderGoals(){const totalTarget=goals.reduce((s,g)=>s+(Number(g.target)||0),0),totalSaved=goals.reduce((s,g)=>s+(Number(g.saved)||0),0);$('goalsTotalTarget').textContent=money(totalTarget);$('goalsTotalSaved').textContent=money(totalSaved);$('goalList').innerHTML=goals.length?goals.map(g=>{const target=Number(g.target)||0,saved=Number(g.saved)||0,pct=target>0?saved/target*100:0,remain=Math.max(0,target-saved);return `<div class="feature-item"><div class="feature-item-head"><div><strong>${esc(g.name)}</strong><div class="feature-meta">${g.date?'เป้าหมายวันที่ '+esc(formatDateDisplay(g.date)):'ยังไม่ได้กำหนดวันที่'}</div></div><strong class="${saved>=target?'inc':''}">${Math.min(100,pct).toFixed(1)}%</strong></div><div class="feature-progress"><span style="width:${Math.min(100,Math.max(0,pct))}%"></span></div><div class="feature-meta">ออมแล้ว ${money(saved)} / ${money(target)} · ${saved>=target?'ถึงเป้าหมายแล้ว':`เหลืออีก ${money(remain)}`}</div><div class="feature-actions"><button class="btn primary" data-goal-add="${esc(g.id)}"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> เพิ่มเงินออม</button><button class="btn secondary" data-goal-edit="${esc(g.id)}">แก้ไข</button><button class="btn danger" data-goal-del="${esc(g.id)}">ลบ</button></div></div>`}).join(''):emptyHTML('ยังไม่มีเป้าหมายการออมค่ะ')}
 $('budgetMonth').addEventListener('change',renderPlanning);
 $('budgetForm').addEventListener('submit',e=>{e.preventDefault();const category=$('budgetCategory').value,limit=Number($('budgetLimit').value),month=planMonth();if(!category||!(limit>0))return;const existing=budgets.find(b=>b.month===month&&b.category===category);if(existing)existing.limit=limit;else budgets.push({id:Date.now(),month,category,limit});savePlans();$('budgetLimit').value='';$('budgetMessage').textContent='บันทึกงบประมาณแล้ว';renderPlanning();try{showToast({message:'บันทึกงบประมาณแล้ว',type:'success'})}catch(e){};try{showToast({message:'บันทึกงบประมาณแล้ว',type:'success'})}catch(e){}});
 $('budgetList').addEventListener('click',e=>{const edit=e.target.closest('[data-budget-edit]'),del=e.target.closest('[data-budget-del]');if(edit){const b=budgets.find(x=>String(x.id)===edit.dataset.budgetEdit);if(b){$('budgetCategory').value=b.category;$('budgetLimit').value=b.limit;$('budgetMessage').textContent='แก้ไขจำนวนเงินแล้วกดบันทึกงบประมาณ';$('budgetLimit').focus()}}if(del){if(!confirm('ลบงบประมาณนี้ใช่ไหมคะ?'))return;budgets=budgets.filter(x=>String(x.id)!==del.dataset.budgetDel);savePlans();renderPlanning()}});
@@ -2273,14 +3149,14 @@ function releaseFocusTrap(container){ if (container && container.__trapHandler) 
 function restoreFocus(){ if (__lastFocus && typeof __lastFocus.focus === 'function') { try { __lastFocus.focus(); } catch(e){} } __lastFocus = null; }
 function showToast(opts){ opts = opts || {}; const msg = opts.message || ''; const type = opts.type || 'info'; const dur = opts.duration || 2500; let cont = document.querySelector('.toast-container'); if (!cont) { cont = document.createElement('div'); cont.className = 'toast-container'; document.body.appendChild(cont); } const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg; cont.appendChild(t); requestAnimationFrame(() => t.classList.add('show')); const remove = () => { t.classList.remove('show'); setTimeout(() => t.remove(), 200); }; const timer = setTimeout(remove, dur); t.addEventListener('click', () => { clearTimeout(timer); remove(); }); return t; }
 let __popupOpen = false;
-function showPopup(opts){ opts = opts || {}; if (__popupOpen) { return Promise.resolve(false); } __popupOpen = true; const type = opts.type || 'info'; const title = opts.title || ''; const message = opts.message || ''; const confirmText = opts.confirmText || 'ตกลง'; const cancelText = opts.cancelText || 'ยกเลิก'; const onConfirm = opts.onConfirm || function(){}; const onCancel = opts.onCancel || function(){}; const forceConfirm = opts.forceConfirm === true; __lastFocus = document.activeElement; return new Promise((resolve) => { let bd = document.querySelector('.popup-backdrop'); if (!bd) { bd = document.createElement('div'); bd.className = 'popup-backdrop'; bd.innerHTML = '<div class="popup" role="dialog" aria-modal="true"><div class="popup-icon"></div><h3 class="popup-title"></h3><p class="popup-message"></p><div class="popup-actions"></div></div>'; document.body.appendChild(bd); } const icon = bd.querySelector('.popup-icon'); const titleEl = bd.querySelector('.popup-title'); const msgEl = bd.querySelector('.popup-message'); const actions = bd.querySelector('.popup-actions'); icon.className = 'popup-icon ' + type; icon.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warning' ? '!' : 'i'; titleEl.textContent = title; msgEl.textContent = message; actions.innerHTML = ''; const isConfirm = type === 'confirm' || !!opts.cancelText; if (isConfirm) { const cb = document.createElement('button'); cb.className = 'btn secondary'; cb.textContent = cancelText; cb.addEventListener('click', () => { closePopup(); onCancel(); resolve(false); }); actions.appendChild(cb); } const okb = document.createElement('button'); okb.className = 'btn primary'; okb.textContent = confirmText; okb.addEventListener('click', () => { closePopup(); onConfirm(); resolve(true); }); actions.appendChild(okb); const popupEl = bd.querySelector('.popup'); bd.classList.add('show'); lockBodyScroll(); trapFocus(popupEl); const backdropHandler = (e) => { if (e.target === bd && !forceConfirm) { bd.removeEventListener('click', backdropHandler); closePopup(); onCancel(); resolve(false); } }; if (!forceConfirm) bd.addEventListener('click', backdropHandler); bd.__backdropHandler = backdropHandler; const esc = (e) => { if (e.key === 'Escape' && !forceConfirm) { document.removeEventListener('keydown', esc); closePopup(); onCancel(); resolve(false); } }; document.addEventListener('keydown', esc); bd.__esc = esc; }); }
+function showPopup(opts){ opts = opts || {}; if (__popupOpen) { return Promise.resolve(false); } __popupOpen = true; const type = opts.type || 'info'; const title = opts.title || ''; const message = opts.message || ''; const confirmText = opts.confirmText || 'ตกลง'; const cancelText = opts.cancelText || 'ยกเลิก'; const onConfirm = opts.onConfirm || function(){}; const onCancel = opts.onCancel || function(){}; const forceConfirm = opts.forceConfirm === true; __lastFocus = document.activeElement; return new Promise((resolve) => { let bd = document.querySelector('.popup-backdrop'); if (!bd) { bd = document.createElement('div'); bd.className = 'popup-backdrop'; bd.innerHTML = '<div class="popup" role="dialog" aria-modal="true"><div class="popup-icon"></div><h3 class="popup-title"></h3><p class="popup-message"></p><div class="popup-actions"></div></div>'; document.body.appendChild(bd); } const icon = bd.querySelector('.popup-icon'); const titleEl = bd.querySelector('.popup-title'); const msgEl = bd.querySelector('.popup-message'); const actions = bd.querySelector('.popup-actions'); icon.className = 'popup-icon ' + type; icon.innerHTML = type === 'success' ? '<svg class="popup-icon-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-check"></use></svg>' : type === 'error' ? '<svg class="popup-icon-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-x"></use></svg>' : type === 'warning' ? '<svg class="popup-icon-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-alert-triangle"></use></svg>' : '<svg class="popup-icon-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-info"></use></svg>'; titleEl.textContent = title; msgEl.textContent = message; actions.innerHTML = ''; const isConfirm = type === 'confirm' || !!opts.cancelText; if (isConfirm) { const cb = document.createElement('button'); cb.className = 'btn secondary'; cb.textContent = cancelText; cb.addEventListener('click', () => { closePopup(); onCancel(); resolve(false); }); actions.appendChild(cb); } const okb = document.createElement('button'); okb.className = 'btn primary'; okb.textContent = confirmText; okb.addEventListener('click', () => { closePopup(); onConfirm(); resolve(true); }); actions.appendChild(okb); const popupEl = bd.querySelector('.popup'); bd.classList.add('show'); lockBodyScroll(); trapFocus(popupEl); const backdropHandler = (e) => { if (e.target === bd && !forceConfirm) { bd.removeEventListener('click', backdropHandler); closePopup(); onCancel(); resolve(false); } }; if (!forceConfirm) bd.addEventListener('click', backdropHandler); bd.__backdropHandler = backdropHandler; const esc = (e) => { if (e.key === 'Escape' && !forceConfirm) { document.removeEventListener('keydown', esc); closePopup(); onCancel(); resolve(false); } }; document.addEventListener('keydown', esc); bd.__esc = esc; }); }
 function closePopup(){ const bd = document.querySelector('.popup-backdrop'); if (!bd) return; bd.classList.remove('show'); if (bd.__backdropHandler) { bd.removeEventListener('click', bd.__backdropHandler); bd.__backdropHandler = null; } if (bd.__esc) { document.removeEventListener('keydown', bd.__esc); bd.__esc = null; } const popupEl = bd.querySelector('.popup'); releaseFocusTrap(popupEl); unlockBodyScroll(); __popupOpen = false; restoreFocus(); }
 
 let __sheetOpen = false;
-function openBottomSheet(opts){ opts = opts || {}; if (__sheetOpen) { closeBottomSheet(); } __sheetOpen = true; const title = opts.title || ''; const content = opts.content || ''; const footer = opts.footer || ''; __lastFocus = document.activeElement; let bd = document.querySelector('.bottom-sheet-backdrop'); if (!bd) { bd = document.createElement('div'); bd.className = 'bottom-sheet-backdrop'; const sh = document.createElement('div'); sh.className = 'bottom-sheet'; sh.innerHTML = '<div class="bottom-sheet-handle"></div><div class="bottom-sheet-header"><h3 class="bottom-sheet-title"></h3><button class="btn secondary" type="button" data-bs-close>✕</button></div><div class="bottom-sheet-body"></div><div class="bottom-sheet-footer"></div>'; bd.appendChild(sh); document.body.appendChild(bd); } const sh = bd.querySelector('.bottom-sheet'); sh.querySelector('.bottom-sheet-title').textContent = title; sh.querySelector('.bottom-sheet-body').innerHTML = content; sh.querySelector('.bottom-sheet-footer').innerHTML = footer; bd.classList.add('show'); sh.classList.add('show'); lockBodyScroll(); bd.querySelector('[data-bs-close]').onclick = () => closeBottomSheet(); const backdropHandler = (e) => { if (e.target === bd) closeBottomSheet(); }; bd.addEventListener('click', backdropHandler); bd.__backdropHandler = backdropHandler; const esc = (e) => { if (e.key === 'Escape') { document.removeEventListener('keydown', esc); closeBottomSheet(); } }; document.addEventListener('keydown', esc); bd.__esc = esc; trapFocus(sh); return sh; }
+function openBottomSheet(opts){ opts = opts || {}; if (__sheetOpen) { closeBottomSheet(); } __sheetOpen = true; const title = opts.title || ''; const content = opts.content || ''; const footer = opts.footer || ''; __lastFocus = document.activeElement; let bd = document.querySelector('.bottom-sheet-backdrop'); if (!bd) { bd = document.createElement('div'); bd.className = 'bottom-sheet-backdrop'; const sh = document.createElement('div'); sh.className = 'bottom-sheet'; sh.innerHTML = '<div class="bottom-sheet-handle"></div><div class="bottom-sheet-header"><h3 class="bottom-sheet-title"></h3><button class="btn secondary" type="button" data-bs-close><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-x"></use></svg></button></div><div class="bottom-sheet-body"></div><div class="bottom-sheet-footer"></div>'; bd.appendChild(sh); document.body.appendChild(bd); } const sh = bd.querySelector('.bottom-sheet'); sh.querySelector('.bottom-sheet-title').textContent = title; sh.querySelector('.bottom-sheet-body').innerHTML = content; sh.querySelector('.bottom-sheet-footer').innerHTML = footer; bd.classList.add('show'); sh.classList.add('show'); lockBodyScroll(); bd.querySelector('[data-bs-close]').onclick = () => closeBottomSheet(); const backdropHandler = (e) => { if (e.target === bd) closeBottomSheet(); }; bd.addEventListener('click', backdropHandler); bd.__backdropHandler = backdropHandler; const esc = (e) => { if (e.key === 'Escape') { document.removeEventListener('keydown', esc); closeBottomSheet(); } }; document.addEventListener('keydown', esc); bd.__esc = esc; trapFocus(sh); return sh; }
 function closeBottomSheet(){ const bd = document.querySelector('.bottom-sheet-backdrop'); if (!bd) return; const sh = bd.querySelector('.bottom-sheet'); bd.classList.remove('show'); sh.classList.remove('show'); if (bd.__backdropHandler) { bd.removeEventListener('click', bd.__backdropHandler); bd.__backdropHandler = null; } if (bd.__esc) { document.removeEventListener('keydown', bd.__esc); bd.__esc = null; } releaseFocusTrap(sh); unlockBodyScroll(); __sheetOpen = false; restoreFocus(); }
 
-function createDropdown(opts){ opts = opts || {}; const host = opts.host; if (!host) return null; const options = opts.options || []; const selected = opts.selected; const onChange = opts.onChange || function(){}; const searchable = !!opts.searchable; const disabledSet = new Set(opts.disabled || []); const wrap = document.createElement('div'); wrap.className = 'dropdown'; const trigger = document.createElement('button'); trigger.type = 'button'; trigger.className = 'dropdown-trigger'; trigger.innerHTML = '<span class="dd-label"></span><span class="chev">▾</span>'; const panel = document.createElement('div'); panel.className = 'dropdown-panel'; if (searchable) { const sw = document.createElement('div'); sw.className = 'dropdown-search'; const inp = document.createElement('input'); inp.type = 'text'; inp.placeholder = 'ค้นหา...'; sw.appendChild(inp); panel.appendChild(sw); inp.addEventListener('input', () => filterItems(inp.value)); } const list = document.createElement('div'); panel.appendChild(list); wrap.appendChild(trigger); wrap.appendChild(panel); host.appendChild(wrap); let activeIndex = options.findIndex(o => String(o.value) === String(selected)); if (activeIndex < 0) activeIndex = 0; function renderItems(q){ list.innerHTML = ''; options.filter(o => !q || String(o.label).toLowerCase().includes(q.toLowerCase())).forEach((o) => { const it = document.createElement('div'); const isDisabled = disabledSet.has(o.value); it.className = 'dropdown-item' + (String(o.value) === String(selected) ? ' active' : '') + (isDisabled ? ' disabled' : ''); it.innerHTML = '<span>' + (o.label || '') + '</span><span class="check">✓</span>'; if (!isDisabled) { it.addEventListener('click', () => { wrap.classList.remove('open'); trigger.querySelector('.dd-label').textContent = o.label; onChange(o.value, o); selected = o.value; activeIndex = options.indexOf(o); }); } list.appendChild(it); }); } function filterItems(q){ renderItems(q); } const selOpt = options.find(o => String(o.value) === String(selected)); trigger.querySelector('.dd-label').textContent = selOpt ? selOpt.label : (options[0] ? options[0].label : ''); renderItems(''); trigger.addEventListener('click', (e) => { e.stopPropagation(); document.querySelectorAll('.dropdown.open').forEach(d => { if (d !== wrap) d.classList.remove('open'); }); wrap.classList.toggle('open'); if (wrap.classList.contains('open')) { const items = list.querySelectorAll('.dropdown-item:not(.disabled)'); if (items[activeIndex]) items[activeIndex].focus(); } }); trigger.addEventListener('keydown', (e) => { const items = [...list.querySelectorAll('.dropdown-item:not(.disabled)')]; if (!items.length) return; if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = Math.min(items.length - 1, activeIndex + 1); items[activeIndex].focus(); } else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = Math.max(0, activeIndex - 1); items[activeIndex].focus(); } else if (e.key === 'Enter') { e.preventDefault(); if (items[activeIndex]) items[activeIndex].click(); } else if (e.key === 'Home') { e.preventDefault(); activeIndex = 0; items[0].focus(); } else if (e.key === 'End') { e.preventDefault(); activeIndex = items.length - 1; items[items.length - 1].focus(); } else if (e.key === 'Escape') { wrap.classList.remove('open'); } }); document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) wrap.classList.remove('open'); }); const esc = (e) => { if (e.key === 'Escape') wrap.classList.remove('open'); }; document.addEventListener('keydown', esc); wrap.__destroy = () => { document.removeEventListener('keydown', esc); wrap.remove(); }; return wrap; }
+function createDropdown(opts){ opts = opts || {}; const host = opts.host; if (!host) return null; const options = opts.options || []; const selected = opts.selected; const onChange = opts.onChange || function(){}; const searchable = !!opts.searchable; const disabledSet = new Set(opts.disabled || []); const wrap = document.createElement('div'); wrap.className = 'dropdown'; const trigger = document.createElement('button'); trigger.type = 'button'; trigger.className = 'dropdown-trigger'; trigger.innerHTML = '<span class="dd-label"></span><span class="chev"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></span>'; const panel = document.createElement('div'); panel.className = 'dropdown-panel'; if (searchable) { const sw = document.createElement('div'); sw.className = 'dropdown-search'; const inp = document.createElement('input'); inp.type = 'text'; inp.placeholder = 'ค้นหา...'; sw.appendChild(inp); panel.appendChild(sw); inp.addEventListener('input', () => filterItems(inp.value)); } const list = document.createElement('div'); panel.appendChild(list); wrap.appendChild(trigger); wrap.appendChild(panel); host.appendChild(wrap); let activeIndex = options.findIndex(o => String(o.value) === String(selected)); if (activeIndex < 0) activeIndex = 0; function renderItems(q){ list.innerHTML = ''; options.filter(o => !q || String(o.label).toLowerCase().includes(q.toLowerCase())).forEach((o) => { const it = document.createElement('div'); const isDisabled = disabledSet.has(o.value); it.className = 'dropdown-item' + (String(o.value) === String(selected) ? ' active' : '') + (isDisabled ? ' disabled' : ''); it.innerHTML = '<span>' + (o.label || '') + '</span><span class="check"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-check"></use></svg></span>'; if (!isDisabled) { it.addEventListener('click', () => { wrap.classList.remove('open'); trigger.querySelector('.dd-label').textContent = o.label; onChange(o.value, o); selected = o.value; activeIndex = options.indexOf(o); }); } list.appendChild(it); }); } function filterItems(q){ renderItems(q); } const selOpt = options.find(o => String(o.value) === String(selected)); trigger.querySelector('.dd-label').textContent = selOpt ? selOpt.label : (options[0] ? options[0].label : ''); renderItems(''); trigger.addEventListener('click', (e) => { e.stopPropagation(); document.querySelectorAll('.dropdown.open').forEach(d => { if (d !== wrap) d.classList.remove('open'); }); wrap.classList.toggle('open'); if (wrap.classList.contains('open')) { const items = list.querySelectorAll('.dropdown-item:not(.disabled)'); if (items[activeIndex]) items[activeIndex].focus(); } }); trigger.addEventListener('keydown', (e) => { const items = [...list.querySelectorAll('.dropdown-item:not(.disabled)')]; if (!items.length) return; if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = Math.min(items.length - 1, activeIndex + 1); items[activeIndex].focus(); } else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = Math.max(0, activeIndex - 1); items[activeIndex].focus(); } else if (e.key === 'Enter') { e.preventDefault(); if (items[activeIndex]) items[activeIndex].click(); } else if (e.key === 'Home') { e.preventDefault(); activeIndex = 0; items[0].focus(); } else if (e.key === 'End') { e.preventDefault(); activeIndex = items.length - 1; items[items.length - 1].focus(); } else if (e.key === 'Escape') { wrap.classList.remove('open'); } }); document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) wrap.classList.remove('open'); }); const esc = (e) => { if (e.key === 'Escape') wrap.classList.remove('open'); }; document.addEventListener('keydown', esc); wrap.__destroy = () => { document.removeEventListener('keydown', esc); wrap.remove(); }; return wrap; }
 function destroyDropdown(wrap){ if (wrap && wrap.__destroy) wrap.__destroy(); }
 function enhanceSelect(selectId){
   const sel = $(selectId);
@@ -2298,7 +3174,7 @@ function enhanceSelect(selectId){
   trigger.setAttribute('aria-expanded','false');
   const panelId = 'dd-panel-' + selectId;
   trigger.setAttribute('aria-controls', panelId);
-  trigger.innerHTML = '<span class="dd-label"></span><span class="chev">▾</span>';
+trigger.innerHTML = '<span class="dd-label"></span><span class="chev"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-down"></use></svg></span>';
   const panel = document.createElement('div');
   panel.className = 'dropdown-panel';
   panel.id = panelId;
@@ -2315,7 +3191,7 @@ function enhanceSelect(selectId){
   let selectedValue = sel.value;
   let activeIndex = 0;
   function syncLabel(){ const opt = sel.options[sel.selectedIndex]; trigger.querySelector('.dd-label').textContent = opt ? opt.textContent : ''; }
-  function buildItems(){ panel.innerHTML = ''; const opts = Array.from(sel.options); activeIndex = opts.findIndex(o => o.value === sel.value); if (activeIndex < 0) activeIndex = 0; opts.forEach((o, idx) => { const it = document.createElement('div'); const isDisabled = o.disabled; it.className = 'dropdown-item' + (o.value === sel.value ? ' active' : '') + (isDisabled ? ' disabled' : ''); it.setAttribute('role','option'); it.setAttribute('aria-selected', String(o.value === sel.value)); if (isDisabled) it.setAttribute('aria-disabled','true'); it.id = 'dd-opt-' + selectId + '-' + idx; it.innerHTML = '<span>' + o.textContent + '</span><span class="check">✓</span>'; if (!isDisabled) { it.addEventListener('click', () => { sel.value = o.value; sel.dispatchEvent(new Event('change', {bubbles:true})); host.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); trigger.removeAttribute('aria-activedescendant'); syncLabel(); }); } panel.appendChild(it); }); }
+  function buildItems(){ panel.innerHTML = ''; const opts = Array.from(sel.options); activeIndex = opts.findIndex(o => o.value === sel.value); if (activeIndex < 0) activeIndex = 0; opts.forEach((o, idx) => { const it = document.createElement('div'); const isDisabled = o.disabled; it.className = 'dropdown-item' + (o.value === sel.value ? ' active' : '') + (isDisabled ? ' disabled' : ''); it.setAttribute('role','option'); it.setAttribute('aria-selected', String(o.value === sel.value)); if (isDisabled) it.setAttribute('aria-disabled','true'); it.id = 'dd-opt-' + selectId + '-' + idx; it.innerHTML = '<span>' + o.textContent + '</span><span class="check"><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-check"></use></svg></span>'; if (!isDisabled) { it.addEventListener('click', () => { sel.value = o.value; sel.dispatchEvent(new Event('change', {bubbles:true})); host.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); trigger.removeAttribute('aria-activedescendant'); syncLabel(); }); } panel.appendChild(it); }); }
   syncLabel();
   trigger.addEventListener('click', (e) => { e.stopPropagation(); buildItems(); document.querySelectorAll('.dropdown.open').forEach(d => { if (d !== host) d.classList.remove('open'); }); const willOpen = !host.classList.contains('open'); host.classList.toggle('open'); trigger.setAttribute('aria-expanded', String(willOpen)); if (willOpen) { const its = [...panel.querySelectorAll('.dropdown-item:not(.disabled)')]; if (its[activeIndex]) { its[activeIndex].focus(); trigger.setAttribute('aria-activedescendant', its[activeIndex].id); } } else { trigger.removeAttribute('aria-activedescendant'); } });
   document.addEventListener('click', (e) => { if (!host.contains(e.target)) { host.classList.remove('open'); trigger.setAttribute('aria-expanded','false'); trigger.removeAttribute('aria-activedescendant'); } });
@@ -2486,7 +3362,7 @@ const badge=(t,c)=>`<span class="pill coa-${c}">${t}</span>`;
 function visible(x,q){if(!ui.hidden&&(!x.isActive||x.special==='opening'))return false;if(!q)return true;return(x.code+' '+x.name).toLowerCase().includes(q)||desc(x.id).some(d=>{const y=get(d);return(ui.hidden||(y.isActive&&y.special!=='opening'))&&(y.code+' '+y.name).toLowerCase().includes(q)})}
 function treeHTML(){const q=ui.q.trim().toLowerCase();let h='';const walk=(x,d)=>{if(!visible(x,q))return;const ks=kids(x.id).filter(k=>visible(k,q)),open=q?true:ui.open.has(x.id);
  const b=(x.isHeader?badge('Header','hd'):x.special==='template'?badge('Template','warn'):x.special==='opening'?badge('บัญชีระบบ','warn'):badge('Postable','ok'))+(x.isActive?'':badge('ปิดใช้งาน','off'))+(x.isCreditCard?badge('บัตรเครดิต','hd'):'');
- h+=`<div class="coa-row" data-code="${esc(x.code)}" style="padding-left:${d*14}px"><button class="coa-caret" data-coa-toggle="${x.id}" aria-label="ย่อ/ขยาย">${ks.length?(open?'▾':'▸'):'·'}</button><div class="grow"><strong>${esc(x.code)}</strong> ${esc(x.name)}<div class="coa-badges">${b}</div></div><div class="coa-actions"><button class="btn secondary" data-coa-edit="${x.id}">แก้ไข</button>${x.isActive?`<button class="btn danger" data-coa-off="${x.id}">ปิด</button>`:`<button class="btn secondary" data-coa-on="${x.id}">เปิด</button>`}</div></div>`;
+ h+=`<div class="coa-row" data-code="${esc(x.code)}" style="padding-left:${d*14}px"><button class="coa-caret" data-coa-toggle="${x.id}" aria-label="ย่อ/ขยาย"><svg class="icon-inline" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-chevron-${open?'down':'right'}"></use></svg></button><div class="grow"><strong>${esc(x.code)}</strong> ${esc(x.name)}<div class="coa-badges">${b}</div></div><div class="coa-actions"><button class="btn secondary" data-coa-edit="${x.id}">แก้ไข</button>${x.isActive?`<button class="btn danger" data-coa-off="${x.id}">ปิด</button>`:`<button class="btn secondary" data-coa-on="${x.id}">เปิด</button>`}</div></div>`;
  if(open)ks.forEach(k=>walk(k,d+1))};coa.filter(x=>!x.parentId).sort((a,b)=>a.code.localeCompare(b.code)).forEach(r=>walk(r,0));return h||emptyHTML('ไม่พบบัญชี')}
 function mapHTML(){const src=sync(),um=src.filter(s=>!isMapped(s)),mp=src.filter(isMapped);const lab={account:'บัญชี',Income:'หมวดรายรับ',Expense:'หมวดรายจ่าย'};
 const stBadge=s=>{const st=s.status||MAP_STATUS.Unmapped;const m={Legacy:'hd',Mapped:'ok',Verified:'ok',Unmapped:'warn'};return badge(st,m[st]||'warn')};
@@ -2505,7 +3381,7 @@ const stBadge=s=>{const st=s.status||MAP_STATUS.Unmapped;const m={Legacy:'hd',Ma
   return `<div class="settings-row" data-rid="${s.rid}"><div class="grow"><strong>${esc(s.name)}</strong><div class="small">${lab[s.kind]} · ${TYPES[s.type]||''}${t?' → <b>'+esc(t.code)+' '+esc(t.name)+'</b>':''} ${stBadge(s)}</div></div><div class="rowbuttons">${acts}</div></div>`};
   return `<div class="small" style="margin:4px 0 8px">ทั้งหมด ${src.length} · จับคู่แล้ว ${src.filter(isMapped).length} · ยืนยันแล้ว ${src.filter(isVerified).length} · ยังไม่ได้จับคู่ ${unmapped().length}</div><div class="map-controls"><button class="btn ${ui.mapFilter==='all'?'active':''}" data-coa-mfilter="all">ทั้งหมด</button><button class="btn ${ui.mapFilter==='unmapped'?'active':''}" data-coa-mfilter="unmapped">ยังไม่จับคู่</button><button class="btn ${ui.mapFilter==='mapped'?'active':''}" data-coa-mfilter="mapped">จับคู่แล้ว</button><button class="btn ${ui.mapFilter==='verified'?'active':''}" data-coa-mfilter="verified">ยืนยันแล้ว</button><button class="btn ${ui.mapFilter==='legacy'?'active':''}" data-coa-mfilter="legacy">Legacy</button></div><div class="map-controls"><button class="btn ${ui.mapKind==='all'?'active':''}" data-coa-mkind="all">ทั้งหมด</button><button class="btn ${ui.mapKind==='account'?'active':''}" data-coa-mkind="account">บัญชี</button><button class="btn ${ui.mapKind==='Income'?'active':''}" data-coa-mkind="Income">categories รายรับ</button><button class="btn ${ui.mapKind==='Expense'?'active':''}" data-coa-mkind="Expense">categories 详情จ่าย</button></div><div style="margin-bottom:8px"><input id="coaMapSearch" type="search" placeholder="ค้นหาชื่อต้นทาง" value="${esc(ui.mapQuery)}" style="width:100%"></div>${filtered.length?filtered.map(row).join(''):'<div class="small">ไม่พบข้อมูลตามตัวกรอง</div>'}`}
 function body(){const b=$$('coaBody');if(b)b.innerHTML=ui.tab==='tree'?treeHTML():mapHTML();const c=$$('coaUnCount');if(c)c.textContent=unmapped().length;}
-window.renderCOA=function(){const p=$$('page-coa');if(!p)return;ui.tab='tree';sync();p.innerHTML=`<div class="coa-header"><div><p class="eyebrow">CHART OF ACCOUNTS</p><h2>ผังบัญชี</h2><p class="coa-sub">โครงสร้างบัญชีและสถานะการจับคู่</p></div><div class="coa-header-actions"><button class="btn secondary" data-go="settings">← ย้อนกลับ</button><button class="btn primary" data-coa-add>＋ สร้างบัญชี</button></div></div>${locked?`<div class="warning-note">${esc(lockMsg)}</div>`:''}<div class="coa-seg"><button class="active" data-coa-tab="tree">ผังบัญชี</button></div><section class="coa-card">${ui.tab==='tree'?`<div class="coa-toolbar"><input id="coaSearch" type="search" placeholder="ค้นหารหัสหรือชื่อบัญชี" value="${esc(ui.q)}"><div class="coa-toolbar-actions"><button class="btn primary" data-coa-add>＋ เพิ่มบัญชี</button><button class="btn secondary" data-coa-all="1">ขยายทั้งหมด</button><button class="btn secondary" data-coa-all="0">ย่อทั้งหมด</button></div></div><label class="coa-check"><input type="checkbox" id="coaHidden" ${ui.hidden?'checked':''}> แสดงบัญชีที่ปิดใช้งานและบัญชีระบบ</label>`:''}<div id="coaBody"></div></section>`;body()};
+window.renderCOA=function(){const p=$$('page-coa');if(!p)return;ui.tab='tree';sync();p.innerHTML=`<div class="coa-header"><div><p class="eyebrow">CHART OF ACCOUNTS</p><h2>ผังบัญชี</h2><p class="coa-sub">โครงสร้างบัญชีและสถานะการจับคู่</p></div><div class="coa-header-actions"><button class="btn secondary" data-go="settings">← ย้อนกลับ</button><button class="btn primary" data-coa-add><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> สร้างบัญชี</button></div></div>${locked?`<div class="warning-note">${esc(lockMsg)}</div>`:''}<div class="coa-seg"><button class="active" data-coa-tab="tree">ผังบัญชี</button></div><section class="coa-card">${ui.tab==='tree'?`<div class="coa-toolbar"><input id="coaSearch" type="search" placeholder="ค้นหารหัสหรือชื่อบัญชี" value="${esc(ui.q)}"><div class="coa-toolbar-actions"><button class="btn primary" data-coa-add><svg class="icon-inline" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-plus"></use></svg> เพิ่มบัญชี</button><button class="btn secondary" data-coa-all="1">ขยายทั้งหมด</button><button class="btn secondary" data-coa-all="0">ย่อทั้งหมด</button></div></div><label class="coa-check"><input type="checkbox" id="coaHidden" ${ui.hidden?'checked':''}> แสดงบัญชีที่ปิดใช้งานและบัญชีระบบ</label>`:''}<div id="coaBody"></div></section>`;body()};
 function parentOptions(sel,selfId){const ex=selfId?new Set([selfId,...desc(selfId)]):new Set();return coa.filter(x=>x.isHeader&&x.isActive&&!isSpecial(x)&&!ex.has(x.id)).sort((a,b)=>a.code.localeCompare(b.code)).map(x=>`<option value="${x.id}" ${x.id===sel?'selected':''}>${esc(x.code)} ${esc(x.name)}</option>`).join('')}
 function openForm(id){ui.editing=id||null;const x=id?get(id):null,root=x&&!x.parentId,sp=x&&isSpecial(x);const dp=x?x.parentId:(coa.find(y=>y.code==='1100')||{}).id;
  openBottomSheet({title:x?'แก้ไขบัญชี':'เพิ่มบัญชี',content:`<div class="stack"><div><label for="coaF_name">ชื่อบัญชี</label><input id="coaF_name" maxlength="80" value="${x?esc(x.name):''}"></div><div class="grid"><div><label for="coaF_code">รหัส (4 หลัก)</label><input id="coaF_code" inputmode="numeric" maxlength="4" value="${x?esc(x.code):esc(nextCode(dp))}"></div><div><label for="coaF_parent">บัญชีแม่</label><select id="coaF_parent" ${root?'disabled':''}>${root?'<option>— หมวดหลัก —</option>':parentOptions(dp,id)}</select></div></div><label class="small"><input type="checkbox" id="coaF_header" ${x&&x.isHeader?'checked':''} ${sp?'disabled':''}> เป็นบัญชีแม่ (Header) — ไม่สามารถบันทึกรายการได้</label><label class="small"><input type="checkbox" id="coaF_post" ${!x||x.allowPosting?'checked':''} ${sp?'disabled':''}> อนุญาตให้บันทึกรายการ (Postable)</label><p class="message" id="coaF_err" style="color:var(--red)"></p></div>`,footer:'<button class="btn primary" data-coa-save>บันทึก</button>'})}
@@ -3074,24 +3950,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <div id="erpOverlayProto" style="position:fixed;inset:0;background:#0008;z-index:9998;display:none"></div>
-<div id="erpSidebarProto" style="position:fixed;left:0;top:0;width:240px;height:100vh;background:#0f172a;color:#e2e8f0;padding:14px 12px;z-index:9999;transform:translateX(-100%);transition:transform .25s ease;font-family:system-ui,sans-serif;font-size:13px;box-shadow:2px 0 12px #0008;overflow:auto;border-right:1px solid #1f2937">
+<div id="erpSidebarProto" style="position:fixed;left:0;top:0;width:240px;height:100vh;background:#FFFFFF;color:#080D13;padding:14px 12px;z-index:9999;transform:translateX(-100%);transition:transform .25s ease;font-family:system-ui,sans-serif;font-size:13px;box-shadow:2px 0 24px rgba(0,0,0,0.15);overflow:auto;border-right:1px solid #E2E8F0">
 <div class="brand" style="margin:0 0 16px 0;padding-top:4px"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney"><div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div></div>
-<details open><summary style="color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer">ภาพรวม</summary><div class="item active" data-nav-go="home" onclick="navigate('home');setOpen(false)">🏠 แดชบอร์ด</div></details>
-<details open><summary style="color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer">📚 สมุดบัญชี</summary><div class="item" data-nav-go="journal" onclick="navigate('journal');setOpen(false)">📒 สมุดรายวัน</div><div class="item" data-nav-go="gl" onclick="navigate('gl');setOpen(false)">📒 บัญชีแยกประเภท</div></details>
-<details open><summary style="color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer">📐 ผังบัญชี</summary><div class="item" data-nav-go="coa" onclick="navigate('coa');setOpen(false)">📐 ผังบัญชี</div></details>
-<details open><summary style="color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer">📊 รายงานทางบัญชี</summary><div class="item" data-nav-go="tb" onclick="navigate('tb');setOpen(false)">📊 งบทดลอง</div><div class="item" data-nav-go="is" onclick="navigate('is');setOpen(false)">📊 งบกำไรขาดทุน</div><div class="item" data-nav-go="financial" onclick="navigate('financial');setOpen(false)">📊 งบดุล</div><div class="item" data-nav-go="reports" onclick="navigate('reports');setOpen(false)">📊 รายงานอื่น ๆ</div></details>
-<details open><summary style="color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer">⚙️ ตั้งค่าระบบบัญชี</summary><div class="item" data-nav-go="settings" onclick="navigate('settings');setOpen(false)">⚙️ ตั้งค่าบัญชี</div></details>
-<details hidden><summary style="color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer">บันทึกรายการ</summary><div class="item" data-nav-go="record" data-nav-mode="Income" onclick="if(window.openRecordType)openRecordType('Income');else{navigate('record');setType('Income')}setOpen(false)">📈 รายได้</div><div class="item" data-nav-go="record" data-nav-mode="Expense" onclick="if(window.openRecordType)openRecordType('Expense');else{navigate('record');setType('Expense')}setOpen(false)">📉 ค่าใช้จ่าย</div><div class="item" data-nav-go="record" data-nav-mode="Transfer" onclick="if(window.openRecordType)openRecordType('Transfer');else{navigate('record');setType('Transfer')}setOpen(false)">🔁 โอนเงิน</div><div class="item" data-nav-go="record" data-nav-mode="Manual" onclick="navigate('record');if(window.setRecordMode)setRecordMode('Manual');setOpen(false)">🧾 บันทึกบัญชี (Manual Journal)</div></details>
+<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-home"></use></svg> ภาพรวม</summary><div class="item active" data-nav-go="home" onclick="navigate('home');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-home"></use></svg> แดชบอร์ด</div></details>
+<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-book-open"></use></svg> สมุดบัญชี</summary><div class="item" data-nav-go="journal" onclick="navigate('journal');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-book-open"></use></svg> สมุดรายวัน</div><div class="item" data-nav-go="gl" onclick="navigate('gl');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-table"></use></svg> บัญชีแยกประเภท</div></details>
+<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-git-branch"></use></svg> ผังบัญชี</summary><div class="item" data-nav-go="coa" onclick="navigate('coa');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-git-branch"></use></svg> ผังบัญชี</div></details>
+<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-pie-chart"></use></svg> รายงานทางบัญชี</summary><div class="item" data-nav-go="tb" onclick="navigate('tb');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-layout-dashboard"></use></svg> งบทดลอง</div><div class="item" data-nav-go="is" onclick="navigate('is');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-pie-chart"></use></svg> งบกำไรขาดทุน</div><div class="item" data-nav-go="financial" onclick="navigate('financial');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-layout-dashboard"></use></svg> งบดุล</div><div class="item" data-nav-go="reports" onclick="navigate('reports');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-file-text"></use></svg> รายงานอื่น ๆ</div></details>
+<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-settings"></use></svg> ตั้งค่าระบบบัญชี</summary><div class="item" data-nav-go="settings" onclick="navigate('settings');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-settings"></use></svg> ตั้งค่าบัญชี</div></details>
+<details hidden><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer">บันทึกรายการ</summary><div class="item" data-nav-go="record" data-nav-mode="Income" onclick="if(window.openRecordType)openRecordType('Income');else{navigate('record');setType('Income')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-trending-up"></use></svg> รายได้</div><div class="item" data-nav-go="record" data-nav-mode="Expense" onclick="if(window.openRecordType)openRecordType('Expense');else{navigate('record');setType('Expense')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-trending-down"></use></svg> ค่าใช้จ่าย</div><div class="item" data-nav-go="record" data-nav-mode="Transfer" onclick="if(window.openRecordType)openRecordType('Transfer');else{navigate('record');setType('Transfer')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-repeat"></use></svg> โอนเงิน</div><div class="item" data-nav-go="record" data-nav-mode="Manual" onclick="navigate('record');if(window.setRecordMode)setRecordMode('Manual');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-file-edit"></use></svg> บันทึกบัญชี (Manual Journal)</div></details>
 </div>
 <style>
 #erpSidebarProto{width:min(85vw,320px)!important;padding-top:max(14px,env(safe-area-inset-top));padding-bottom:max(14px,env(safe-area-inset-bottom));overflow-y:auto}
-#erpSidebarProto .item{padding:12px 12px;margin:4px 0;border-radius:8px;background:#1e293b;border:1px solid #334155;min-height:44px;display:flex;align-items:center;gap:8px}
-#erpSidebarProto .item:hover{background:#243244}
-#erpSidebarProto .active{background:#065f46;color:#d1fae5;border-color:#10b981;position:relative}
-#erpSidebarProto .active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:#10b981;border-radius:2px}
+#erpSidebarProto .item{padding:12px 12px;margin:4px 0;border-radius:8px;background:transparent;border:none;min-height:44px;display:flex;align-items:center;gap:8px;color:#080D13}
+#erpSidebarProto .item:hover{background:#E0F7FA}
+#erpSidebarProto .active{background:#DDF5F7;color:#080D13;border:none;position:relative}
+#erpSidebarProto .active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--cyan-primary);border-radius:2px}
 #erpSidebarProto details>summary{list-style:none;cursor:pointer}
 #erpSidebarProto details>summary::-webkit-details-marker{display:none}
 #erpOverlayProto{transition:opacity .2s ease}
+#erpSidebarProto .icon-sidebar{flex-shrink:0;width:var(--icon-size-lg);height:var(--icon-size-lg);stroke-width:var(--icon-stroke-width);stroke:#334155}
+#erpSidebarProto summary .icon-sidebar{width:14px;height:14px;stroke:#334155}
+#erpSidebarProto .item.active .icon-sidebar{stroke:#080D13}
+#erpSidebarProto .item:hover .icon-sidebar{stroke:#080D13}
+#erpSidebarProto summary:hover .icon-sidebar{stroke:#080D13}
 </style>
 <script>
 (function(){
