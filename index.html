@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="th" style="background:var(--bg-app)">
 <head>
 <meta charset="utf-8">
@@ -1121,8 +1121,26 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
   #journalListMount .jrnl-card-date { order: 1; }
   #journalListMount .jrnl-card-no { order: 2; text-align: right; font-family: monospace; }
   #journalListMount .jrnl-card-status { order: 3; text-align: right; font-size: 10px; padding: 2px 6px; background: transparent; }
-  #journalListMount .jrnl-card-desc-main { display: none; }
-  #journalListMount .jrnl-card-totals { display: none; }
+  #journalListMount .jrnl-card-desc-main {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding: 2px 0 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #journalListMount .jrnl-card-totals {
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 0 4px;
+    border-bottom: 1px solid rgba(148,163,184,.1);
+    margin-bottom: 2px;
+  }
+  #journalListMount .jrnl-card-total-debit { color: var(--red); }
+  #journalListMount .jrnl-card-total-credit { color: var(--green); }
   #journalListMount .jrnl-card-lines {
     display: grid;
     grid-template-columns: 1fr minmax(80px, 1fr) minmax(80px, 1fr);
@@ -1466,6 +1484,59 @@ body.dark-mode #page-journal .mig-table th,body.dark-mode #page-journal .mig-tab
 @media (min-width: 769px) {
   #page-gl .gl-cards { display: none; }
   #page-gl .gl-table-scroll { display: block; }
+}
+
+/* GL KPI Summary Grid */
+.gl-summary-container {
+  margin-bottom: 10px;
+}
+.gl-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .gl-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+}
+.gl-kpi-card {
+  background: var(--bg-card, #101923);
+  border: 1px solid var(--border-default, rgba(255,255,255,0.08));
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+.gl-kpi-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-muted, #6B7F90);
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+.gl-kpi-value {
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary, #D9E7F1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 360px) {
+  .gl-kpi-value { font-size: 12px; }
+  .gl-kpi-card { padding: 8px 10px; }
+}
+.gl-kpi-sub {
+  font-size: 10px;
+  color: var(--text-muted, #6B7F90);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ============================================================
@@ -2382,20 +2453,13 @@ footer { color: var(--text-muted) !important; }
       <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:end"><div style="min-width:0"><label for="glFrom" class="small" style="display:block;margin-bottom:4px">ตั้งแต่วันที่</label><input type="date" id="glFrom" style="width:100%;min-width:0;box-sizing:border-box"></div><div style="min-width:0"><label for="glTo" class="small" style="display:block;margin-bottom:4px">ถึงวันที่</label><input type="date" id="glTo" style="width:100%;min-width:0;box-sizing:border-box"></div></div>
       <div style="display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap"><button class="btn" id="glSearchBtn" type="button" style="padding:8px 10px;min-height:38px">ค้นหา</button><button class="btn secondary" id="glClearBtn" type="button" style="padding:8px 10px;min-height:38px">ล้างตัวกรอง</button></div>
     </div>
-    <div class="card gl-table-card"><div class="gl-table-scroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%"><table class="mig-table gl-ledger-table" id="glTable"><colgroup><col style="min-width:96px;width:96px"><col style="min-width:108px;width:108px"><col style="min-width:180px"><col style="min-width:96px;width:96px"><col style="min-width:96px;width:96px"><col style="min-width:110px;width:110px"></colgroup><thead><tr><th>วันที่</th><th>เลขที่รายการ</th><th>รายละเอียด</th><th style="text-align:right">เดบิต</th><th style="text-align:right">เครดิต</th><th style="text-align:right">ยอดคงเหลือ</th></tr></thead><tbody id="glBody"></tbody></table></div><div id="glEmpty" class="empty" style="display:none">เลือกบัญชี</div></div>
+    <div id="glSummary" class="gl-summary-container"></div>
+    <div class="card gl-table-card"><div class="gl-table-scroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%"><table class="mig-table gl-ledger-table" id="glTable"><colgroup><col style="min-width:96px;width:96px"><col style="min-width:108px;width:108px"><col style="min-width:180px"><col style="min-width:96px;width:96px"><col style="min-width:96px;width:96px"><col style="min-width:110px;width:110px"></colgroup><thead><tr><th>วันที่</th><th>เลขที่รายการ</th><th>รายละเอียด</th><th style="text-align:right">เดบิต</th><th style="text-align:right">เครดิต</th><th style="text-align:right">ยอดคงเหลือ</th></tr></thead><tbody id="glBody"></tbody></table></div><div class="gl-cards"></div><div id="glEmpty" class="empty" style="display:none">เลือกบัญชี</div></div>
   </section>
   <section class="page" id="page-tb"><div class="section" style="margin-top:5px"><div><p class="eyebrow">TRIAL BALANCE</p><h2>งบทดลอง</h2></div></div><div id="accountingReportsTb" class="stack"></div></section>
   <section class="page" id="page-is"><div class="section" style="margin-top:5px"><div><p class="eyebrow">INCOME STATEMENT</p><h2>งบกำไรขาดทุน</h2></div></div></section>
   <section class="page" id="page-financial"><div class="section" style="margin-top:5px"><div><p class="eyebrow">FINANCIAL STATEMENTS</p><h2>รายงานการเงิน</h2></div></div></section>
-<style>
-@media (max-width: 600px){
-  #glTable thead{display:none}
-  #glTable,#glTable tbody,#glTable tr,#glTable td{display:block;width:100%}
-  #glTable tr{margin-bottom:8px;border:1px solid #334155;border-radius:8px;padding:8px}
-  #glTable td{text-align:left!important;padding:2px 0}
-  #glTable td:nth-child(4),#glTable td:nth-child(5),#glTable td:nth-child(6){display:inline-block;width:50%}
-}
-</style>
+<!-- obsolete glTable mobile block removed; replaced by .gl-cards system -->
 <footer>MyMoney · Personal Finance · v10 Mobile UX</footer>
 </div>
 
@@ -2519,7 +2583,6 @@ function _sidebarModeForPage(page){try{if(page!=='record')return '';var mj=docum
 function syncSidebarActive(page){try{var p=page||(document.querySelector('.page.active')&&document.querySelector('.page.active').id||'').replace(/^page-/,'')||'home';var mode=(p==='record')?_sidebarModeForPage('record'):'';var items=document.querySelectorAll('#erpSidebarProto .item[data-nav-go]');if(!items.length)return;var best=null,score=-1;items.forEach(function(it){var g=it.getAttribute('data-nav-go')||'';var m=it.getAttribute('data-nav-mode')||'';if(g!==p){it.classList.remove('active');return;}var s=1;if(p==='record'){if(m&&mode&&m===mode)s=3;else if(!m&&!mode)s=2;}if(s>score){score=s;best=it;}});items.forEach(function(it){it.classList.toggle('active',it===best);});if(!best){items.forEach(function(it){if(it.getAttribute('data-nav-go')==='home')it.classList.add('active');});}}catch(_){ }}
 window.syncSidebarActive=syncSidebarActive;
 function navigate(page){
-  console.log('NAVIGATE: called with page =', page);
   const current=document.querySelector('.page.active');
   const currentPage=current?.id?.replace('page-','')||'home';
   if(currentPage)pageScrollPositions[currentPage]=window.scrollY||window.pageYOffset||0;
@@ -2532,7 +2595,7 @@ function navigate(page){
   try{syncSidebarActive(page);}catch(_){ }
   if(page==='home')renderHome();
   if(page==='settings')renderSettings();
-  if(page==='coa'){console.log('PRE: about to render COA page');renderCOA();console.log('POST: renderCOA completed');}
+  if(page==='coa'){renderCOA();}
   if(page==='tb')renderAccountingReports();
   if(page==='reports')renderReports();
 if(page==='gl')renderGeneralLedgerPage();
@@ -2694,12 +2757,42 @@ function renderGeneralLedgerPage(){
   $('glBody').innerHTML = `<tr><td></td><td></td><td><strong>ยอดยกมา</strong></td><td></td><td></td><td style="text-align:right"><strong>${money(opening)}</strong></td></tr>` + rows + `<tr><td></td><td></td><td><strong>รวมรายการ</strong></td><td style="text-align:right"><strong>${money(totD)}</strong></td><td style="text-align:right"><strong>${money(totC)}</strong></td><td style="text-align:right"></td></tr>` + `<tr><td></td><td></td><td><strong>ยอดยกไป</strong></td><td></td><td></td><td style="text-align:right"><strong>${money(run)}</strong></td></tr>`;
   const glTableCard = $('#page-gl .gl-table-card');
   if (glTableCard) {
-    const cardsDiv = glTableCard.querySelector('.gl-cards') || document.createElement('div');
-    cardsDiv.className = 'gl-cards';
-    cardsDiv.innerHTML = openingCard + cards;
-    if (!glTableCard.querySelector('.gl-cards')) glTableCard.appendChild(cardsDiv);
+    const cardsDiv = glTableCard.querySelector('.gl-cards');
+    if (cardsDiv) {
+      cardsDiv.innerHTML = openingCard + cards;
+    }
   }
-  if ($('glSummary')) $('glSummary').innerHTML = '';
+  /* ---- Populate KPI Summary (UI only, all values derived from already-computed variables) ---- */
+  const accObj = coa.find(c => c.id === accountId);
+  const typeLabels = { Asset: 'สินทรัพย์', Liability: 'หนี้สิน', Equity: 'ทุน', Income: 'รายได้', Expense: 'ค่าใช้จ่าย' };
+  const typeLabel = accObj ? (typeLabels[accObj.type] || accObj.type || '') : '';
+  const accLabel = accObj ? (accObj.code ? accObj.code + ' · ' + accObj.name : accObj.name) : '';
+  const balColor = run >= 0 ? 'var(--color-income)' : 'var(--color-expense)';
+  if ($('glSummary')) {
+    $('glSummary').innerHTML = `
+      <div class="gl-kpi-grid">
+        <div class="gl-kpi-card gl-kpi-opening">
+          <div class="gl-kpi-label">ยอดยกมา</div>
+          <div class="gl-kpi-value">${money(opening)}</div>
+          ${accLabel ? `<div class="gl-kpi-sub">${esc(accLabel)}${typeLabel ? ' · ' + esc(typeLabel) : ''}</div>` : ''}
+        </div>
+        <div class="gl-kpi-card gl-kpi-debit">
+          <div class="gl-kpi-label">รวมเดบิต</div>
+          <div class="gl-kpi-value" style="color:var(--color-expense)">${money(totD)}</div>
+          <div class="gl-kpi-sub">${moves.length} รายการ</div>
+        </div>
+        <div class="gl-kpi-card gl-kpi-credit">
+          <div class="gl-kpi-label">รวมเครดิต</div>
+          <div class="gl-kpi-value" style="color:var(--color-income)">${money(totC)}</div>
+          <div class="gl-kpi-sub">&nbsp;</div>
+        </div>
+        <div class="gl-kpi-card gl-kpi-balance">
+          <div class="gl-kpi-label">ยอดยกไป</div>
+          <div class="gl-kpi-value" style="color:${balColor}">${money(run)}</div>
+          <div class="gl-kpi-sub">&nbsp;</div>
+        </div>
+      </div>`;
+  }
 }
 window.renderGeneralLedgerPage=renderGeneralLedgerPage;
 if($('glSearchBtn')) $('glSearchBtn').addEventListener('click',renderGeneralLedgerPage);
@@ -2739,7 +2832,7 @@ document.addEventListener('click', e => {
   toggle.textContent = expanded ? 'รายละเอียดบัญชี' : 'ซ่อนรายละเอียด';
 });
 
-document.addEventListener('click',e=>{console.log('EVENT: document received click');const go=e.target.closest('[data-go]');console.log('ANALYSIS: e.target tagName =', e.target.tagName, 'type =', e.target.type);console.log('SEARCH: closest [data-go] =', go);if(go){console.log('BUTTON: go.dataset.go =', go.dataset.go);e.preventDefault();navigate(go.dataset.go)}});
+document.addEventListener('click',e=>{const go=e.target.closest('[data-go]');if(go){e.preventDefault();navigate(go.dataset.go)}});
 function fillSelect(id,values,selected){const el=$(id);if(!el)return;const norm=(Array.isArray(values)?values:[]).map(v=>{if(v&&typeof v==='object'&&('value' in v||'id' in v))return{value:String(v.value!=null?v.value:v.id),text:String(v.text!=null?v.text:(v.code?String(v.code)+' '+(v.name||''): (v.name||v.value||v.id||'')))};return{value:String(v==null?'':v),text:String(v==null?'':v)}});el.innerHTML=norm.map(v=>`<option value="${esc(v.value)}">${esc(v.text)}</option>`).join('');if(selected!=null&&selected!==''){const s=String(selected);if(norm.some(v=>v.value===s))el.value=s;else{const o=document.createElement('option');o.value=s;o.textContent=s;o.dataset.legacy='1';el.appendChild(o);el.value=s}}}
 function _coaLabel(a){return a?(String(a.code||'')?String(a.code)+' '+String(a.name||''):String(a.name||a.id||'')):''}
 function _coaPostable(type){try{return (window.MyMoneyCOA&&window.MyMoneyCOA.getCoaAccountsByType)?window.MyMoneyCOA.getCoaAccountsByType(type):(window.MyMoneyCOA?window.MyMoneyCOA.get().filter(x=>x&&x.type===type&&window.MyMoneyCOA.canPost(x.id)) : [])}catch(_){return[]}}
@@ -3649,26 +3742,13 @@ if(!window.__myMoneySettingsCollapseInited){
   window.__myMoneySettingsCollapseInited=true;
 
   document.addEventListener('click', function(e){
-    console.log('ACCORDION: EVENT received');
 
     const toggle=e.target.closest('.settings-collapse-toggle');
-
-    console.log(
-      'ACCORDION: toggle found =',
-      toggle !== null,
-      'id =',
-      toggle?.id
-    );
 
     if(!toggle)return;
 
     const panelId=toggle.getAttribute('aria-controls');
     const panel=document.getElementById(panelId);
-
-    console.log('ACCORDION: panelId =', panelId);
-    console.log('ACCORDION: panel found =', panel !== null);
-    console.log('ACCORDION: expanded before =', toggle.getAttribute('aria-expanded'));
-    console.log('ACCORDION: hidden before =', panel?.hidden);
 
     if(!panel)return;
 
@@ -3676,9 +3756,6 @@ if(!window.__myMoneySettingsCollapseInited){
 
     toggle.setAttribute('aria-expanded', String(!expanded));
     panel.hidden=expanded;
-
-    console.log('ACCORDION: expanded after =', toggle.getAttribute('aria-expanded'));
-    console.log('ACCORDION: hidden after =', panel.hidden);
   });
 }
 function getTransactionJournal(txId){return findLinksByTx(txId)}
@@ -3949,30 +4026,338 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<div id="erpOverlayProto" style="position:fixed;inset:0;background:#0008;z-index:9998;display:none"></div>
-<div id="erpSidebarProto" style="position:fixed;left:0;top:0;width:240px;height:100vh;background:#FFFFFF;color:#080D13;padding:14px 12px;z-index:9999;transform:translateX(-100%);transition:transform .25s ease;font-family:system-ui,sans-serif;font-size:13px;box-shadow:2px 0 24px rgba(0,0,0,0.15);overflow:auto;border-right:1px solid #E2E8F0">
+<div id="erpOverlayProto" style="position:fixed;inset:0;background:rgba(4,8,14,0.55);z-index:9998;display:none"></div>
+<div id="erpSidebarProto" style="position:fixed;left:0;top:0;width:min(85vw,300px);height:100vh;z-index:9999;transform:translateX(-100%);transition:transform .28s cubic-bezier(0.16,1,0.3,1);overflow-y:auto">
 <div class="brand" style="margin:0 0 16px 0;padding-top:4px"><img class="brand-icon" src="mymoney-icon.png" alt="MyMoney"><div class="brand-copy"><p class="eyebrow">PERSONAL FINANCE</p><h1>MyMoney</h1></div></div>
-<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-home"></use></svg> ภาพรวม</summary><div class="item active" data-nav-go="home" onclick="navigate('home');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-home"></use></svg> แดชบอร์ด</div></details>
-<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-book-open"></use></svg> สมุดบัญชี</summary><div class="item" data-nav-go="journal" onclick="navigate('journal');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-book-open"></use></svg> สมุดรายวัน</div><div class="item" data-nav-go="gl" onclick="navigate('gl');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-table"></use></svg> บัญชีแยกประเภท</div></details>
-<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-git-branch"></use></svg> ผังบัญชี</summary><div class="item" data-nav-go="coa" onclick="navigate('coa');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-git-branch"></use></svg> ผังบัญชี</div></details>
-<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-pie-chart"></use></svg> รายงานทางบัญชี</summary><div class="item" data-nav-go="tb" onclick="navigate('tb');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-layout-dashboard"></use></svg> งบทดลอง</div><div class="item" data-nav-go="is" onclick="navigate('is');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-pie-chart"></use></svg> งบกำไรขาดทุน</div><div class="item" data-nav-go="financial" onclick="navigate('financial');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-layout-dashboard"></use></svg> งบดุล</div><div class="item" data-nav-go="reports" onclick="navigate('reports');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-file-text"></use></svg> รายงานอื่น ๆ</div></details>
-<details open><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-settings"></use></svg> ตั้งค่าระบบบัญชี</summary><div class="item" data-nav-go="settings" onclick="navigate('settings');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-settings"></use></svg> ตั้งค่าบัญชี</div></details>
-<details hidden><summary style="color:var(--cyan-primary);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px;cursor:pointer">บันทึกรายการ</summary><div class="item" data-nav-go="record" data-nav-mode="Income" onclick="if(window.openRecordType)openRecordType('Income');else{navigate('record');setType('Income')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-trending-up"></use></svg> รายได้</div><div class="item" data-nav-go="record" data-nav-mode="Expense" onclick="if(window.openRecordType)openRecordType('Expense');else{navigate('record');setType('Expense')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-trending-down"></use></svg> ค่าใช้จ่าย</div><div class="item" data-nav-go="record" data-nav-mode="Transfer" onclick="if(window.openRecordType)openRecordType('Transfer');else{navigate('record');setType('Transfer')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-repeat"></use></svg> โอนเงิน</div><div class="item" data-nav-go="record" data-nav-mode="Manual" onclick="navigate('record');if(window.setRecordMode)setRecordMode('Manual');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-file-edit"></use></svg> บันทึกบัญชี (Manual Journal)</div></details>
+<details open><summary style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-home"></use></svg> ภาพรวม</summary><div class="item active" data-nav-go="home" onclick="navigate('home');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-home"></use></svg> แดชบอร์ด</div></details>
+<details open><summary style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-book-open"></use></svg> สมุดบัญชี</summary><div class="item" data-nav-go="journal" onclick="navigate('journal');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-book-open"></use></svg> สมุดรายวัน</div><div class="item" data-nav-go="gl" onclick="navigate('gl');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-table"></use></svg> บัญชีแยกประเภท</div></details>
+<details open><summary style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-git-branch"></use></svg> ผังบัญชี</summary><div class="item" data-nav-go="coa" onclick="navigate('coa');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-git-branch"></use></svg> ผังบัญชี</div></details>
+<details open><summary style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-pie-chart"></use></svg> รายงานทางบัญชี</summary><div class="item" data-nav-go="tb" onclick="navigate('tb');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-layout-dashboard"></use></svg> งบทดลอง</div><div class="item" data-nav-go="is" onclick="navigate('is');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-pie-chart"></use></svg> งบกำไรขาดทุน</div><div class="item" data-nav-go="financial" onclick="navigate('financial');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-layout-dashboard"></use></svg> งบดุล</div><div class="item" data-nav-go="reports" onclick="navigate('reports');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-file-text"></use></svg> รายงานอื่น ๆ</div></details>
+<details open><summary style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px;cursor:pointer"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-settings"></use></svg> ตั้งค่าระบบบัญชี</summary><div class="item" data-nav-go="settings" onclick="navigate('settings');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-settings"></use></svg> ตั้งค่าบัญชี</div></details>
+<details hidden><summary style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 4px;cursor:pointer">บันทึกรายการ</summary><div class="item" data-nav-go="record" data-nav-mode="Income" onclick="if(window.openRecordType)openRecordType('Income');else{navigate('record');setType('Income')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-trending-up"></use></svg> รายได้</div><div class="item" data-nav-go="record" data-nav-mode="Expense" onclick="if(window.openRecordType)openRecordType('Expense');else{navigate('record');setType('Expense')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-trending-down"></use></svg> ค่าใช้จ่าย</div><div class="item" data-nav-go="record" data-nav-mode="Transfer" onclick="if(window.openRecordType)openRecordType('Transfer');else{navigate('record');setType('Transfer')}setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-repeat"></use></svg> โอนเงิน</div><div class="item" data-nav-go="record" data-nav-mode="Manual" onclick="navigate('record');if(window.setRecordMode)setRecordMode('Manual');setOpen(false)"><svg class="icon-sidebar" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-file-edit"></use></svg> บันทึกบัญชี (Manual Journal)</div></details>
 </div>
 <style>
-#erpSidebarProto{width:min(85vw,320px)!important;padding-top:max(14px,env(safe-area-inset-top));padding-bottom:max(14px,env(safe-area-inset-bottom));overflow-y:auto}
-#erpSidebarProto .item{padding:12px 12px;margin:4px 0;border-radius:8px;background:transparent;border:none;min-height:44px;display:flex;align-items:center;gap:8px;color:#080D13}
-#erpSidebarProto .item:hover{background:#E0F7FA}
-#erpSidebarProto .active{background:#DDF5F7;color:#080D13;border:none;position:relative}
-#erpSidebarProto .active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--cyan-primary);border-radius:2px}
-#erpSidebarProto details>summary{list-style:none;cursor:pointer}
-#erpSidebarProto details>summary::-webkit-details-marker{display:none}
-#erpOverlayProto{transition:opacity .2s ease}
-#erpSidebarProto .icon-sidebar{flex-shrink:0;width:var(--icon-size-lg);height:var(--icon-size-lg);stroke-width:var(--icon-stroke-width);stroke:#334155}
-#erpSidebarProto summary .icon-sidebar{width:14px;height:14px;stroke:#334155}
-#erpSidebarProto .item.active .icon-sidebar{stroke:#080D13}
-#erpSidebarProto .item:hover .icon-sidebar{stroke:#080D13}
-#erpSidebarProto summary:hover .icon-sidebar{stroke:#080D13}
+/* ============================================================
+   PREMIUM GLASSMORPHISM SIDEBAR — MyMoney Design System
+   ============================================================ */
+
+/* --- Overlay Backdrop --- */
+#erpOverlayProto {
+  transition: opacity .25s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  background: rgba(4, 8, 14, 0.6) !important;
+}
+
+/* --- Sidebar Base & Dark Mode (Default) --- */
+#erpSidebarProto {
+  width: min(85vw, 300px) !important;
+  padding: 16px 14px !important;
+  padding-top: max(16px, env(safe-area-inset-top)) !important;
+  padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
+  overflow-y: auto !important;
+  font-family: var(--font-family-base, system-ui, -apple-system, sans-serif) !important;
+  font-size: 13.5px !important;
+  
+  /* Premium Dark Glassmorphism */
+  background: rgba(13, 20, 29, 0.78) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 8px 0 40px rgba(0, 0, 0, 0.5), inset -1px 0 0 rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-primary, #D9E7F1) !important;
+}
+
+/* Custom Sleek Scrollbar */
+#erpSidebarProto::-webkit-scrollbar {
+  width: 4px;
+}
+#erpSidebarProto::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+}
+#erpSidebarProto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* --- Brand Section inside Sidebar --- */
+#erpSidebarProto .brand {
+  margin: 0 0 14px 0 !important;
+  padding: 4px 6px 14px 6px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+#erpSidebarProto .brand-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 11px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+#erpSidebarProto .brand-copy h1 {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+  letter-spacing: -0.01em !important;
+  margin: 0 !important;
+}
+#erpSidebarProto .brand-copy .eyebrow {
+  font-size: 9.5px !important;
+  letter-spacing: 1.5px !important;
+  color: var(--cyan-primary, #52B8D5) !important;
+  font-weight: 600 !important;
+  margin: 0 0 2px !important;
+}
+
+/* --- Section Summaries (Categories) --- */
+#erpSidebarProto details > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--cyan-primary, #52B8D5) !important;
+  margin: 14px 0 4px;
+  transition: background 0.18s ease, color 0.18s ease;
+  user-select: none;
+}
+#erpSidebarProto details > summary::-webkit-details-marker {
+  display: none;
+}
+#erpSidebarProto details > summary:hover {
+  background: rgba(82, 184, 213, 0.08);
+  color: var(--cyan-highlight, #7DD3ED) !important;
+}
+#erpSidebarProto summary .icon-sidebar {
+  width: 14px !important;
+  height: 14px !important;
+  stroke: var(--cyan-primary, #52B8D5) !important;
+  transition: stroke 0.18s ease;
+}
+#erpSidebarProto details > summary:hover .icon-sidebar {
+  stroke: var(--cyan-highlight, #7DD3ED) !important;
+}
+
+/* --- Menu Items --- */
+#erpSidebarProto .item {
+  padding: 10px 14px;
+  margin: 3px 0;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary, #D9E7F1);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  user-select: none;
+}
+
+#erpSidebarProto .icon-sidebar {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  stroke-width: var(--icon-stroke-width, 1.8);
+  stroke: var(--text-secondary, #91A5B5);
+  transition: stroke 0.18s ease, transform 0.18s ease;
+}
+
+/* Hover State */
+#erpSidebarProto .item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  transform: translateX(3px);
+}
+#erpSidebarProto .item:hover .icon-sidebar {
+  stroke: var(--cyan-highlight, #7DD3ED);
+  transform: scale(1.08);
+}
+
+/* Active State — Emerald Glassmorphism */
+#erpSidebarProto .item.active {
+  background: linear-gradient(135deg, rgba(84, 214, 181, 0.20) 0%, rgba(20, 78, 61, 0.38) 100%) !important;
+  border: 1px solid rgba(84, 214, 181, 0.38) !important;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(84, 214, 181, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  position: relative;
+}
+#erpSidebarProto .item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3.5px;
+  background: var(--green-primary, #54D6B5);
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(84, 214, 181, 0.9);
+}
+#erpSidebarProto .item.active .icon-sidebar {
+  stroke: var(--green-primary, #54D6B5) !important;
+  filter: drop-shadow(0 0 4px rgba(84, 214, 181, 0.5));
+}
+#erpSidebarProto .item.active:hover {
+  background: linear-gradient(135deg, rgba(84, 214, 181, 0.26) 0%, rgba(20, 78, 61, 0.44) 100%) !important;
+  transform: translateX(3px);
+}
+
+/* ============================================================
+   LIGHT MODE GLASSMORPHISM
+   - Default theme of MyMoney is Dark (Financial Control System).
+   - Light Mode activates when explicitly set via:
+     html[data-theme="light"], html.light, body.light, [data-theme="light"]
+     or when system theme is opted in via html[data-theme="auto"] / html[data-theme="system"]
+   - Guarantees prefers-color-scheme NEVER distorts user theme or dark dashboard!
+   ============================================================ */
+@media (prefers-color-scheme: light) {
+  html[data-theme="auto"] #erpOverlayProto, html[data-theme="system"] #erpOverlayProto {
+    background: rgba(15, 23, 42, 0.35) !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto, html[data-theme="system"] #erpSidebarProto {
+    background: rgba(255, 255, 255, 0.82) !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 8px 0 40px rgba(0, 0, 0, 0.1), inset -1px 0 0 rgba(255, 255, 255, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    color: #0F172A !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto::-webkit-scrollbar-thumb, html[data-theme="system"] #erpSidebarProto::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+  }
+  html[data-theme="auto"] #erpSidebarProto .brand, html[data-theme="system"] #erpSidebarProto .brand {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto .brand-copy h1, html[data-theme="system"] #erpSidebarProto .brand-copy h1 {
+    color: #0F172A !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto .brand-copy .eyebrow, html[data-theme="system"] #erpSidebarProto .brand-copy .eyebrow {
+    color: #0284C7 !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto details > summary, html[data-theme="system"] #erpSidebarProto details > summary {
+    color: #0284C7 !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto details > summary:hover, html[data-theme="system"] #erpSidebarProto details > summary:hover {
+    background: rgba(2, 132, 199, 0.08);
+    color: #0369A1 !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto summary .icon-sidebar, html[data-theme="system"] #erpSidebarProto summary .icon-sidebar {
+    stroke: #0284C7 !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto details > summary:hover .icon-sidebar, html[data-theme="system"] #erpSidebarProto details > summary:hover .icon-sidebar {
+    stroke: #0369A1 !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto .item, html[data-theme="system"] #erpSidebarProto .item {
+    color: #334155;
+  }
+  html[data-theme="auto"] #erpSidebarProto .icon-sidebar, html[data-theme="system"] #erpSidebarProto .icon-sidebar {
+    stroke: #64748B;
+  }
+  html[data-theme="auto"] #erpSidebarProto .item:hover, html[data-theme="system"] #erpSidebarProto .item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.06);
+    color: #0F172A;
+  }
+  html[data-theme="auto"] #erpSidebarProto .item:hover .icon-sidebar, html[data-theme="system"] #erpSidebarProto .item:hover .icon-sidebar {
+    stroke: #0284C7;
+  }
+  html[data-theme="auto"] #erpSidebarProto .item.active, html[data-theme="system"] #erpSidebarProto .item.active {
+    background: linear-gradient(135deg, rgba(84, 214, 181, 0.28) 0%, rgba(167, 243, 208, 0.45) 100%) !important;
+    border: 1px solid rgba(16, 185, 129, 0.35) !important;
+    color: #064E3B !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  }
+  html[data-theme="auto"] #erpSidebarProto .item.active::before, html[data-theme="system"] #erpSidebarProto .item.active::before {
+    background: #059669;
+    box-shadow: 0 0 8px rgba(5, 150, 105, 0.6);
+  }
+  html[data-theme="auto"] #erpSidebarProto .item.active .icon-sidebar, html[data-theme="system"] #erpSidebarProto .item.active .icon-sidebar {
+    stroke: #059669 !important;
+    filter: none;
+  }
+  html[data-theme="auto"] #erpSidebarProto .item.active:hover, html[data-theme="system"] #erpSidebarProto .item.active:hover {
+    background: linear-gradient(135deg, rgba(84, 214, 181, 0.35) 0%, rgba(167, 243, 208, 0.55) 100%) !important;
+  }
+}
+
+/* Explicit Light Mode by Attribute or Class */
+html[data-theme="light"] #erpOverlayProto, html.light #erpOverlayProto, body.light #erpOverlayProto {
+  background: rgba(15, 23, 42, 0.35) !important;
+}
+html[data-theme="light"] #erpSidebarProto, html.light #erpSidebarProto, body.light #erpSidebarProto {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 8px 0 40px rgba(0, 0, 0, 0.1), inset -1px 0 0 rgba(255, 255, 255, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  color: #0F172A !important;
+}
+html[data-theme="light"] #erpSidebarProto::-webkit-scrollbar-thumb, html.light #erpSidebarProto::-webkit-scrollbar-thumb, body.light #erpSidebarProto::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+html[data-theme="light"] #erpSidebarProto .brand, html.light #erpSidebarProto .brand, body.light #erpSidebarProto .brand {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme="light"] #erpSidebarProto .brand-copy h1, html.light #erpSidebarProto .brand-copy h1, body.light #erpSidebarProto .brand-copy h1 {
+  color: #0F172A !important;
+}
+html[data-theme="light"] #erpSidebarProto .brand-copy .eyebrow, html.light #erpSidebarProto .brand-copy .eyebrow, body.light #erpSidebarProto .brand-copy .eyebrow {
+  color: #0284C7 !important;
+}
+html[data-theme="light"] #erpSidebarProto details > summary, html.light #erpSidebarProto details > summary, body.light #erpSidebarProto details > summary {
+  color: #0284C7 !important;
+}
+html[data-theme="light"] #erpSidebarProto details > summary:hover, html.light #erpSidebarProto details > summary:hover, body.light #erpSidebarProto details > summary:hover {
+  background: rgba(2, 132, 199, 0.08);
+  color: #0369A1 !important;
+}
+html[data-theme="light"] #erpSidebarProto summary .icon-sidebar, html.light #erpSidebarProto summary .icon-sidebar, body.light #erpSidebarProto summary .icon-sidebar {
+  stroke: #0284C7 !important;
+}
+html[data-theme="light"] #erpSidebarProto details > summary:hover .icon-sidebar, html.light #erpSidebarProto details > summary:hover .icon-sidebar, body.light #erpSidebarProto details > summary:hover .icon-sidebar {
+  stroke: #0369A1 !important;
+}
+html[data-theme="light"] #erpSidebarProto .item, html.light #erpSidebarProto .item, body.light #erpSidebarProto .item {
+  color: #334155;
+}
+html[data-theme="light"] #erpSidebarProto .icon-sidebar, html.light #erpSidebarProto .icon-sidebar, body.light #erpSidebarProto .icon-sidebar {
+  stroke: #64748B;
+}
+html[data-theme="light"] #erpSidebarProto .item:hover, html.light #erpSidebarProto .item:hover, body.light #erpSidebarProto .item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.06);
+  color: #0F172A;
+}
+html[data-theme="light"] #erpSidebarProto .item:hover .icon-sidebar, html.light #erpSidebarProto .item:hover .icon-sidebar, body.light #erpSidebarProto .item:hover .icon-sidebar {
+  stroke: #0284C7;
+}
+html[data-theme="light"] #erpSidebarProto .item.active, html.light #erpSidebarProto .item.active, body.light #erpSidebarProto .item.active {
+  background: linear-gradient(135deg, rgba(84, 214, 181, 0.28) 0%, rgba(167, 243, 208, 0.45) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  color: #064E3B !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+html[data-theme="light"] #erpSidebarProto .item.active::before, html.light #erpSidebarProto .item.active::before, body.light #erpSidebarProto .item.active::before {
+  background: #059669;
+  box-shadow: 0 0 8px rgba(5, 150, 105, 0.6);
+}
+html[data-theme="light"] #erpSidebarProto .item.active .icon-sidebar, html.light #erpSidebarProto .item.active .icon-sidebar, body.light #erpSidebarProto .item.active .icon-sidebar {
+  stroke: #059669 !important;
+  filter: none;
+}
+html[data-theme="light"] #erpSidebarProto .item.active:hover, html.light #erpSidebarProto .item.active:hover, body.light #erpSidebarProto .item.active:hover {
+  background: linear-gradient(135deg, rgba(84, 214, 181, 0.35) 0%, rgba(167, 243, 208, 0.55) 100%) !important;
+}
 </style>
 <script>
 (function(){
